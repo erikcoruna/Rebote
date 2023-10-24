@@ -2,9 +2,9 @@
 Este es el proyecto grupal de la asignatura Programación III.
 
 # Estructura commits
-  **Autor(es):**
+  **Autor(es):** Nombre(s).
   
-  **Apartado desarrollado:**
+  **Apartado desarrollado:** Tema tratado en la modificación.
   
   **Clases modificadas/creadas:** Las modificadas en minúsculas//las creadas en mayúsculas.
     
