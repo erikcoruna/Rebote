@@ -6,11 +6,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.html.ImageView;
 
 public class Start extends JFrame {
 	
@@ -22,6 +20,8 @@ public class Start extends JFrame {
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Bienvenido");
         
+        // https://stackoverflow.com/questions/42964669/placing-button-panel-in-center-java-swing
+        // Se ha modificado parte del código para adecuarlo a nuestro proyecto con los botones y textos necesarios.
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setLayout(new GridBagLayout());
@@ -40,7 +40,7 @@ public class Start extends JFrame {
         JButton register = new JButton("Registrarse");
         login.setPreferredSize(new Dimension(200, 50));
         register.setPreferredSize(new Dimension(200, 50));
-        register.setBackground(Color.MAGENTA);
+        register.setBackground(Color.RED);
         buttons.add(login, gbc);
         buttons.add(new JLabel(" "), gbc);
         buttons.add(register, gbc);
