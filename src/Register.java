@@ -3,6 +3,9 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -72,10 +75,23 @@ public class Register extends JFrame {
 		gbc2.anchor = GridBagConstraints.EAST;
 
 		JPanel acept = new JPanel(new GridBagLayout());
-		JButton confirmar = new JButton("Confirmar");
-		JButton cancelar = new JButton("Cancelar");
-		acept.add(confirmar, gbc2);
-		acept.add(cancelar, gbc2);
+		JButton OK = new JButton("Confirmar");
+		JButton back = new JButton("Cancelar");
+		OK.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//CHEQUEAR QUE SE HAYA RELLENADO TODO CORRECTAMENTE
+				//CREAR un user y registrarlo en el fichero de logger con el método toString User.logger()
+				//fastRegister();
+			}
+		});
+		
+		
+		
+		acept.add(OK, gbc2);
+		acept.add(back, gbc2);
 		panel.add(registro, gbc);
 		panel.add(acept, gbc2);
 		add(panel);
