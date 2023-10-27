@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -23,12 +26,13 @@ public class Start extends JFrame {
         // https://stackoverflow.com/questions/42964669/placing-button-panel-in-center-java-swing
         // Se ha modificado parte del código para adecuarlo a nuestro proyecto con los botones y textos necesarios.
         JPanel panel = new JPanel();
+        ImageIcon image = new ImageIcon("img/basket.jpg");
+        JLabel labelBasket = new JLabel(image);
+        panel.add(labelBasket);
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setLayout(new GridBagLayout());
-        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor = GridBagConstraints.NORTH;
         
         panel.add(new JLabel("<html><h1><strong>REBOTE</strong></h1></html>"), gbc);
         
@@ -45,24 +49,28 @@ public class Start extends JFrame {
         buttons.add(new JLabel(" "), gbc);
         buttons.add(register, gbc);
         
-        
         panel.add(buttons, gbc);
-        
-//        login.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				new Login();
-//			}
-//        });
-//        
-//        register.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				new Register();
-//			}
-//		});
         
         add(panel);
         setVisible(true);
+        
+        // https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
+        // Cogido la parte de los ActionListener y modificado para nuestro código.
+        login.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		Login windowLogin = new Login();
+        		windowLogin.setVisible(true);
+        		setVisible(false);
+			}
+		});
+        register.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Register windowRegister = new Register();
+        		windowRegister.setVisible(true);
+        		setVisible(false);
+			}
+		});
     }
 }

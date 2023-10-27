@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -89,6 +90,14 @@ public class Login extends JFrame {
 //			@Override
 //			public void mouseClicked(MouseEvent e) {
 //				
+//			}
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				labelForget.setForeground(Color.BLUE);
+//			}
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//				labelForget.setForeground(null);
 //			}
 //		});
     }
