@@ -33,23 +33,21 @@ public class Start extends JFrame {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(new JLabel(" "), gbc);
         
         panel.add(new JLabel("<html><h1><strong>REBOTE</strong></h1></html>"), gbc);
         
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        JPanel buttons = new JPanel(new GridBagLayout());
         JButton login = new JButton("Iniciar Sesión");
         JButton register = new JButton("Registrarse");
         login.setPreferredSize(new Dimension(200, 50));
         register.setPreferredSize(new Dimension(200, 50));
         register.setBackground(Color.RED);
-        buttons.add(login, gbc);
-        buttons.add(new JLabel(" "), gbc);
-        buttons.add(register, gbc);
-        
-        panel.add(buttons, gbc);
+        panel.add(login, gbc);
+        panel.add(new JLabel(" "), gbc);
+        panel.add(register, gbc);
         
         add(panel);
         setVisible(true);
