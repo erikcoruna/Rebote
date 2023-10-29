@@ -20,10 +20,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class CreatePlayer extends JFrame {
-	public static void main(String[] args) {
-        // Ventana inicial
-    	new CreatePlayer();
-    }
 	
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
