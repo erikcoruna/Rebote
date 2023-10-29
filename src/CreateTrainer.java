@@ -82,10 +82,5 @@ public class CreateTrainer extends JFrame {
 		add(informationPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 		setVisible(true);
-		
-	}
-	
-	public static void main(String[] args) {
-		new CreateTrainer();
 	}
 }
