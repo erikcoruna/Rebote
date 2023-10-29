@@ -1,11 +1,18 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.logging.Logger;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,68 +21,89 @@ import javax.swing.JTextField;
 
 public class StartTrainer extends JFrame {
 	
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(StartTrainer.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	public StartTrainer() {
-		setSize(600, 500);
+		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Inicio Entrenador");
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		setAutoRequestFocus(false);
 		
-		JPanel titlePanel = new JPanel();
+		JPanel northPanel = new JPanel();
+		northPanel.setLayout(new BorderLayout());
 		JLabel title = new JLabel("¡Bienvenido a REBOTE!");
-		Font font = new Font("Arial", Font.BOLD, 30);
-		title.setFont(font);
-		titlePanel.add(title);
+		Font titleFont = new Font("Arial", Font.BOLD, 30);
+		title.setFont(titleFont);
+		northPanel.add(title, BorderLayout.NORTH);
 		
-		JPanel leftPrincipalPanel = new JPanel();
-		leftPrincipalPanel.setLayout(new GridBagLayout());
+		JTextField searcher = new JTextField("Buscar...");
+		northPanel.add(searcher, BorderLayout.CENTER);
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		gbc.weightx = 1.0;
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridBagLayout());
 		
-		JLabel text = new JLabel("Seleccione al jugador que quieres buscar \n");
-		JTextField searcher = new JTextField(50);
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		leftPrincipalPanel.add(text, gbc);
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.EAST;
-		leftPrincipalPanel.add(searcher, gbc);
-		
-		
-		JPanel ImagePanel = new JPanel();
-		ImagePanel.setLayout(new GridBagLayout());
-        ImageIcon image = new ImageIcon("img/basket.jpg");
-        JLabel labelBasket = new JLabel(image);
-        ImagePanel.add(labelBasket, gbc);
-        
+		//Añadir Imagen
 		//Añadir Buscador
 		
-		JPanel buttonPanel = new JPanel();
-		JButton select = new JButton("Seleccionar");
-		JButton newTrainer = new JButton("Crear entrandor");
-		JButton editTrainer = new JButton("Editar entrandor");
-		JButton eliminate = new JButton("Eliminar tu usuario");
-		buttonPanel.add(eliminate);
-		buttonPanel.add(editTrainer);
-		buttonPanel.add(newTrainer);
-		buttonPanel.add(select);
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JPanel southPanel = new JPanel();
+		southPanel.setLayout(new GridLayout(2, 2));
+		JButton selectButton = new JButton("Seleccionar");
+		southPanel.add(selectButton);
+		JButton editTrainerButton = new JButton("Editar entrenador");
+		southPanel.add(editTrainerButton);
+		JButton createTrainerButton = new JButton("Crear entrenador");
+		southPanel.add(createTrainerButton);
+		JButton deleteTrainerButton = new JButton("Eliminar tu usuario");
+		deleteTrainerButton.setBackground(Color.RED);
+		deleteTrainerButton.setForeground(Color.ORANGE);
+		southPanel.add(deleteTrainerButton);
 		
-		add(titlePanel, BorderLayout.NORTH);
-		add(leftPrincipalPanel, BorderLayout.WEST);
-		add(ImagePanel, BorderLayout.EAST);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(northPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
+		add(southPanel, BorderLayout.SOUTH);
 		setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new StartTrainer();
+		
+		searcher.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (searcher.getText().equals("")) {
+					searcher.setText("Buscar...");
+					logger.info("Entrado al campo de texto.");
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				searcher.setText("");
+				logger.info("Salido del campo de texto.");
+			}
+		});
+		selectButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				logger.info("Clic en el botón selectButton.");
+			}
+		});
+		editTrainerButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				logger.info("Clic en el botón editTrainerButton.");
+			}
+		});
+		createTrainerButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				logger.info("Clic en el botón createTrainerButton.");
+			}
+		});
+		deleteTrainerButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				logger.info("Clic en el botón deleteTrainerButton.");
+			}
+		});
 	}
 }

@@ -1,11 +1,16 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.TextField;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.logging.Logger;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,64 +19,65 @@ import javax.swing.JTextField;
 
 public class StartPlayer extends JFrame {
 	
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(StartPlayer.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	public StartPlayer() {
-		setSize(600, 500);
+		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Inicio Jugador");
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		setAutoRequestFocus(false);
 		
-		JPanel titlePanel = new JPanel();
+		JPanel northPanel = new JPanel();
+		northPanel.setLayout(new BorderLayout());
 		JLabel title = new JLabel("¡Bienvenido a REBOTE!");
-		Font font = new Font("Arial", Font.BOLD, 30);
-		title.setFont(font);
-		titlePanel.add(title);
+		Font titleFont = new Font("Arial", Font.BOLD, 30);
+		title.setFont(titleFont);
+		northPanel.add(title, BorderLayout.NORTH);
 		
-		JPanel leftPrincipalPanel = new JPanel();
-		leftPrincipalPanel.setLayout(new GridBagLayout());
+		JTextField searcher = new JTextField("Buscar...");
+		northPanel.add(searcher, BorderLayout.CENTER);
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		gbc.weightx = 1.0;
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridBagLayout());
 		
-		JLabel text = new JLabel("Seleccione al jugador que quieres buscar \n");
-		JTextField searcher = new JTextField(50);
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		leftPrincipalPanel.add(text, gbc);
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.EAST;
-		leftPrincipalPanel.add(searcher, gbc);
-		
-		
-		JPanel ImagePanel = new JPanel();
-		ImagePanel.setLayout(new GridBagLayout());
-        ImageIcon image = new ImageIcon("img/basket.jpg");
-        JLabel labelBasket = new JLabel(image);
-        ImagePanel.add(labelBasket, gbc);
-
+		//Añadir Imagen
 		//Añadir Buscador
 		
-		JPanel buttonPanel = new JPanel();
-		JButton select = new JButton("Seleccionar");
-		JButton newPlayer = new JButton("Crear usario");
-		JButton editPlayer = new JButton("Editar usuario");
-		JButton eliminate = new JButton("Eliminar tu usuario");
-		buttonPanel.add(eliminate);
-		buttonPanel.add(editPlayer);
-		buttonPanel.add(newPlayer);
-		buttonPanel.add(select);
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JPanel southPanel = new JPanel();
+		southPanel.setLayout(new GridLayout(2, 2));
+		JButton selectButton = new JButton("Seleccionar");
+		southPanel.add(selectButton);
+		JButton editUserButton = new JButton("Editar usuario");
+		southPanel.add(editUserButton);
+		JButton createUserButton = new JButton("Crear usuario");
+		southPanel.add(createUserButton);
+		JButton deleteUserButton = new JButton("Eliminar tu usuario");
+		deleteUserButton.setBackground(Color.RED);
+		deleteUserButton.setForeground(Color.ORANGE);
+		southPanel.add(deleteUserButton);
 		
-		add(titlePanel, BorderLayout.NORTH);
-		add(leftPrincipalPanel, BorderLayout.WEST);
-		add(ImagePanel, BorderLayout.EAST);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(northPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
+		add(southPanel, BorderLayout.SOUTH);
 		setVisible(true);
+		
+		searcher.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (searcher.getText().equals("")) {
+					searcher.setText("Buscar...");
+					logger.info("Entrado al campo de texto.");
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				searcher.setText("");
+				logger.info("Salido del campo de texto.");
+			}
+		});
 	}
 }
