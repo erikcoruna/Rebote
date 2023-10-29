@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 
 public class Start extends JFrame {
 	
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(Start.class.getName());
     private static final long serialVersionUID = 1L;
 
