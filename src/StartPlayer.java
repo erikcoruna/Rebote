@@ -5,21 +5,22 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class startTrainer extends JFrame {
+public class StartPlayer extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public startTrainer() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public StartPlayer() {
+		setSize(600, 560);
 		setLocationRelativeTo(null);
-		setSize(600,400);
-		setTitle("Inicio Entrenador");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Inicio Jugador");
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -35,29 +36,42 @@ public class startTrainer extends JFrame {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.insets = new Insets(10, 10, 10, 10);
 		gbc.weightx = 1.0;
 		
-		JLabel text = new JLabel("Seleccione el equipo que quieres buscar");
-		JTextField searcher = new JTextField(100);
+		JLabel text = new JLabel("Seleccione al jugador que quieres buscar \n");
+		JTextField searcher = new JTextField(50);
 		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-		principalPanel.add(text,gbc);
+		gbc.anchor = GridBagConstraints.EAST;
+		principalPanel.add(text, gbc);
 		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		principalPanel.add(searcher,gbc);
+		gbc.anchor = GridBagConstraints.EAST;
+		principalPanel.add(searcher, gbc);
 		
-		//Añadir Imagen
+		
+		JPanel ImagePanel = new JPanel();
+        ImageIcon image = new ImageIcon("img/basket.jpg");
+        JLabel labelBasket = new JLabel(image);
+        JLabel blankLabel = new JLabel();
+        ImagePanel.add(labelBasket);
+        
+        gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.EAST;
+		principalPanel.add(blankLabel, gbc);
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        principalPanel.add(labelBasket, gbc);
+
 		//Añadir Buscador
 		
 		JPanel buttonPanel = new JPanel();
 		JButton select = new JButton("Seleccionar");
-		JButton newTrainer = new JButton("Crear entrandor");
-		JButton editTrainer = new JButton("Editar entrandor");
+		JButton newPlayer = new JButton("Crear usario");
+		JButton editPlayer = new JButton("Editar usuario");
 		JButton eliminate = new JButton("Eliminar tu usuario");
 		buttonPanel.add(eliminate);
-		buttonPanel.add(editTrainer);
-		buttonPanel.add(newTrainer);
+		buttonPanel.add(editPlayer);
+		buttonPanel.add(newPlayer);
 		buttonPanel.add(select);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
@@ -67,6 +81,3 @@ public class startTrainer extends JFrame {
 		setVisible(true);
 	}
 }
-	
-
-

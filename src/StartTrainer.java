@@ -11,15 +11,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class startPlayer extends JFrame {
+public class StartTrainer extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public startPlayer() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public StartTrainer() {
+		setSize(480, 560);
 		setLocationRelativeTo(null);
-		setSize(600,400);
-		setTitle("Inicio Jugador");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Inicio Entrenador");
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -38,7 +38,7 @@ public class startPlayer extends JFrame {
 		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.weightx = 1.0;
 		
-		JLabel text = new JLabel("Seleccione al jugador que quieres buscar");
+		JLabel text = new JLabel("Seleccione el equipo que quieres buscar");
 		JTextField searcher = new JTextField(100);
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
@@ -52,12 +52,12 @@ public class startPlayer extends JFrame {
 		
 		JPanel buttonPanel = new JPanel();
 		JButton select = new JButton("Seleccionar");
-		JButton newPlayer = new JButton("Crear usario");
-		JButton editPlayer = new JButton("Editar usuario");
+		JButton newTrainer = new JButton("Crear entrandor");
+		JButton editTrainer = new JButton("Editar entrandor");
 		JButton eliminate = new JButton("Eliminar tu usuario");
 		buttonPanel.add(eliminate);
-		buttonPanel.add(editPlayer);
-		buttonPanel.add(newPlayer);
+		buttonPanel.add(editTrainer);
+		buttonPanel.add(newTrainer);
 		buttonPanel.add(select);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
@@ -67,6 +67,3 @@ public class startPlayer extends JFrame {
 		setVisible(true);
 	}
 }
-	
-
-
