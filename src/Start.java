@@ -63,7 +63,7 @@ public class Start extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		new Login();
         		dispose();
-        		logger.info("Se ha pulsado el botón Login.");
+        		logger.info("Pulsado el botón Login.");
 			}
 		});
         register.addActionListener(new ActionListener() {
@@ -71,7 +71,7 @@ public class Start extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				new Register();
         		dispose();
-        		logger.info("Se ha pulsado el botón Register.");
+        		logger.info("Pulsado el botón Register.");
 			}
 		});
     }
