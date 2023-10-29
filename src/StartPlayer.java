@@ -5,20 +5,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class startPlayer extends JFrame {
+public class StartPlayer extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public startPlayer() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public StartPlayer() {
+		setSize(600, 500);
 		setLocationRelativeTo(null);
-		setSize(600,400);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Inicio Jugador");
 
 		JPanel panel = new JPanel();
@@ -30,24 +31,30 @@ public class startPlayer extends JFrame {
 		title.setFont(font);
 		titlePanel.add(title);
 		
-		JPanel principalPanel = new JPanel();
-		principalPanel.setLayout(new GridBagLayout());
+		JPanel leftPrincipalPanel = new JPanel();
+		leftPrincipalPanel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.weightx = 1.0;
 		
-		JLabel text = new JLabel("Seleccione al jugador que quieres buscar");
-		JTextField searcher = new JTextField(100);
+		JLabel text = new JLabel("Seleccione al jugador que quieres buscar \n");
+		JTextField searcher = new JTextField(50);
 		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-		principalPanel.add(text,gbc);
+		gbc.anchor = GridBagConstraints.EAST;
+		leftPrincipalPanel.add(text, gbc);
 		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		principalPanel.add(searcher,gbc);
+		gbc.anchor = GridBagConstraints.EAST;
+		leftPrincipalPanel.add(searcher, gbc);
 		
-		//Añadir Imagen
+		
+		JPanel ImagePanel = new JPanel();
+		ImagePanel.setLayout(new GridBagLayout());
+        ImageIcon image = new ImageIcon("img/basket.jpg");
+        JLabel labelBasket = new JLabel(image);
+        ImagePanel.add(labelBasket, gbc);
+
 		//Añadir Buscador
 		
 		JPanel buttonPanel = new JPanel();
@@ -62,11 +69,9 @@ public class startPlayer extends JFrame {
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		add(titlePanel, BorderLayout.NORTH);
-		add(principalPanel, BorderLayout.CENTER);
+		add(leftPrincipalPanel, BorderLayout.WEST);
+		add(ImagePanel, BorderLayout.EAST);
 		add(buttonPanel, BorderLayout.SOUTH);
 		setVisible(true);
 	}
 }
-	
-
-
