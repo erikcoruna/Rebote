@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,6 +16,9 @@ import javax.swing.border.EmptyBorder;
 
 public class Start extends JFrame {
 	
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(Start.class.getName());
     private static final long serialVersionUID = 1L;
 
 	public Start() {
@@ -57,17 +61,17 @@ public class Start extends JFrame {
         login.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
-        		Login windowLogin = new Login();
-        		windowLogin.setVisible(true);
-        		setVisible(false);
+        		new Login();
+        		dispose();
+        		logger.info("Pulsado el botón Login.");
 			}
 		});
         register.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Register windowRegister = new Register();
-        		windowRegister.setVisible(true);
-        		setVisible(false);
+				new Register();
+        		dispose();
+        		logger.info("Pulsado el botón Register.");
 			}
 		});
     }

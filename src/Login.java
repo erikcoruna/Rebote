@@ -5,9 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,9 @@ import javax.swing.JTextField;
 
 public class Login extends JFrame {
 
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(Start.class.getName());
 	private static final long serialVersionUID = 1L;
 
     public Login() {
@@ -72,33 +77,53 @@ public class Login extends JFrame {
 		
 		// https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
         // Cogido la parte de los ActionListener y modificado para nuestro código.
-//		confirm.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				
-//			}
-//		});
+		confirm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón confirm.");
+			}
+		});
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Start windowStart = new Start();
-				windowStart.setVisible(true);
-				setVisible(false);
+				new Start();
+				dispose();
+				logger.info("Pulsado el botón cancel.");
 			}
 		});
-//		labelForget.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				
-//			}
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				labelForget.setForeground(Color.BLUE);
-//			}
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				labelForget.setForeground(null);
-//			}
-//		});
+		labelForget.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				logger.info("Pulsado el botón labelForget.");
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelForget.setForeground(Color.BLUE);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelForget.setForeground(null);
+			}
+		});
+		textFieldName.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		passwordFieldPassword.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
     }
 }
