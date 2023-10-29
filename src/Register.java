@@ -1,10 +1,17 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -15,6 +22,9 @@ import javax.swing.JTextField;
 
 public class Register extends JFrame {
 
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(Start.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	public Register() {
@@ -79,21 +89,62 @@ public class Register extends JFrame {
 		add(panel);
 		setVisible(true);
 		
-//		confirm.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				//CHEQUEAR QUE SE HAYA RELLENADO TODO CORRECTAMENTE
-//				//CREAR un user y registrarlo en el fichero de logger con el método toString User.logger()
-//				//fastRegister();
-//			}
-//		});
+		// https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
+        // Cogido la parte de los ActionListener y modificado para nuestro código.
+		confirm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón confirm.");
+			}
+		});
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Start windowStart = new Start();
-				windowStart.setVisible(true);
-				setVisible(false);
+				new Start();
+				dispose();
+				logger.info("Pulsado el botón cancel.");
+			}
+		});
+		textFieldName.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		passwordFieldPassword.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		passwordFieldPassword2.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		coach.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón coach.");
+			}
+		});
+		player.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón player.");
 			}
 		});
 	}

@@ -72,37 +72,37 @@ public class StartTrainer extends JFrame {
 			public void focusLost(FocusEvent e) {
 				if (searcher.getText().equals("")) {
 					searcher.setText("Buscar...");
-					logger.info("Entrado al campo de texto.");
+					logger.info("Salido del campo de texto.");
 				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				searcher.setText("");
-				logger.info("Salido del campo de texto.");
+				logger.info("Entrado al campo de texto.");
 			}
 		});
 		selectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				logger.info("Clic en el botón selectButton.");
+				logger.info("Pulsado el botón selectButton.");
 			}
 		});
 		editTrainerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				logger.info("Clic en el botón editTrainerButton.");
+				logger.info("Pulsado el botón editTrainerButton.");
 			}
 		});
 		createTrainerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				logger.info("Clic en el botón createTrainerButton.");
+				logger.info("Pulsado el botón createTrainerButton.");
 			}
 		});
 		deleteTrainerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				logger.info("Clic en el botón deleteTrainerButton.");
+				logger.info("Pulsado el botón deleteTrainerButton.");
 			}
 		});
 	}
