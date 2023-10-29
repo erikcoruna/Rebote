@@ -70,13 +70,13 @@ public class StartPlayer extends JFrame {
 			public void focusLost(FocusEvent e) {
 				if (searcher.getText().equals("")) {
 					searcher.setText("Buscar...");
-					logger.info("Entrado al campo de texto.");
+					logger.info("Salido del campo de texto.");
 				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				searcher.setText("");
-				logger.info("Salido del campo de texto.");
+				logger.info("Entrado al campo de texto.");
 			}
 		});
 	}
