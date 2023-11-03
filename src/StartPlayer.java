@@ -7,8 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -18,7 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class StartPlayer extends JFrame {
-	
+	public static void main(String[] args) {
+		new StartPlayer();
+	}
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(StartPlayer.class.getName());
@@ -58,6 +63,9 @@ public class StartPlayer extends JFrame {
 		JButton deleteUserButton = new JButton("Eliminar tu usuario");
 		deleteUserButton.setBackground(Color.RED);
 		deleteUserButton.setForeground(Color.ORANGE);
+		// ALT + x para atajo de teclado
+		deleteUserButton.setMnemonic(KeyEvent.VK_X);
+		deleteUserButton.setToolTipText("ALT + x para atajo de teclado.");
 		southPanel.add(deleteUserButton);
 		
 		add(northPanel, BorderLayout.NORTH);
