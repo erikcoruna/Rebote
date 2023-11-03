@@ -9,16 +9,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class Register extends JFrame {
 
@@ -51,7 +51,6 @@ public class Register extends JFrame {
 		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
 		JPasswordField passwordFieldPassword2 = new JPasswordField();
 		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
-		JLabel labelRole = new JLabel("Elija su rol:");
 		JRadioButton coach = new JRadioButton("Entrenador");
 		JRadioButton player = new JRadioButton("Jugador");
 
@@ -71,10 +70,17 @@ public class Register extends JFrame {
 		panel.add(new JLabel(" "), gbc);
 		panel.add(passwordFieldPassword2, gbc);
 		panel.add(new JLabel(" "), gbc);
-		panel.add(labelRole, gbc);
-		panel.add(new JLabel(" "), gbc);
-		panel.add(coach, gbc);
-		panel.add(player, gbc);
+		// Nuevo panel para meter los botones coach y player
+		JPanel rolePanel = new JPanel();
+		// Le ponemos el mismo layout que al panel principal
+		rolePanel.setLayout(new GridBagLayout());
+		// Creamos un lineBorder con título para los botones y lo añadimos al panel principal
+		Border lineBorder = BorderFactory.createLineBorder(Color.RED);
+		Border titledBorder = BorderFactory.createTitledBorder(lineBorder, "Elige tu rol");
+		rolePanel.setBorder(titledBorder);
+		rolePanel.add(coach, gbc);
+		rolePanel.add(player, gbc);
+		panel.add(rolePanel);
 		
 		for (int i = 0; i < 3; i++) {
 			panel.add(new JLabel(" "), gbc);
