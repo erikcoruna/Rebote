@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -6,6 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -20,12 +26,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class CreatePlayer extends JFrame {
-	
+	public static void main(String[] args) {
+		new CreatePlayer();
+	}
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(StartPlayer.class.getName());
 	private static final long serialVersionUID = 1L;
-
+	
 	public CreatePlayer() {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
@@ -158,11 +166,33 @@ public class CreatePlayer extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de texto dorsalNumberTextField.");
+				// IAG Erik Coruña Rodríguez_2023-11-04_13-20
+				// El código generado por IA ha sido modificado para adecuarlo a nuestra aplicación
+				DateFormat birthDateFormat = new SimpleDateFormat("dd/MM/YYYY");
+				// Para que solo admita exactamente el formato de fecha (dd/MM/YYYY)
+				birthDateFormat.setLenient(false);
+				try {
+					Date birthDate = birthDateFormat.parse(birthTextField.getText());
+					if (!isValidDate(birthDate)) {
+						birthTextField.setBackground(Color.RED);
+					}
+				} catch (ParseException pe) {
+					birthTextField.setBackground(Color.RED);
+				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				logger.info("Entrado al campo de texto dorsalNumberTextField.");
+				birthTextField.setBackground(Color.WHITE);
 			}
 		});
+	}
+	
+	// Para comprobar si una fecha es válida o no
+	public static boolean isValidDate(Date date) {
+		// Para que la fecha esté entre la fecha actual y después del año 0, mes 1 y día 1
+		Calendar minimumDate = Calendar.getInstance();
+		minimumDate.set(0, 1, 1);
+		return date.before(new Date()) && date.after(minimumDate.getTime());
 	}
 }
