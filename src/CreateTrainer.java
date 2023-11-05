@@ -14,7 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.toedter.calendar.JDateChooser;
+
 public class CreateTrainer extends JFrame {
+	public static void main(String[] args) {
+		new CreateTrainer();
+	}
 	
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
@@ -47,9 +52,11 @@ public class CreateTrainer extends JFrame {
 		JTextField surname1TextField = new JTextField(50);
 		JLabel surname2Label = new JLabel("Segundo apellido:");
 		JTextField surname2TextField = new JTextField(50);
-		//posible mejora con JList
-		JLabel birthLabel = new JLabel("Fecha nacimiento (dd/mm/aaaa): "); 
-		JTextField birthTextField = new JTextField(50);
+		//IAG Hugo Rey Insausti_2023-11-05_17-44
+		//El código generado por IA ha sido modificado para adecuarlo a nuestra aplicación
+		JLabel birthLabel = new JLabel("Fecha nacimiento: ");
+		JDateChooser birthDateChooser = new JDateChooser();
+		birthDateChooser.setDateFormatString("MMM. dd, yyyy");
 		
 		
 		gbc.gridy = 0;
@@ -75,7 +82,7 @@ public class CreateTrainer extends JFrame {
 		informationPanel.add(birthLabel, gbc);
 		gbc.gridy = 7;
 		gbc.anchor = GridBagConstraints.CENTER;
-		informationPanel.add(birthTextField, gbc);
+		informationPanel.add(birthDateChooser, gbc);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(new JButton("Guardar"));
@@ -117,7 +124,7 @@ public class CreateTrainer extends JFrame {
 				logger.info("Entrado al campo de texto surname2TextField.");
 			}
 		});
-		birthTextField.addFocusListener(new FocusListener() {
+		birthDateChooser.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de texto birthTextField.");
