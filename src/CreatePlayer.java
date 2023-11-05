@@ -7,11 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -24,6 +19,8 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.toedter.calendar.JDateChooser;
 
 public class CreatePlayer extends JFrame {
 	public static void main(String[] args) {
@@ -65,9 +62,11 @@ public class CreatePlayer extends JFrame {
 		JLabel heightLabel = new JLabel("Altura (cm):");
 		SpinnerModel valuesSpinnerNumberModel = new SpinnerNumberModel(150, 100, 250, 1);
 		JSpinner heightSpinner = new JSpinner(valuesSpinnerNumberModel);
-		//posible mejora con Jlist
-		JLabel birthLabel = new JLabel("Fecha nacimiento (dd/mm/aaaa): ");
-		JTextField birthTextField = new JTextField(50);
+		//IAG Hugo Rey Insausti_2023-11-05_17-44
+		//El código generado por IA ha sido modificado para adecuarlo a nuestra aplicación
+		JLabel birthLabel = new JLabel("Fecha nacimiento: ");
+		JDateChooser birthDateChooser = new JDateChooser();
+		birthDateChooser.setDateFormatString("MMM. dd, yyyy");
 		
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.CENTER;
@@ -104,7 +103,7 @@ public class CreatePlayer extends JFrame {
 		informationPanel.add(birthLabel, gbc);
 		gbc.gridy = 11;
 		gbc.anchor = GridBagConstraints.CENTER;
-		informationPanel.add(birthTextField, gbc);
+		informationPanel.add(birthDateChooser, gbc);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(new JButton("Guardar"));
@@ -162,7 +161,25 @@ public class CreatePlayer extends JFrame {
 				logger.info("Cambiado el valor de valuesSpinnerNumberModel.");
 			}
 		});
-		birthTextField.addFocusListener(new FocusListener() {
+		birthDateChooser.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de eleccion de fecha birthDateChooser.");
+				birthDateChooser.setBackground(Color.RED);
+				
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de eleccion de fecha dorsalNumberTextField.");
+				birthDateChooser.setBackground(Color.WHITE);
+				
+			}
+		});
+		
+		// (PROVISIONAL) CAMBIO EN LA ELECCION DE FECHAS, ESTO PODRÍA ELIMINARSE
+		
+/*		birthDateChooser.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de texto dorsalNumberTextField.");
@@ -172,18 +189,18 @@ public class CreatePlayer extends JFrame {
 				// Para que solo admita exactamente el formato de fecha (dd/MM/YYYY)
 				birthDateFormat.setLenient(false);
 				try {
-					Date birthDate = birthDateFormat.parse(birthTextField.getText());
+					Date birthDate = birthDateFormat.parse(birthDateChooser.getDate());
 					if (!isValidDate(birthDate)) {
-						birthTextField.setBackground(Color.RED);
+						birthDateChooser.setBackground(Color.RED);
 					}
 				} catch (ParseException pe) {
-					birthTextField.setBackground(Color.RED);
+					birthDateChooser.setBackground(Color.RED);
 				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				logger.info("Entrado al campo de texto dorsalNumberTextField.");
-				birthTextField.setBackground(Color.WHITE);
+				birthDateChooser.setBackground(Color.WHITE);
 			}
 		});
 	}
@@ -194,5 +211,7 @@ public class CreatePlayer extends JFrame {
 		Calendar minimumDate = Calendar.getInstance();
 		minimumDate.set(0, 1, 1);
 		return date.before(new Date()) && date.after(minimumDate.getTime());
+	*/
+		
 	}
 }
