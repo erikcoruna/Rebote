@@ -21,6 +21,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 public class Register extends JFrame {
+	public static void main(String[] args) {
+		new Register();
+	}
 
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
@@ -43,7 +46,7 @@ public class Register extends JFrame {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
-		JTextField textFieldName = new JTextField();
+		JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
 		JPasswordField passwordFieldPassword = new JPasswordField();
@@ -95,11 +98,15 @@ public class Register extends JFrame {
 		add(panel);
 		setVisible(true);
 		
+		
+		
 		// https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
         // Cogido la parte de los ActionListener y modificado para nuestro código.
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//new Start();
+				//dispose();
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -114,10 +121,14 @@ public class Register extends JFrame {
 		textFieldName.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				if (textFieldName.getText().equals("")) {
+					textFieldName.setText("Introduzca nombre de usuario...");
+				}
 				logger.info("Salido del campo de texto.");
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
+				textFieldName.setText("");
 				logger.info("Entrado al campo de texto.");
 			}
 		});
