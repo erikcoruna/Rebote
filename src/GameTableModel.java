@@ -9,9 +9,13 @@ public class GameTableModel extends AbstractTableModel {
 
 	private List<String> columnNames = Arrays.asList("ID", "Categoría", "Autor", "Puntuación", "Coordenadas");
 	private List<GameScore> gameScore;
+	private String id;
+	private String category;
 	
-	public GameTableModel(List<GameScore> gameScore) {
+	public GameTableModel(List<GameScore> gameScore, String id, String category) {
 		this.gameScore = gameScore;
+		this.id = id;
+		this.category = category;
 	}
 	
 	@Override
@@ -25,11 +29,16 @@ public class GameTableModel extends AbstractTableModel {
 	}
 
 	@Override
+	public String getColumnName(int column) {
+		return columnNames.get(column);
+	}
+	
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
-			return gameScore.get(rowIndex).getId();
+			return id;
 		} else if (columnIndex == 1) {
-			return gameScore.get(rowIndex).getCategory();
+			return category;
 		} else if (columnIndex == 2) {
 			return gameScore.get(rowIndex).getName();
 		} else if (columnIndex == 3) {
