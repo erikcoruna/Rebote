@@ -1,13 +1,21 @@
 import java.util.Date;
 
 public class User {
-	protected String name;
-	protected String passw;
-	protected String ID;
-	protected Date BDay;
-	protected String team;
+	public String name;
+	public String password;
+	public String id;
+	public Date birthDay;
+	public String country;
 	
-	//Getters y Setters
+	public User(String name, String password, String id, Date birthDay, String country) {
+		super();
+		this.name = name;
+		this.password = password;
+		this.id = id;
+		this.birthDay = birthDay;
+		this.country = country;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -16,54 +24,36 @@ public class User {
 		this.name = name;
 	}
 
-	public String getPassw() {
-		return passw;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPassw(String passw) {
-		this.passw = passw;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getID() {
-		return ID;
+	public String getId() {
+		return id;
 	}
 
-	public void setID(String ID) {
-		this.ID = ID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public Date getBDay() {
-		return BDay;
+	public Date getBirthDay() {
+		return birthDay;
 	}
 
-	public void setBDay(Date bDay) {
-		BDay = bDay;
-	}
-	
-	public String getTeam() {
-		return team;
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
 	}
 
-	public void setTeam(String team) {
-		this.team = team;
+	public String getCountry() {
+		return country;
 	}
-	
-	//es un constructor que va a crear un objeto user, que se añade a una lista de usuarios, sin tener en cuenta ningún dato además del nombre de usuario, contraseña y DNI
-	//esto lo hacemos para que el login posterior sea más rápido y sencillo
-	public User(String ID, String name, String passw) {
-		this.ID = ID;
-		this.name = name;
-		this.passw = passw;
-	}
-	
-	public String logger() {
-		return getID()+"/t"+getName()+"/t"+getPassw();
-	}
-	
-	
 
-	
-	
-	
+	public void setCountry(String country) {
+		this.country = country;
+	}
 }
 
