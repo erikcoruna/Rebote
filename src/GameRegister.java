@@ -1,8 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,10 +48,14 @@ public class GameRegister extends JFrame{
 		
 		//Crear una tabla con scroll en la que se regisgraran las acciones
 		JPanel panelTable = new JPanel();
-		String[] columnNames = {"ID", "Categoría", "Autor", "Coordenadas"};
-		DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-		JTable tableActions = new JTable(tableModel);
+		JTable tableActions = new JTable();
+		List<GameScore> gameScores = new ArrayList<>();
+		// gameScores.add(new GameScore("Erik", 2, new Point(0, 0)));
+		// gameScores.add(new GameScore("Ander", 3, new Point(1, 0)));
+		GameTableModel tableModel = new GameTableModel(gameScores, "DNI", "Primera");
 		JScrollPane scrollPane = new JScrollPane(tableActions);
+		tableActions.setModel(tableModel);
+		tableActions.setDefaultRenderer(Object.class, new GameTableRenderer());
 		panelTable.add(scrollPane);
 		
 		//Botonera con opciones en la parte de abajo a la derecha

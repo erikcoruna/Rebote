@@ -1,15 +1,23 @@
 import java.awt.Point;
 import java.util.Date;
 
-public class GameScore extends Player {
+public class GameScore {
+	public String name;
 	public int score;
 	public Point coordinates;
 	
-	public GameScore(String name, String password, String id, Date birthDay, String country, String category,
-			float height, float weight, String team, int score, Point coordinates) {
-		super(name, password, id, birthDay, country, category, height, weight, team);
+	public GameScore(String name, int score, Point coordinates) {
+		this.name = name;
 		this.score = score;
 		this.coordinates = coordinates;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getScore() {
