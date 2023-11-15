@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,7 +30,11 @@ public class Register extends JFrame {
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(Start.class.getName());
 	private static final long serialVersionUID = 1L;
-
+	
+	JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
+	JPasswordField passwordFieldPassword = new JPasswordField();
+	JPasswordField passwordFieldPassword2 = new JPasswordField();
+	
 	public Register() {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
@@ -46,13 +51,10 @@ public class Register extends JFrame {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
-		JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
-		JPasswordField passwordFieldPassword = new JPasswordField();
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
-		JPasswordField passwordFieldPassword2 = new JPasswordField();
 		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
 		JRadioButton coach = new JRadioButton("Entrenador");
 		JRadioButton player = new JRadioButton("Jugador");
@@ -105,8 +107,8 @@ public class Register extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//new Start();
-				//dispose();
+				buttonConfirmPressed();
+				
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -164,5 +166,19 @@ public class Register extends JFrame {
 				logger.info("Pulsado el botón player.");
 			}
 		});
+	}
+	
+	private void buttonConfirmPressed() {
+		String password = new String(passwordFieldPassword.getPassword());
+		String passwordConfirm = new String(passwordFieldPassword2.getPassword());
+		
+		if (password.equals(passwordConfirm)) {
+			JOptionPane.showMessageDialog(this, "Operación realizada");
+		} else {
+			JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "ERROR", JOptionPane.ERROR_MESSAGE);
+			passwordFieldPassword.setText("");
+			passwordFieldPassword2.setText("");
+		}
+		
 	}
 }
