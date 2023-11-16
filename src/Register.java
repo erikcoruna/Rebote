@@ -188,10 +188,8 @@ public class Register extends JFrame {
 		}
 		
 		if (password.equals(passwordConfirm)) {
-			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter("files\\register.csv"));
+			try (FileWriter writer = new FileWriter("files\\register.csv", true)) {
 				writer.write(trainerOrPlayer + "," + username + "," + password + "\n");
-				writer.close();
 				
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
