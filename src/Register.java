@@ -172,7 +172,7 @@ public class Register extends JFrame {
 	}
 	
 	//https://youtu.be/ScUJx4aWRi0
-	//Cogido parte de escritura en csv
+	//Cogido parte de escritura en csv y adapatado a nuestro proyecto
 	private void buttonConfirmPressed() {
 		String username = textFieldName.getText();
 		String password = new String(passwordFieldPassword.getPassword());
