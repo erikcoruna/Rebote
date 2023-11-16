@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -34,6 +37,8 @@ public class Register extends JFrame {
 	JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
 	JPasswordField passwordFieldPassword = new JPasswordField();
 	JPasswordField passwordFieldPassword2 = new JPasswordField();
+	JRadioButton coach = new JRadioButton("Entrenador");
+	JRadioButton player = new JRadioButton("Jugador");
 	
 	public Register() {
 		setSize(480, 560);
@@ -56,8 +61,6 @@ public class Register extends JFrame {
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
 		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
-		JRadioButton coach = new JRadioButton("Entrenador");
-		JRadioButton player = new JRadioButton("Jugador");
 
 		ButtonGroup grupo = new ButtonGroup();
 		grupo.add(coach);
@@ -168,12 +171,36 @@ public class Register extends JFrame {
 		});
 	}
 	
+	//https://youtu.be/ScUJx4aWRi0
+	//Cogido parte de escritura en csv
 	private void buttonConfirmPressed() {
+		String username = textFieldName.getText();
 		String password = new String(passwordFieldPassword.getPassword());
 		String passwordConfirm = new String(passwordFieldPassword2.getPassword());
+		int trainerOrPlayer = 0;
+		
+		if (coach.isSelected()) {
+			trainerOrPlayer = 1;
+		} else if (player.isSelected()) {
+			trainerOrPlayer = 0;
+		} else {
+			JOptionPane.showMessageDialog(this, "No se ha seleccionado un rol", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
 		
 		if (password.equals(passwordConfirm)) {
-			JOptionPane.showMessageDialog(this, "Operación realizada");
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter("files\\register.csv"));
+				writer.write(trainerOrPlayer + "," + username + "," + password + "\n");
+				writer.close();
+				
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			textFieldName.setText("");
+			passwordFieldPassword.setText("");
+			passwordFieldPassword2.setText("");
+			
 		} else {
 			JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "ERROR", JOptionPane.ERROR_MESSAGE);
 			passwordFieldPassword.setText("");
