@@ -9,11 +9,16 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -25,6 +30,9 @@ public class Login extends JFrame {
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(Start.class.getName());
 	private static final long serialVersionUID = 1L;
+	
+	JTextField textFieldName = new JTextField();
+	JPasswordField passwordFieldPassword = new JPasswordField();
 
     public Login() {
 		setSize(480, 560);
@@ -42,10 +50,8 @@ public class Login extends JFrame {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		
 		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
-		JTextField textFieldName = new JTextField();
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
-		JPasswordField passwordFieldPassword = new JPasswordField();
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
 		JLabel labelForget = new JLabel("¿Ha olvidado su contraseña?");
 		// https://stackoverflow.com/questions/2715118/how-to-change-the-size-of-the-font-of-a-jlabel-to-take-the-maximum-size
@@ -80,6 +86,8 @@ public class Login extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				confirmButtonPressed();
+				
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -125,5 +133,45 @@ public class Login extends JFrame {
 				logger.info("Entrado al campo de texto.");
 			}
 		});
+    }
+    
+    //https://youtu.be/ScUJx4aWRi0
+  	//Cogido parte de lectura en csv y adapatado a nuestro proyecto
+    private void confirmButtonPressed() {
+    	String username = textFieldName.getText();
+    	String password = new String(passwordFieldPassword.getPassword());
+    	int trainerOrUser = -1;
+    	
+    	if (checkValues(username, password)) {
+    		System.out.println("good");
+    	} else {
+    		System.out.println("false");
+    	}
+    	
+    	
+    }
+    
+    private boolean checkValues(String username, String password) {
+    	
+    	try (BufferedReader reader = new BufferedReader(new FileReader("files\\register.csv"))) {
+			String line;
+			
+			while ((line = reader.readLine()) != null) {
+				String[] divided = line.split(",");
+				String sameUsername = divided[1].trim();
+				String samePassword = divided[2].trim();
+				
+				if (sameUsername.equals(username) && samePassword.equals(password)) {
+					return true;
+				}
+			}
+			
+			reader.readLine();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "Error al leer el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+    	
+    	return false;
     }
 }
