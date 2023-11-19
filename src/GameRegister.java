@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 		//Vamos a poner una botonera en la parte inferior y luego dividir el resto de la ventana en dos, para que
 		//en una mitad tengamos un campo de baloncesto en el que interactuar y en la otra, una tabla en la que se

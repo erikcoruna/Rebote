@@ -10,7 +10,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -25,6 +24,10 @@ import javax.swing.JTextField;
 
 
 public class Login extends JFrame {
+	
+	public static void main(String[] args) {
+		new Login();
+	}
 
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
@@ -87,7 +90,6 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				confirmButtonPressed();
-				
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -140,13 +142,13 @@ public class Login extends JFrame {
     private void confirmButtonPressed() {
     	String username = textFieldName.getText();
     	String password = new String(passwordFieldPassword.getPassword());
-    	int trainerOrUser = -1;
     	
     	if (checkValues(username, password)) {
-    		System.out.println("good");
+    		PlayerOrTrainer();
     	} else {
-    		System.out.println("false");
+    		JOptionPane.showMessageDialog(this, "El usuario y/o contraseña no coincide", "ERROR", JOptionPane.ERROR_MESSAGE);
     	}
+    		
     	
     	
     }
@@ -168,10 +170,33 @@ public class Login extends JFrame {
 			
 			reader.readLine();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "Error al leer el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
     	
     	return false;
+    }
+    
+    private void PlayerOrTrainer() {
+    	try (BufferedReader reader = new BufferedReader(new FileReader("files\\register.csv"))) {
+			String line;
+			
+			while ((line = reader.readLine()) != null) {
+				String[] divided = line.split(",");
+				String samePlayerOrTrainer = divided[0].trim();
+				
+				if (samePlayerOrTrainer.equals("0")) {
+					new HomeTrainer();
+					dispose();
+				} else if (samePlayerOrTrainer.equals("1")) {
+					new HomePlayer();
+					dispose();
+				}
+			}
+			reader.readLine();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
     }
 }
