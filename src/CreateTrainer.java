@@ -156,7 +156,7 @@ public class CreateTrainer extends JFrame {
 		String username = nameTextField.getText();
 		String surname1 = surname1TextField.getText();
 		String surname2 = surname2TextField.getText();
-		java.util.Date date = birthDateChooser.getDate();
+		String date = birthDateChooser.getDateFormatString();
 		
 		try (FileWriter writer = new FileWriter("files\\trainers.csv", true)){
 			writer.write(username + "," + surname1 + "," + surname2 + "," + date);
