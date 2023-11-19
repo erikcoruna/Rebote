@@ -110,8 +110,6 @@ public class Register extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buttonConfirmPressed();
-				new Start();
-				dispose();
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -190,6 +188,8 @@ public class Register extends JFrame {
 		if (password.equals(passwordConfirm)) {
 			try (FileWriter writer = new FileWriter("files\\register.csv", true)) {
 				writer.write(trainerOrPlayer + "," + username + "," + password + "\n");
+				new Start();
+				dispose();
 				
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
