@@ -115,7 +115,7 @@ public class CreatePlayer extends JFrame {
 		JPanel buttonPanel = new JPanel();
 		JButton saveButton = new JButton("Guardar");
 		buttonPanel.add(saveButton);
-		JButton cancelButton = new JButton("Guardar");
+		JButton cancelButton = new JButton("Cancelar");
 		buttonPanel.add(cancelButton);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
@@ -241,9 +241,16 @@ public class CreatePlayer extends JFrame {
 		
 		try (FileWriter writer = new FileWriter("files\\players.csv", true)){
 			writer.write(username + "," + surname1 + "," + surname2 + "," + dorsalNumber + "," + height + "," + date);
+			
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "No se ha podido guardar en el fichero", "ERROR", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		
+		nameTextField.setText("");
+		surname1TextField.setText("");
+		surname2TextField.setText("");
+		dorsalNumberTextField.setText("");
+		heightSpinner.setValue(150);
 	}
 }

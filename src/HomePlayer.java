@@ -38,11 +38,6 @@ public class HomePlayer extends JFrame {
        //	panelTeam.add(tableTeammates);
        // }
 		tabbedPanel.addTab("Tu equipo", scrollPaneTeam);
-		
-		
-		
-        
-        
 
         JPanel panelSearch = new JPanel();
         panelSearch.add(new JLabel("Buscador de otros jugadores y equipos"));
