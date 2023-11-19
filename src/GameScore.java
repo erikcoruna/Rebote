@@ -1,5 +1,4 @@
-import java.awt.Point;
-import java.util.Date;
+import java.awt.Point;;
 
 public class GameScore {
 	public String name;
