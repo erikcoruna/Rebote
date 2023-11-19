@@ -5,13 +5,18 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -30,6 +35,14 @@ public class CreatePlayer extends JFrame {
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(StartPlayer.class.getName());
 	private static final long serialVersionUID = 1L;
+	
+	JTextField nameTextField = new JTextField(50);
+	JTextField surname1TextField = new JTextField(50);
+	JTextField surname2TextField = new JTextField(50);
+	JTextField dorsalNumberTextField = new JTextField(50);
+	JDateChooser birthDateChooser = new JDateChooser();
+	SpinnerModel valuesSpinnerNumberModel = new SpinnerNumberModel(150, 100, 250, 1);
+	JSpinner heightSpinner = new JSpinner(valuesSpinnerNumberModel);
 	
 	public CreatePlayer() {
 		setSize(480, 560);
@@ -52,20 +65,14 @@ public class CreatePlayer extends JFrame {
 		gbc.weightx = 1.0;
 		
 		JLabel nameLabel = new JLabel("Nombre:");
-		JTextField nameTextField = new JTextField(50);
 		JLabel surname1Label = new JLabel("Primer apellido:");
-		JTextField surname1TextField = new JTextField(50);
 		JLabel surname2Label = new JLabel("Segundo apellido:");
-		JTextField surname2TextField = new JTextField(50);
 		JLabel dorsalNumber = new JLabel("Numero de dorsal:");
-		JTextField dorsalNumberTextField = new JTextField(50);
 		JLabel heightLabel = new JLabel("Altura (cm):");
-		SpinnerModel valuesSpinnerNumberModel = new SpinnerNumberModel(150, 100, 250, 1);
-		JSpinner heightSpinner = new JSpinner(valuesSpinnerNumberModel);
+		
 		//IAG Hugo Rey Insausti_2023-11-05_17-44
 		//El código generado por IA ha sido modificado para adecuarlo a nuestra aplicación
 		JLabel birthLabel = new JLabel("Fecha nacimiento: ");
-		JDateChooser birthDateChooser = new JDateChooser();
 		birthDateChooser.setDateFormatString("MMM. dd, yyyy");
 		
 		gbc.gridy = 0;
@@ -106,14 +113,23 @@ public class CreatePlayer extends JFrame {
 		informationPanel.add(birthDateChooser, gbc);
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(new JButton("Guardar"));
-		buttonPanel.add(new JButton("Cancelar"));
+		JButton saveButton = new JButton("Guardar");
+		buttonPanel.add(saveButton);
+		JButton cancelButton = new JButton("Guardar");
+		buttonPanel.add(cancelButton);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		add(titlePanel, BorderLayout.NORTH);
 		add(informationPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 		setVisible(true);
+		
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				savePlayer();
+			}
+		});
 		
 		nameTextField.addFocusListener(new FocusListener() {
 			@Override
@@ -213,5 +229,21 @@ public class CreatePlayer extends JFrame {
 		return date.before(new Date()) && date.after(minimumDate.getTime());
 	*/
 		
+	}
+	
+	private void savePlayer() {
+		String username = nameTextField.getText();
+		String surname1 = surname1TextField.getText();
+		String surname2 = surname2TextField.getText();
+		String dorsalNumber = dorsalNumberTextField.getText();
+		int height = Integer.parseInt(heightSpinner.getValue().toString());
+		java.util.Date date = birthDateChooser.getDate();
+		
+		try (FileWriter writer = new FileWriter("files\\players.csv", true)){
+			writer.write(username + "," + surname1 + "," + surname2 + "," + dorsalNumber + "," + height + "," + date);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "No se ha podido guardar en el fichero", "ERROR", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 }
