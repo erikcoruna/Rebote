@@ -6,6 +6,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry exported="true" kind="lib" path="jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="libraries/assertj-core-3.17.2.jar"/>
+	<classpathentry kind="lib" path="libraries/assertj-swing-3.17.1.jar"/>
+	<classpathentry kind="lib" path="libraries/fest-util-1.2.5.jar"/>
+	<classpathentry kind="lib" path="libraries/jcalendar-1.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

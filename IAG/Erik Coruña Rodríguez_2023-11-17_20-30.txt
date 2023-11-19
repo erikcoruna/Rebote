@@ -1,0 +1,657 @@
+Eres un programador de Java. Hazme el test unitario (JUnit) del siguiente codigo:
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+
+public class Register extends JFrame {
+	public static void main(String[] args) {
+		new Register();
+	}
+
+	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
+	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
+	Logger logger = Logger.getLogger(Start.class.getName());
+	private static final long serialVersionUID = 1L;
+	
+	JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
+	JPasswordField passwordFieldPassword = new JPasswordField();
+	JPasswordField passwordFieldPassword2 = new JPasswordField();
+	JRadioButton coach = new JRadioButton("Entrenador");
+	JRadioButton player = new JRadioButton("Jugador");
+	
+	public Register() {
+		setSize(480, 560);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Registrarse");
+
+		// https://stackoverflow.com/questions/42964669/placing-button-panel-in-center-java-swing
+        // Se ha modificado parte del código para adecuarlo a nuestro proyecto con los botones y textos necesarios.
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
+		textFieldName.setPreferredSize(new Dimension(300, 20));
+		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
+		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
+		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
+		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
+
+		ButtonGroup grupo = new ButtonGroup();
+		grupo.add(coach);
+		grupo.add(player);
+
+		panel.add(labelName, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(textFieldName, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(labelPassword, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(passwordFieldPassword, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(labelPassword2, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(passwordFieldPassword2, gbc);
+		panel.add(new JLabel(" "), gbc);
+		// Nuevo panel para meter los botones coach y player
+		JPanel rolePanel = new JPanel();
+		// Le ponemos el mismo layout que al panel principal
+		rolePanel.setLayout(new GridBagLayout());
+		// Creamos un lineBorder con título para los botones y lo añadimos al panel principal
+		Border lineBorder = BorderFactory.createLineBorder(Color.RED);
+		Border titledBorder = BorderFactory.createTitledBorder(lineBorder, "Elige tu rol");
+		rolePanel.setBorder(titledBorder);
+		rolePanel.add(coach, gbc);
+		rolePanel.add(player, gbc);
+		panel.add(rolePanel);
+		
+		for (int i = 0; i < 3; i++) {
+			panel.add(new JLabel(" "), gbc);
+		}
+
+		JButton confirm = new JButton("Confirmar");
+		JButton cancel = new JButton("Cancelar");
+		
+		panel.add(confirm, gbc);
+		panel.add(cancel, gbc);
+		
+		add(panel);
+		setVisible(true);
+		
+		
+		
+		// https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
+        // Cogido la parte de los ActionListener y modificado para nuestro código.
+		confirm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buttonConfirmPressed();
+				new Start();
+				dispose();
+				logger.info("Pulsado el botón confirm.");
+			}
+		});
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Start();
+				dispose();
+				logger.info("Pulsado el botón cancel.");
+			}
+		});
+		textFieldName.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textFieldName.getText().equals("")) {
+					textFieldName.setText("Introduzca nombre de usuario...");
+				}
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				textFieldName.setText("");
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		passwordFieldPassword.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		passwordFieldPassword2.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		coach.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón coach.");
+			}
+		});
+		player.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Pulsado el botón player.");
+			}
+		});
+	}
+	
+	//https://youtu.be/ScUJx4aWRi0
+	//Cogido parte de escritura en csv y adapatado a nuestro proyecto
+	private void buttonConfirmPressed() {
+		String username = textFieldName.getText();
+		String password = new String(passwordFieldPassword.getPassword());
+		String passwordConfirm = new String(passwordFieldPassword2.getPassword());
+		int trainerOrPlayer = 0;
+		
+		if (coach.isSelected()) {
+			trainerOrPlayer = 1;
+		} else if (player.isSelected()) {
+			trainerOrPlayer = 0;
+		} else {
+			JOptionPane.showMessageDialog(this, "No se ha seleccionado un rol", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if (password.equals(passwordConfirm)) {
+			try (FileWriter writer = new FileWriter("files\\register.csv", true)) {
+				writer.write(trainerOrPlayer + "," + username + "," + password + "\n");
+				
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			textFieldName.setText("");
+			passwordFieldPassword.setText("");
+			passwordFieldPassword2.setText("");
+			
+		} else {
+			JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "ERROR", JOptionPane.ERROR_MESSAGE);
+			passwordFieldPassword.setText("");
+			passwordFieldPassword2.setText("");
+		}
+		
+	}
+}
+
+3 / 3
+
+ChatGPT
+To write JUnit tests for the provided code, you need to test the buttonConfirmPressed method, which is responsible for handling the user registration logic. Below is an example of a JUnit test class for the Register class:
+
+java
+Copy code
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // Test case 1: Matching passwords and a role selected
+        register.textFieldName.setText("testUser");
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(true);
+
+        register.buttonConfirmPressed();
+
+        // Add assertions based on your expected behavior
+        // For example, you can check if the CSV file has been updated or if the fields are cleared.
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        register.buttonConfirmPressed();
+
+        // Add assertions based on your expected behavior
+
+        // Test case 3: No role selected
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(false);
+        register.player.setSelected(false);
+
+        register.buttonConfirmPressed();
+
+        // Add assertions based on your expected behavior
+    }
+}
+Note that this is a basic example, and you should customize the test cases based on the expected behavior of your application. You might need to modify the Register class to make it more testable, for example, by extracting the logic from the buttonConfirmPressed method into a separate class or method that can be tested independently.
+
+User
+Añademe asserts de prueba para cada caso que has creado.
+ChatGPT
+Certainly! Here's an updated version of the JUnit test class with assertions for each test case:
+
+java
+Copy code
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // Test case 1: Matching passwords and a role selected
+        register.textFieldName.setText("testUser");
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(true);
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 1
+        // For example, you can check if the CSV file has been updated or if the fields are cleared.
+        // In this example, we assume that the CSV file is updated, so we check if it is not empty.
+        assertFalse("CSV file should be updated", readFile("files\\register.csv").isEmpty());
+        assertEquals("Username field should be cleared", "", register.textFieldName.getText());
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 2
+        // For example, you can check if an error message is displayed or if the password fields are cleared.
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+
+        // Test case 3: No role selected
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(false);
+        register.player.setSelected(false);
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 3
+        // For example, you can check if an error message is displayed or if the password fields are cleared.
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // Helper method to read the content of a file
+    private String readFile(String filePath) {
+        // Implement this method based on your file reading logic
+        return ""; // Placeholder value, replace it with your actual implementation
+    }
+}
+Note: The readFile method is a placeholder, and you should replace it with your actual file reading logic based on your application structure.
+
+User
+En la linea "assertFalse("CSV file should be updated", readFile("files\\register.csv").isEmpty());" no existe readFile
+ChatGPT
+I apologize for the confusion. You're correct; the readFile method was a placeholder, and I should have made that clear. You need to implement the readFile method based on your actual file reading logic. If you're using Java's standard libraries, you can use Files.readAllLines to read the contents of a file.
+
+Here's an updated version of the test class with a more complete example of the readFile method using Java's standard libraries:
+
+java
+Copy code
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // Test case 1: Matching passwords and a role selected
+        register.textFieldName.setText("testUser");
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(true);
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 1
+        assertFalse("CSV file should be updated", readFile("files\\register.csv").isEmpty());
+        assertEquals("Username field should be cleared", "", register.textFieldName.getText());
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 2
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+
+        // Test case 3: No role selected
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(false);
+        register.player.setSelected(false);
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 3
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // Helper method to read the content of a file
+    private List<String> readFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return List.of(); // Return an empty list if an exception occurs
+        }
+    }
+}
+Make sure to update the readFile method with your actual file path and handling logic.
+
+User
+Cuando se hace el segundo test, salta un JOptionPane de error porque las contraseñas no coinciden. Como puedo darle al boton de "Aceptar" automaticamente para que se cierre?
+
+3 / 3
+
+ChatGPT
+En los entornos de prueba, especialmente para pruebas de unidad, es común utilizar un enfoque que permita simular interacciones del usuario de manera programática. En este caso, como estás tratando con un JOptionPane que muestra un mensaje de error, puedes usar una biblioteca como FEST Swing o AssertJ Swing para automatizar las interacciones con los componentes de la interfaz de usuario Swing.
+
+A continuación, te proporcionaré un ejemplo simple utilizando AssertJ Swing para simular la interacción con el JOptionPane. Asegúrate de incluir la biblioteca assertj-swing en tu proyecto.
+
+java
+Copy code
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.DialogFixture;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // Test case 1: Matching passwords and a role selected
+        // (Assuming successful registration without error)
+        register.textFieldName.setText("testUser");
+        register.passwordFieldPassword.setText("password");
+        register.passwordFieldPassword2.setText("password");
+        register.coach.setSelected(true);
+
+        register.buttonConfirmPressed();
+
+        // Assertions for test case 1
+        assertFalse("CSV file should be updated", readFile("files\\register.csv").isEmpty());
+        assertEquals("Username field should be cleared", "", register.textFieldName.getText());
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        // Create a robot for simulated UI interactions
+        Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
+
+        // Execute the buttonConfirmPressed method, which will show a JOptionPane
+        register.buttonConfirmPressed();
+
+        // Simulate clicking the "OK" button on the JOptionPane
+        DialogFixture dialog = robot.dialog("ERROR");
+        dialog.button().click();
+
+        // Assertions for test case 2
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // Helper method to read the content of a file
+    private List<String> readFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return List.of(); // Return an empty list if an exception occurs
+        }
+    }
+}
+En este ejemplo, estamos utilizando AssertJ Swing para simular la interacción con el cuadro de diálogo de error (JOptionPane). Este enfoque puede variar según la biblioteca de prueba que elijas, así que asegúrate de consultar la documentación correspondiente para obtener información más detallada.
+
+User
+En la linea de "DialogFixture dialog = robot.dialog("ERROR");" da error.
+
+3 / 3
+
+ChatGPT
+Lamento la confusión. Parece que me equivoqué en la forma en que asumí que el cuadro de diálogo se llamaría "ERROR". Debes ajustar esta parte de acuerdo con cómo estás mostrando el cuadro de diálogo de error en tu aplicación.
+
+Si el cuadro de diálogo se muestra con el título "ERROR", puedes intentar con:
+
+java
+Copy code
+DialogFixture dialog = robot.dialog("ERROR");
+Si el título del cuadro de diálogo es más específico o diferente, debes ajustar la cadena que se pasa a robot.dialog() en consecuencia. Si aún no puedes identificarlo correctamente, puedes utilizar:
+
+java
+Copy code
+DialogFixture dialog = robot.dialog();
+Esto debería tomar el primer cuadro de diálogo que encuentre. Sin embargo, ten en cuenta que esto solo funcionará si no hay otros cuadros de diálogo abiertos en ese momento.
+
+Si puedes proporcionar más detalles sobre cómo se llama exactamente el cuadro de diálogo en tu aplicación o cualquier otro detalle específico sobre cómo se presenta, podré ayudarte mejor.
+
+User
+No existe el metodo .dialog() para la variable robot.
+ChatGPT
+Mis disculpas por la confusión. Si DialogFixture no tiene un método .dialog() en tu versión de AssertJ Swing, puedes intentar utilizar el método .target() para obtener el cuadro de diálogo actual. Aquí hay una versión actualizada del código:
+
+java
+Copy code
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.DialogFixture;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // ... (Código anterior)
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        // Create a robot for simulated UI interactions
+        Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
+
+        // Execute the buttonConfirmPressed method, which will show a JOptionPane
+        register.buttonConfirmPressed();
+
+        // Simulate clicking the "OK" button on the JOptionPane
+        DialogFixture dialog = new DialogFixture(robot, robot.target());
+        dialog.button().click();
+
+        // Assertions for test case 2
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // ... (Resto del código)
+}
+En este código, robot.target() debería devolver el componente actual en el enfoque, que sería el cuadro de diálogo en este caso. Sin embargo, ten en cuenta que la disponibilidad de métodos puede depender de la versión específica de AssertJ Swing que estás utilizando.
+
+Si sigues teniendo problemas, verifica la documentación o los recursos en línea de AssertJ Swing para tu versión específica y ajusta el código en consecuencia.
+
+User
+el metodo .target() no existe para la variable robot.
+ChatGPT
+Mis disculpas por la confusión. Parece que no hay un método directo para obtener el cuadro de diálogo en AssertJ Swing. Podemos abordar esto de una manera diferente utilizando el método robot.finder() para buscar componentes en el contenedor raíz y luego identificar el cuadro de diálogo que coincide con ciertos criterios.
+
+Aquí hay una versión actualizada del código:
+
+java
+Copy code
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.FrameFixture;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // ... (Código anterior)
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        // Create a robot for simulated UI interactions
+        Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
+
+        // Execute the buttonConfirmPressed method, which will show a JOptionPane
+        register.buttonConfirmPressed();
+
+        // Find the error dialog by title
+        DialogFixture dialog = findDialog(robot, "ERROR");
+
+        // Simulate clicking the "OK" button on the JOptionPane
+        dialog.button().click();
+
+        // Assertions for test case 2
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // Helper method to find a dialog by title
+    private DialogFixture findDialog(Robot robot, String title) {
+        return new DialogFixture(robot, robot.finder().find(DialogMatcher.withTitle(title).andShowing()));
+    }
+
+    // ... (Resto del código)
+}
+En este código, hemos introducido un nuevo método findDialog que utiliza el robot.finder() para buscar el cuadro de diálogo por título. Asegúrate de que el título "ERROR" coincida con el título real del cuadro de diálogo de error en tu aplicación.
+
+Si aún encuentras problemas, verifica la documentación de AssertJ Swing o considera buscar soluciones específicas para la versión que estás utilizando.
+
+
+2 / 2
+
+User
+haz que cuando salga el JOptionPane con el mensaje de error el robot le de clic al boton "Aceptar".
+
+5 / 5
+
+ChatGPT
+Para automatizar el clic en el botón "Aceptar" del JOptionPane cuando se muestra el mensaje de error, puedes usar la clase org.assertj.swing.core.matcher.JButtonMatcher. Aquí hay una versión actualizada del código para lograr eso:
+
+java
+Copy code
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.DialogFixture;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class RegisterTest {
+
+    @Test
+    public void testButtonConfirmPressed() {
+        Register register = new Register();
+
+        // ... (Código anterior)
+
+        // Test case 2: Non-matching passwords
+        register.passwordFieldPassword.setText("password1");
+        register.passwordFieldPassword2.setText("password2");
+
+        // Create a robot for simulated UI interactions
+        Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
+
+        // Execute the buttonConfirmPressed method, which will show a JOptionPane
+        register.buttonConfirmPressed();
+
+        // Find the error dialog by title
+        DialogFixture dialog = findDialog(robot, "ERROR");
+
+        // Simulate clicking the "Aceptar" button on the JOptionPane
+        dialog.button(withText("Aceptar")).click();
+
+        // Assertions for test case 2
+        assertEquals("Password field should be cleared", "", new String(register.passwordFieldPassword.getPassword()));
+        assertEquals("Password confirm field should be cleared", "", new String(register.passwordFieldPassword2.getPassword()));
+    }
+
+    // Helper method to find a dialog by title
+    private DialogFixture findDialog(Robot robot, String title) {
+        return new DialogFixture(robot, robot.finder().find(DialogMatcher.withTitle(title).andShowing()));
+    }
+
+    // Helper method to create a JButtonMatcher with text
+    private JButtonMatcher withText(String buttonText) {
+        return JButtonMatcher.withText(buttonText).andShowing();
+    }
+
+    // ... (Resto del código)
+}
+Este código utiliza JButtonMatcher para encontrar el botón "Aceptar" en el JOptionPane y luego simula hacer clic en él. Asegúrate de ajustar la cadena "Aceptar" de acuerdo con el texto real del botón en tu aplicación.
