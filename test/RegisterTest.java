@@ -13,6 +13,8 @@ public class RegisterTest {
 
 	private Register register;
 	
+	// Erik Coruña Rodríguez_2023-11-17_20-30
+	// Se han hecho algunas modificaciones respecto a las respuestas de ChatGPT
     @Test
     public void testButtonConfirmPressed() {
         register = new Register();
