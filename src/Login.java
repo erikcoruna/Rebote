@@ -186,7 +186,8 @@ public class Login extends JFrame {
 				String samePlayerOrTrainer = divided[0].trim();
 				
 				if (samePlayerOrTrainer.equals("0")) {
-					new HomeTrainer(); 
+					new HomeTrainer();
+					dispose();
 				} else if (samePlayerOrTrainer.equals("1")) {
 					new HomePlayer();
 					dispose();
