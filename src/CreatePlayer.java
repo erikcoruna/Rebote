@@ -11,6 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -182,75 +183,37 @@ public class CreatePlayer extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de eleccion de fecha birthDateChooser.");
-				birthDateChooser.setBackground(Color.RED);
-				
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				logger.info("Entrado al campo de eleccion de fecha dorsalNumberTextField.");
-				birthDateChooser.setBackground(Color.WHITE);
-				
-			}
-		});
-		
-		// (PROVISIONAL) CAMBIO EN LA ELECCION DE FECHAS, ESTO PODRÍA ELIMINARSE
-		
-/*		birthDateChooser.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto dorsalNumberTextField.");
-				// IAG Erik Coruña Rodríguez_2023-11-04_13-20
-				// El código generado por IA ha sido modificado para adecuarlo a nuestra aplicación
-				DateFormat birthDateFormat = new SimpleDateFormat("dd/MM/YYYY");
-				// Para que solo admita exactamente el formato de fecha (dd/MM/YYYY)
-				birthDateFormat.setLenient(false);
-				try {
-					Date birthDate = birthDateFormat.parse(birthDateChooser.getDate());
-					if (!isValidDate(birthDate)) {
-						birthDateChooser.setBackground(Color.RED);
-					}
-				} catch (ParseException pe) {
-					birthDateChooser.setBackground(Color.RED);
-				}
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto dorsalNumberTextField.");
-				birthDateChooser.setBackground(Color.WHITE);
 			}
 		});
 	}
 	
-	// Para comprobar si una fecha es válida o no
-	public static boolean isValidDate(Date date) {
-		// Para que la fecha esté entre la fecha actual y después del año 0, mes 1 y día 1
-		Calendar minimumDate = Calendar.getInstance();
-		minimumDate.set(0, 1, 1);
-		return date.before(new Date()) && date.after(minimumDate.getTime());
-	*/
-		
-	}
-	
-	private void savePlayer() {
+	public void savePlayer() {
 		String username = nameTextField.getText();
 		String surname1 = surname1TextField.getText();
 		String surname2 = surname2TextField.getText();
 		String dorsalNumber = dorsalNumberTextField.getText();
 		int height = Integer.parseInt(heightSpinner.getValue().toString());
-		java.util.Date date = birthDateChooser.getDate();
+		Date date = birthDateChooser.getDate();
 		
-		try (FileWriter writer = new FileWriter("files\\players.csv", true)){
-			writer.write(username + "," + surname1 + "," + surname2 + "," + dorsalNumber + "," + height + "," + date);
-			
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "No se ha podido guardar en el fichero", "ERROR", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+		if (!username.isEmpty() && !surname1.isEmpty() && !surname2.isEmpty() && !dorsalNumber.isEmpty() && date != null) {
+			try (FileWriter writer = new FileWriter("files\\players.csv", true)) {
+				writer.write(username + "," + surname1 + "," + surname2 + "," + dorsalNumber + "," + height + "," + date);
+				nameTextField.setText("");
+				surname1TextField.setText("");
+				surname2TextField.setText("");
+				dorsalNumberTextField.setText("");
+				heightSpinner.setValue(150);
+				birthDateChooser.setDate(null);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el fichero", "ERROR", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Es necesario rellenar todos los campos.");
 		}
-		
-		nameTextField.setText("");
-		surname1TextField.setText("");
-		surname2TextField.setText("");
-		dorsalNumberTextField.setText("");
-		heightSpinner.setValue(150);
 	}
 }
