@@ -1,54 +1,44 @@
-import java.util.Arrays;
-import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
 
 public class GameTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
-
-	private List<String> columnNames = Arrays.asList("ID", "Categoría", "Autor", "Puntuación", "Coordenadas");
-	private List<GameScore> gameScore;
-	private String id;
-	private String category;
 	
-	public GameTableModel(List<GameScore> gameScore, String id, String category) {
-		this.gameScore = gameScore;
-		this.id = id;
-		this.category = category;
+	private Object[] columnNames;
+	private GameScore[] data;
+	
+	public GameTableModel(Object[] columnNames, GameScore[] data) {
+		this.columnNames = columnNames;
+		this.data = data;
 	}
 	
 	@Override
 	public int getRowCount() {
-		return gameScore.size();
+		return data.length;
 	}
 
 	@Override
 	public int getColumnCount() {
-		return columnNames.size();
+		return columnNames.length;
 	}
 
 	@Override
 	public String getColumnName(int column) {
-		return columnNames.get(column);
+		return (String) columnNames[column];
 	}
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
-			return id;
+			return data[rowIndex].getId();
 		} else if (columnIndex == 1) {
-			return category;
+			return data[rowIndex].getCategory();
 		} else if (columnIndex == 2) {
-			return gameScore.get(rowIndex).getName();
+			return data[rowIndex].getName();
 		} else if (columnIndex == 3) {
-			return gameScore.get(rowIndex).getScore();
+			return data[rowIndex].getScore();
 		} else {
-			return gameScore.get(rowIndex).getCoordinates();
+			return data[rowIndex].getCoordinates();
 		}
-	}
-	
-	public void removeRow(int rowIndex) {
-		gameScore.remove(rowIndex);
 	}
 }
