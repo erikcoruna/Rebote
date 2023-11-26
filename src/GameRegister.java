@@ -1,9 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,9 +22,6 @@ import javax.swing.JTable;
 		//van registrando todas las acciones que se registran
 public class GameRegister extends JFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	public static void main(String[] args) {
@@ -44,16 +43,20 @@ public class GameRegister extends JFrame{
 		JLabel labelGame = new JLabel(field);
 		panelGame.add(labelGame);
 		
-		//Crear una tabla con scroll en la que se regisgraran las acciones
+		// Crear una tabla con scroll en la que se regisgraran las acciones
 		JPanel panelTable = new JPanel();
+		Object[] columnNames = {"id", "category", "autor", "score", "coordinates"};
+		GameScore[] data = {
+				new GameScore("11112222A", "1A", "Erik", 2, new Point(0, 0)),
+				new GameScore("33334444B", "2B", "Ander", 3, new Point(1, 0))
+		};
+		
 		JTable tableActions = new JTable();
-		List<GameScore> gameScores = new ArrayList<>();
-		// gameScores.add(new GameScore("Erik", 2, new Point(0, 0)));
-		// gameScores.add(new GameScore("Ander", 3, new Point(1, 0)));
-		GameTableModel tableModel = new GameTableModel(gameScores, "DNI", "Primera");
+		GameTableModel tableModel = new GameTableModel(columnNames, data);
 		JScrollPane scrollPane = new JScrollPane(tableActions);
 		tableActions.setModel(tableModel);
 		tableActions.setDefaultRenderer(Object.class, new GameTableRenderer());
+		tableActions.getTableHeader().setDefaultRenderer(new GameTableHeaderRenderer());
 		panelTable.add(scrollPane);
 		
 		//Botonera con opciones en la parte de abajo a la derecha
