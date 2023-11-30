@@ -7,7 +7,7 @@ public class User {
 	public String secondSurname;
 	public String password;
 	public String id;
-	public Date birthDay;
+	public Date birthDate;
 	public String country;
 	
 	public User(String name, String firstSurname, String secondSurname, String password, String id, Date birthDay, String country) {
@@ -17,7 +17,7 @@ public class User {
 		this.secondSurname = secondSurname;
 		this.password = password;
 		this.id = id;
-		this.birthDay = birthDay;
+		this.birthDate = birthDate;
 		this.country = country;
 	}
 
@@ -62,11 +62,11 @@ public class User {
 	}
 
 	public Date getBirthDay() {
-		return birthDay;
+		return birthDate;
 	}
 
 	public void setBirthDay(Date birthDay) {
-		this.birthDay = birthDay;
+		this.birthDate = birthDay;
 	}
 
 	public String getCountry() {
