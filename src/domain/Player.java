@@ -7,9 +7,9 @@ public class Player extends User {
 	public float weight;
 	public String team;
 	
-	public Player(String name, String password, String id, Date birthDay, String country, String category, float height,
+	public Player(String name, String firstSurname, String secondSurname, String password, String id, Date birthDay, String country, String category, float height,
 			float weight, String team) {
-		super(name, password, id, birthDay, country);
+		super(name, firstSurname, secondSurname, password, id, birthDay, country);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;

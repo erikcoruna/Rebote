@@ -3,14 +3,18 @@ import java.util.Date;
 
 public class User {
 	public String name;
+	public String firstSurname;
+	public String secondSurname;
 	public String password;
 	public String id;
 	public Date birthDay;
 	public String country;
 	
-	public User(String name, String password, String id, Date birthDay, String country) {
+	public User(String name, String firstSurname, String secondSurname, String password, String id, Date birthDay, String country) {
 		super();
 		this.name = name;
+		this.firstSurname = firstSurname;
+		this.secondSurname = secondSurname;
 		this.password = password;
 		this.id = id;
 		this.birthDay = birthDay;
@@ -23,6 +27,22 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getFirstSurname() {
+		return firstSurname;
+	}
+
+	public void setFirstSurname(String firstSurname) {
+		this.firstSurname = firstSurname;
+	}
+
+	public String getSecondSurname() {
+		return secondSurname;
+	}
+
+	public void setSecondSurname(String secondSurname) {
+		this.secondSurname = secondSurname;
 	}
 
 	public String getPassword() {
