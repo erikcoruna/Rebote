@@ -13,6 +13,8 @@ import java.util.List;
 import domain.User;
 
 public class DBManager {
+	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
+	// Se han modificado algunas líneas respecto al código.
 	private Connection connection = null;
 	
 	// Establece conexión con la base de datos
