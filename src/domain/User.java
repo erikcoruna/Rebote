@@ -10,7 +10,7 @@ public class User {
 	public Date birthDate;
 	public String country;
 	
-	public User(String name, String firstSurname, String secondSurname, String password, String id, Date birthDay, String country) {
+	public User(String name, String firstSurname, String secondSurname, String password, String id, Date birthDate, String country) {
 		super();
 		this.name = name;
 		this.firstSurname = firstSurname;
@@ -61,12 +61,12 @@ public class User {
 		this.id = id;
 	}
 
-	public Date getBirthDay() {
+	public Date getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDay(Date birthDay) {
-		this.birthDate = birthDay;
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	public String getCountry() {
