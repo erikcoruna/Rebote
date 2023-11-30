@@ -1,24 +1,40 @@
 package domain;
-import java.util.Date;
 
 public class User {
+	private int id = -1;
 	public String name;
 	public String firstSurname;
 	public String secondSurname;
 	public String password;
-	public String id;
-	public Date birthDate;
+	public String birthDate;
 	public String country;
 	
-	public User(String name, String firstSurname, String secondSurname, String password, String id, Date birthDate, String country) {
+	public User(String name, String firstSurname, String secondSurname, String password, String birthDate, String country) {
 		super();
 		this.name = name;
 		this.firstSurname = firstSurname;
 		this.secondSurname = secondSurname;
 		this.password = password;
-		this.id = id;
 		this.birthDate = birthDate;
 		this.country = country;
+	}
+	
+	public User() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", firstSurname=" + firstSurname + ", secondSurname="
+				+ secondSurname + ", password=" + password + ", birthDate=" + birthDate + ", country=" + country + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -53,19 +69,11 @@ public class User {
 		this.password = password;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Date getBirthDate() {
+	public String getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
 

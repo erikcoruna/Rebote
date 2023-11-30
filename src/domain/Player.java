@@ -1,5 +1,4 @@
 package domain;
-import java.util.Date;
 
 public class Player extends User {
 	public String category;
@@ -7,9 +6,9 @@ public class Player extends User {
 	public float weight;
 	public String team;
 	
-	public Player(String name, String firstSurname, String secondSurname, String password, String id, Date birthDate, String country, String category, float height,
+	public Player(int id, String name, String firstSurname, String secondSurname, String password, String birthDate, String country, String category, float height,
 			float weight, String team) {
-		super(name, firstSurname, secondSurname, password, id, birthDate, country);
+		super(name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
