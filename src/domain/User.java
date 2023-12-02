@@ -1,15 +1,17 @@
 package domain;
 
+import java.util.GregorianCalendar;
+
 public class User {
 	private int id = -1;
 	public String name;
 	public String firstSurname;
 	public String secondSurname;
 	public String password;
-	public String birthDate;
+	public GregorianCalendar birthDate;
 	public String country;
 	
-	public User(String name, String firstSurname, String secondSurname, String password, String birthDate, String country) {
+	public User(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
 		super();
 		this.name = name;
 		this.firstSurname = firstSurname;
@@ -69,11 +71,11 @@ public class User {
 		this.password = password;
 	}
 
-	public String getBirthDate() {
+	public GregorianCalendar getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(String birthDate) {
+	public void setBirthDate(GregorianCalendar birthDate) {
 		this.birthDate = birthDate;
 	}
 

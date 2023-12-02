@@ -1,6 +1,10 @@
 package db;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import domain.User;
+import domain.UserRepositoryException;
 
 public class DataBase {
 	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
@@ -14,9 +18,9 @@ public class DataBase {
 			
 			dbManager.createUserTable();
 			
-			User erik = new User("Erik", "Coruña", "Rodríguez", "prueba", "2004-04-22", "España");
-			User ander = new User("Ander", "Herrero", "Pascual", "test", "2004-06-20", "España");
-			User iker = new User("Iker", "Larrinaga", "Fortuna", "pruebatest", "2004-09-10", "España");
+			User erik = new User("Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 22, 4), "España");
+			User ander = new User("Ander", "Herrero", "Pascual", "test", new GregorianCalendar(2004, 21, 5), "España");
+			User iker = new User("Iker", "Larrinaga", "Fortuna", "pruebatest", new GregorianCalendar(2004, 20, 6), "España");
 			dbManager.storeUser(erik);
 			dbManager.storeUser(ander);
 			dbManager.storeUser(iker);
@@ -25,7 +29,7 @@ public class DataBase {
 			
 			System.out.println(dbManager.getAllUsers());
 			
-			dbManager.deleteUser(2);
+			dbManager.deleteUser(erik);
 			
 			System.out.println(dbManager.getAllUsers());
 			
@@ -37,7 +41,7 @@ public class DataBase {
 			System.out.println(dbManager.getAllUsers());
 			
 			dbManager.disconnect();
-		} catch (DBException e) {
+		} catch (UserRepositoryException e) {
 			System.out.println("Error intentando acceder a la base de datos.");
 			e.printStackTrace();
 		}
