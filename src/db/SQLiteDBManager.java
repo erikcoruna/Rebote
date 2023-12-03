@@ -19,7 +19,9 @@ import domain.IUserRepository;
 import domain.User;
 import domain.UserRepositoryException;
 
-public class DBManager implements IUserRepository {
+// Por el momento solo hemos creado una base de datos con SQLite, pero en un futuro pueden integrarse más bases de datos
+// como PostgresSQL, y por eso está implementada la interfaz IUserRepository.
+public class SQLiteDBManager implements IUserRepository {
 	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
 	// Se han modificado algunas líneas respecto al código.
 	private Connection connection = null;

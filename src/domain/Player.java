@@ -1,18 +1,24 @@
 package domain;
 
+import java.util.GregorianCalendar;
+
 public class Player extends User {
 	public String category;
 	public float height;
 	public float weight;
 	public String team;
 	
-	public Player(int id, String name, String firstSurname, String secondSurname, String password, String birthDate, String country, String category, float height,
+	public Player(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, float height,
 			float weight, String team) {
-		super(name, firstSurname, secondSurname, password, birthDate, country);
+		super(id, name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
 		this.team = team;
+	}
+	
+	public Player() {
+		super();
 	}
 
 	public String getCategory() {

@@ -10,7 +10,7 @@ public class DataBase {
 	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
 	// Se han modificado algunas líneas respecto al código.
 	public static void main(String[] args) {
-		DBManager dbManager = new DBManager();
+		SQLiteDBManager dbManager = new SQLiteDBManager();
 		
 		try {
 			System.out.println("Conectando con la base de datos...");

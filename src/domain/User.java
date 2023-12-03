@@ -3,13 +3,24 @@ package domain;
 import java.util.GregorianCalendar;
 
 public class User {
-	private int id = -1;
+	public int id = -1;
 	public String name;
 	public String firstSurname;
 	public String secondSurname;
 	public String password;
 	public GregorianCalendar birthDate;
 	public String country;
+	
+	public User(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.firstSurname = firstSurname;
+		this.secondSurname = secondSurname;
+		this.password = password;
+		this.birthDate = birthDate;
+		this.country = country;
+	}
 	
 	public User(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
 		super();

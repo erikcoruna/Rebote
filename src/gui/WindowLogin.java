@@ -1,4 +1,6 @@
 package gui;
+
+import io.CSVFileManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,18 +27,14 @@ import javax.swing.JTextField;
 
 
 public class WindowLogin extends JFrame {
-	
-	public static void main(String[] args) {
-		new WindowLogin();
-	}
-
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
 	Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
-	JTextField textFieldName = new JTextField();
-	JPasswordField passwordFieldPassword = new JPasswordField();
+	CSVFileManager fileManager = new CSVFileManager();
+	public JTextField textFieldName = new JTextField();
+	public JPasswordField passwordFieldPassword = new JPasswordField();
 
     public WindowLogin() {
 		setSize(480, 560);
@@ -90,7 +88,7 @@ public class WindowLogin extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmButtonPressed();
+				//fileManager.confirmButtonPressed(textFieldName.getText(), passwordFieldPassword.getPassword());
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -136,68 +134,5 @@ public class WindowLogin extends JFrame {
 				logger.info("Entrado al campo de texto.");
 			}
 		});
-    }
-    
-    //https://youtu.be/ScUJx4aWRi0
-  	//Cogido parte de lectura en csv y adapatado a nuestro proyecto
-    private void confirmButtonPressed() {
-    	String username = textFieldName.getText();
-    	String password = new String(passwordFieldPassword.getPassword());
-    	
-    	if (checkValues(username, password)) {
-    		PlayerOrTrainer();
-    	} else {
-    		JOptionPane.showMessageDialog(this, "El usuario y/o contraseña no coincide", "ERROR", JOptionPane.ERROR_MESSAGE);
-    	}
-    		
-    	
-    	
-    }
-    
-    private boolean checkValues(String username, String password) {
-    	
-    	try (BufferedReader reader = new BufferedReader(new FileReader("files\\register.csv"))) {
-			String line;
-			
-			while ((line = reader.readLine()) != null) {
-				String[] divided = line.split(",");
-				String sameUsername = divided[1].trim();
-				String samePassword = divided[2].trim();
-				
-				if (sameUsername.equals(username) && samePassword.equals(password)) {
-					return true;
-				}
-			}
-			
-			reader.readLine();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-    	
-    	return false;
-    }
-    
-    private void PlayerOrTrainer() {
-    	try (BufferedReader reader = new BufferedReader(new FileReader("files\\register.csv"))) {
-			String line;
-			
-			while ((line = reader.readLine()) != null) {
-				String[] divided = line.split(",");
-				String samePlayerOrTrainer = divided[0].trim();
-				
-				if (samePlayerOrTrainer.equals("0")) {
-					new WindowHomeTrainer();
-					dispose();
-				} else if (samePlayerOrTrainer.equals("1")) {
-					new WindowHomePlayer();
-					dispose();
-				}
-			}
-			reader.readLine();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
     }
 }
