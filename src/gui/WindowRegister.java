@@ -13,16 +13,29 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import com.toedter.calendar.JDateChooser;
+
+import db.SQLiteDBManager;
+import domain.Player;
+import domain.Trainer;
+import domain.UserRepositoryException;
 
 public class WindowRegister extends JFrame {
 	public static void main(String[] args) {
@@ -34,14 +47,20 @@ public class WindowRegister extends JFrame {
 	Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
-	public JTextField textFieldName = new JTextField("Introduzca nombre de usuario...");
+	public JTextField textFieldName = new JTextField();
+	public JTextField textFieldFirstSurname = new JTextField();
+	public JTextField textFieldSecondSurname = new JTextField();
 	public JPasswordField passwordFieldPassword = new JPasswordField();
 	public JPasswordField passwordFieldPassword2 = new JPasswordField();
+	public JDateChooser birthDateChooser = new JDateChooser();
+	public JComboBox<String> countryComboBox = new JComboBox<>(new Vector<>(Arrays.asList(
+			"España", "Francia", "Portugal", "Alemania", "Italia"
+			)));
 	public JRadioButton coach = new JRadioButton("Entrenador");
 	public JRadioButton player = new JRadioButton("Jugador");
 	
 	public WindowRegister() {
-		setSize(480, 560);
+		setSize(480, 760);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Registrarse");
@@ -55,12 +74,20 @@ public class WindowRegister extends JFrame {
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
+		JLabel labelName = new JLabel("Introduzca su nombre:");
+		textFieldName.setPreferredSize(new Dimension(300, 20));
+		JLabel labelFirstSurname = new JLabel("Introduzca su primer apellido:");
+		textFieldName.setPreferredSize(new Dimension(300, 20));
+		JLabel labelSecondSurname = new JLabel("Introduzca su segundo apellido:");
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
 		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
+		JLabel labelBirthDate = new JLabel("Fecha nacimiento: ");
+		birthDateChooser.setDateFormatString("yyyy-MM-dd");
+		JLabel labelCountry = new JLabel("Seleccione su país:");
+		textFieldName.setPreferredSize(new Dimension(300, 20));
 
 		ButtonGroup grupo = new ButtonGroup();
 		grupo.add(coach);
@@ -70,6 +97,14 @@ public class WindowRegister extends JFrame {
 		panel.add(new JLabel(" "), gbc);
 		panel.add(textFieldName, gbc);
 		panel.add(new JLabel(" "), gbc);
+		panel.add(labelFirstSurname, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(textFieldFirstSurname, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(labelSecondSurname, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(textFieldSecondSurname, gbc);
+		panel.add(new JLabel(" "), gbc);
 		panel.add(labelPassword, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(passwordFieldPassword, gbc);
@@ -77,6 +112,14 @@ public class WindowRegister extends JFrame {
 		panel.add(labelPassword2, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(passwordFieldPassword2, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(labelBirthDate, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(birthDateChooser, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(labelCountry, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(countryComboBox, gbc);
 		panel.add(new JLabel(" "), gbc);
 		// Nuevo panel para meter los botones coach y player
 		JPanel rolePanel = new JPanel();
@@ -103,14 +146,59 @@ public class WindowRegister extends JFrame {
 		add(panel);
 		setVisible(true);
 		
-		
-		
 		// https://github.com/andoni-eguiluz/ud-progII-2023/blob/master/Clase2023-2/src/tema5/resueltos/ej5b8/VentanaPrincipal.java
         // Cogido la parte de los ActionListener y modificado para nuestro código.
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buttonConfirmPressed();
+				if (!textFieldName.getText().isEmpty() && !textFieldFirstSurname.getText().isEmpty() && !textFieldSecondSurname.getText().isEmpty()
+						&& !passwordFieldPassword.getPassword().toString().isEmpty() && !passwordFieldPassword2.getPassword().toString().isEmpty()
+						&& !(birthDateChooser.getDate() == null) && (coach.isSelected() || player.isSelected())) {
+					if (birthDateChooser.getDate().before(new Date())) {
+						SQLiteDBManager dbManager = new SQLiteDBManager();
+						try {
+							System.out.println("Conectando con la base de datos...");
+							dbManager.connect("src/db/rebote.db");
+							dbManager.createUserTable();
+							
+							Date date = birthDateChooser.getDate();
+							GregorianCalendar calendar = new GregorianCalendar();
+							calendar.setTime(date);
+							
+							if (coach.isSelected()) {
+								Trainer trainer = new Trainer(
+										textFieldName.getText(),
+										textFieldFirstSurname.getText(),
+										textFieldSecondSurname.getText(),
+										passwordFieldPassword.getPassword().toString(),
+										calendar,
+										countryComboBox.getSelectedItem().toString()
+										);
+								dbManager.storeUser(trainer);
+								System.out.println("Entrenador " + textFieldName.getText() + " ha sido registrado correctamente.");
+							} else if (player.isSelected()) {
+								Player player = new Player(
+										textFieldName.getText(),
+										textFieldFirstSurname.getText(),
+										textFieldSecondSurname.getText(),
+										passwordFieldPassword.getPassword().toString(),
+										calendar,
+										countryComboBox.getSelectedItem().toString()
+										);
+								dbManager.storeUser(player);
+								System.out.println("Jugador " + textFieldName.getText() + " ha sido registrado correctamente.");
+							}
+							dbManager.disconnect();
+						} catch (UserRepositoryException ex) {
+							System.out.println("Error accediendo a la base de datos.");
+							ex.printStackTrace();
+						}
+					} else {
+						System.out.println("La fecha de nacimiento no puede ser superior a la actual.");
+					}
+				} else {
+					System.out.println("Debes rellenar todos los campos para registrar un usuario.");
+				}
 				logger.info("Pulsado el botón confirm.");
 			}
 		});
@@ -125,14 +213,30 @@ public class WindowRegister extends JFrame {
 		textFieldName.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (textFieldName.getText().equals("")) {
-					textFieldName.setText("Introduzca nombre de usuario...");
-				}
 				logger.info("Salido del campo de texto.");
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
-				textFieldName.setText("");
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		textFieldFirstSurname.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				logger.info("Entrado al campo de texto.");
+			}
+		});
+		textFieldSecondSurname.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				logger.info("Salido del campo de texto.");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
 				logger.info("Entrado al campo de texto.");
 			}
 		});
@@ -168,43 +272,5 @@ public class WindowRegister extends JFrame {
 				logger.info("Pulsado el botón player.");
 			}
 		});
-	}
-	
-	//https://youtu.be/ScUJx4aWRi0
-	//Cogido parte de escritura en csv y adapatado a nuestro proyecto
-	public void buttonConfirmPressed() {
-		String username = textFieldName.getText();
-		String password = new String(passwordFieldPassword.getPassword());
-		String passwordConfirm = new String(passwordFieldPassword2.getPassword());
-		int trainerOrPlayer = 0;
-		
-		if (coach.isSelected()) {
-			trainerOrPlayer = 1;
-		} else if (player.isSelected()) {
-			trainerOrPlayer = 0;
-		} else {
-			JOptionPane.showMessageDialog(this, "No se ha seleccionado un rol", "ERROR", JOptionPane.ERROR_MESSAGE);
-		}
-		
-		if (password.equals(passwordConfirm)) {
-			try (FileWriter writer = new FileWriter("files\\register.csv", true)) {
-				writer.write(trainerOrPlayer + "," + username + "," + password + "\n");
-				new WindowStart();
-				dispose();
-				
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(this, "No se ha podido guardar en el archivo", "ERROR", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-			}
-			textFieldName.setText("");
-			passwordFieldPassword.setText("");
-			passwordFieldPassword2.setText("");
-			
-		} else {
-			JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "ERROR", JOptionPane.ERROR_MESSAGE);
-			passwordFieldPassword.setText("");
-			passwordFieldPassword2.setText("");
-		}
-		
 	}
 }
