@@ -1,25 +1,31 @@
 package domain;
 
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 public class Trainer extends User {
-	public String[] teams;
+	public Vector<String> teams;
 
 	public Trainer(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
-			String country, String[] teams) {
+			String country, Vector<String> teams) {
 		super(id, name, firstSurname, secondSurname, password, birthDate, country);
 		this.teams = teams;
+	}
+	
+	public Trainer(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
+			String country) {
+		super(name, firstSurname, secondSurname, password, birthDate, country);
 	}
 	
 	public Trainer() {
 		super();
 	}
 
-	public String[] getTeams() {
+	public Vector<String> getTeams() {
 		return teams;
 	}
 
-	public void setTeams(String[] teams) {
+	public void setTeams(Vector<String> teams) {
 		this.teams = teams;
 	}
 }

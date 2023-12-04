@@ -27,7 +27,7 @@ public class SQLiteDBManager implements IUserRepository {
 	private Connection connection = null;
 	private SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	private GregorianCalendar stringToCalendar(String str) {
+	public GregorianCalendar stringToCalendar(String str) {
 		GregorianCalendar calendar = new GregorianCalendar();
 		try {
 			calendar.setTime(isoDateFormat.parse(str));
@@ -37,8 +37,8 @@ public class SQLiteDBManager implements IUserRepository {
 		return calendar;
 	}
 	
-	private String calendarToString(GregorianCalendar calendar) {
-		return isoDateFormat.format(calendar);
+	public String calendarToString(GregorianCalendar calendar) {
+		return isoDateFormat.format(calendar.getTime());
 	}
 	
 	public void connect(String dbPath) throws UserRepositoryException {

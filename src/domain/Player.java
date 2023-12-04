@@ -17,6 +17,10 @@ public class Player extends User {
 		this.team = team;
 	}
 	
+	public Player(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+		super(name, firstSurname, secondSurname, password, birthDate, country);
+	}
+	
 	public Player() {
 		super();
 	}
