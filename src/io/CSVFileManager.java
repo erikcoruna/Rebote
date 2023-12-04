@@ -7,11 +7,17 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.io.CsvMapWriter;
@@ -31,7 +37,7 @@ public class CSVFileManager implements IFileManager {
 	public static void main(String[] args) {
 		CSVFileManager fileManager = new CSVFileManager();
 		List<Trainer> trainersList = new ArrayList<>();
-		String[] teams = {"Test", "Test2"};
+		Vector<String> teams = new Vector<>(Arrays.asList("Test", "Test2"));
 		trainersList.add(new Trainer(1, "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 22, 4), "España", teams));
 		trainersList.add(new Trainer(2, "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 24, 7), "Francia", teams));
 		try {
@@ -63,12 +69,33 @@ public class CSVFileManager implements IFileManager {
 	public List<Player> importPlayersFromFile(Path path) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/players.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
+			List<Player> playerList = new ArrayList<>();
+			SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(playerHeaders)) != null) {
-				System.out.println(String.format("id: %s", row.get("id")));
+				Player player = new Player();
+				player.setId(Integer.parseInt(row.get("id")));
+				player.setName(row.get("name"));
+				player.setFirstSurname(row.get("firstSurname"));
+				player.setSecondSurname(row.get("secondSurname"));
+				player.setPassword(row.get("password"));
+				try {
+					Date date = isoDateFormat.parse(row.get("birthDate"));
+					GregorianCalendar calendar = new GregorianCalendar();
+					calendar.setTime(date);
+					player.setBirthDate(calendar);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				player.setCountry(row.get("country"));
+				player.setCategory(row.get("category"));
+				player.setHeight(Integer.parseInt(row.get("height")));
+				player.setWeight(Integer.parseInt(row.get("weight")));
+				player.setTeam(row.get("team"));
+				playerList.add(player);
 			}
-			return null;
+			return playerList;
 		} catch (FileNotFoundException e) {
 			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
 		} catch (IOException e) {
@@ -79,12 +106,32 @@ public class CSVFileManager implements IFileManager {
 	public List<Trainer> importTrainersFromFile(Path path) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/trainers.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
+			List<Trainer> trainersList = new ArrayList<>();
+			SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(trainerHeaders)) != null) {
-				System.out.println(String.format("id: %s", row.get("id")));
+				Trainer trainer = new Trainer();
+				trainer.setId(Integer.parseInt(row.get("id")));
+				trainer.setName(row.get("name"));
+				trainer.setFirstSurname(row.get("firstSurname"));
+				trainer.setSecondSurname(row.get("secondSurname"));
+				trainer.setPassword(row.get("password"));
+				System.out.println(row.get("birthDate"));
+				try {
+					Date date = isoDateFormat.parse(row.get("birthDate"));
+					GregorianCalendar calendar = new GregorianCalendar();
+					calendar.setTime(date);
+					trainer.setBirthDate(calendar);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				trainer.setCountry(row.get("country"));
+				String trainerTeams = row.get("teams");
+				System.out.println(trainerTeams);
+				trainersList.add(trainer);
 			}
-			return null;
+			return trainersList;
 		} catch (FileNotFoundException e) {
 			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
 		} catch (IOException e) {
