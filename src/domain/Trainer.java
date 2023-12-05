@@ -13,6 +13,12 @@ public class Trainer extends User {
 	}
 	
 	public Trainer(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
+			String country, Vector<String> teams) {
+		super(name, firstSurname, secondSurname, password, birthDate, country);
+		this.teams = teams;
+	}
+	
+	public Trainer(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
 			String country) {
 		super(name, firstSurname, secondSurname, password, birthDate, country);
 	}
@@ -27,5 +33,10 @@ public class Trainer extends User {
 
 	public void setTeams(Vector<String> teams) {
 		this.teams = teams;
+	}
+
+	@Override
+	public String toString() {
+		return "Trainer [teams=" + teams + "]";
 	}
 }
