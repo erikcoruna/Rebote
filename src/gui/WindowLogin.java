@@ -25,6 +25,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import db.SQLiteDBManager;
+import domain.Player;
+import domain.Trainer;
+import domain.UserRepositoryException;
+
 
 public class WindowLogin extends JFrame {
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
@@ -33,7 +38,7 @@ public class WindowLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	CSVFileManager fileManager = new CSVFileManager();
-	public JTextField textFieldName = new JTextField();
+	public JTextField textFieldUsername = new JTextField();
 	public JPasswordField passwordFieldPassword = new JPasswordField();
 
     public WindowLogin() {
@@ -51,8 +56,8 @@ public class WindowLogin extends JFrame {
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		
-		JLabel labelName = new JLabel("Introduzca un nombre de usuario:");
-		textFieldName.setPreferredSize(new Dimension(300, 20));
+		JLabel labelUsername = new JLabel("Introduzca su nombre de usuario:");
+		textFieldUsername.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
 		JLabel labelForget = new JLabel("¿Ha olvidado su contraseña?");
@@ -60,9 +65,9 @@ public class WindowLogin extends JFrame {
 		// Para cambiar el tamaño de la fuente.
 		labelForget.setFont(new Font(labelForget.getFont().getName(), Font.PLAIN, 10));
 		
-		panel.add(labelName, gbc);
+		panel.add(labelUsername, gbc);
 		panel.add(new JLabel(" "), gbc);
-		panel.add(textFieldName, gbc);
+		panel.add(textFieldUsername, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(labelPassword, gbc);
 		panel.add(new JLabel(" "), gbc);
@@ -88,6 +93,32 @@ public class WindowLogin extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!textFieldUsername.getText().isEmpty() && !passwordFieldPassword.getPassword().toString().isEmpty()) {
+					SQLiteDBManager dbManager = new SQLiteDBManager();
+					String inputUsername = textFieldUsername.getText();
+					String inputPassword = String.valueOf(passwordFieldPassword.getPassword());
+					try {
+						System.out.println("Conectando con la base de datos...");
+						dbManager.connect("src/db/rebote.db");
+						
+						for (Player player : dbManager.getAllPlayers()) {
+							if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {
+								new WindowHomePlayer();
+								dispose();
+							}
+						}
+						for (Trainer trainer : dbManager.getAllTrainers()) {
+							if (trainer.getUsername().equals(inputUsername) && String.valueOf(trainer.getPassword()).equals(inputPassword)) {
+								new WindowHomeTrainer();
+								dispose();
+							}
+						}
+						
+						dbManager.disconnect();
+					} catch (UserRepositoryException e1) {
+						e1.printStackTrace();
+					}
+				}
 				//fileManager.confirmButtonPressed(textFieldName.getText(), passwordFieldPassword.getPassword());
 				logger.info("Pulsado el botón confirm.");
 			}
@@ -114,7 +145,7 @@ public class WindowLogin extends JFrame {
 				labelForget.setForeground(null);
 			}
 		});
-		textFieldName.addFocusListener(new FocusListener() {
+		textFieldUsername.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de texto.");

@@ -47,6 +47,7 @@ public class WindowRegister extends JFrame {
 	Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
+	public JTextField textFieldUsername = new JTextField();
 	public JTextField textFieldName = new JTextField();
 	public JTextField textFieldFirstSurname = new JTextField();
 	public JTextField textFieldSecondSurname = new JTextField();
@@ -60,7 +61,7 @@ public class WindowRegister extends JFrame {
 	public JRadioButton player = new JRadioButton("Jugador");
 	
 	public WindowRegister() {
-		setSize(480, 760);
+		setSize(480, 860);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Registrarse");
@@ -74,6 +75,8 @@ public class WindowRegister extends JFrame {
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
+		JLabel labelUsername = new JLabel("Introduzca su nombre de usuario:");
+		textFieldUsername.setPreferredSize(new Dimension(300, 20));
 		JLabel labelName = new JLabel("Introduzca su nombre:");
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelFirstSurname = new JLabel("Introduzca su primer apellido:");
@@ -93,6 +96,10 @@ public class WindowRegister extends JFrame {
 		grupo.add(coach);
 		grupo.add(player);
 
+		panel.add(labelUsername, gbc);
+		panel.add(new JLabel(" "), gbc);
+		panel.add(textFieldUsername, gbc);
+		panel.add(new JLabel(" "), gbc);
 		panel.add(labelName, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(textFieldName, gbc);
@@ -151,7 +158,7 @@ public class WindowRegister extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!textFieldName.getText().isEmpty() && !textFieldFirstSurname.getText().isEmpty() && !textFieldSecondSurname.getText().isEmpty()
+				if (!textFieldUsername.getText().isEmpty() && !textFieldName.getText().isEmpty() && !textFieldFirstSurname.getText().isEmpty() && !textFieldSecondSurname.getText().isEmpty()
 						&& !passwordFieldPassword.getPassword().toString().isEmpty() && !passwordFieldPassword2.getPassword().toString().isEmpty()
 						&& !(birthDateChooser.getDate() == null) && (coach.isSelected() || player.isSelected())) {
 					if (birthDateChooser.getDate().before(new Date())) {
@@ -160,44 +167,65 @@ public class WindowRegister extends JFrame {
 							System.out.println("Conectando con la base de datos...");
 							dbManager.connect("src/db/rebote.db");
 							
-							Date date = birthDateChooser.getDate();
-							GregorianCalendar calendar = new GregorianCalendar();
-							calendar.setTime(date);
+							int exists = 0;
+							for (Trainer trainer : dbManager.getAllTrainers()) {
+								if (trainer.getUsername().equals(textFieldUsername.getText())) {
+									exists = 1;
+								}
+							}
+							for (Player player : dbManager.getAllPlayers()) {
+								if (player.getUsername().equals(textFieldUsername.getText())) {
+									exists = 1;
+								}
+							}
 							
-							if (coach.isSelected()) {
-								dbManager.createTrainerTable();
-								Trainer trainer = new Trainer(
-										textFieldName.getText(),
-										textFieldFirstSurname.getText(),
-										textFieldSecondSurname.getText(),
-										passwordFieldPassword.getPassword().toString(),
-										calendar,
-										countryComboBox.getSelectedItem().toString(),
-										new Vector<String>()
-										);
-								dbManager.storeTrainer(trainer);
-								System.out.println("Entrenador " + textFieldName.getText() + " ha sido registrado correctamente.");
-							} else if (player.isSelected()) {
-								dbManager.createPlayerTable();
-								Player player = new Player(
-										textFieldName.getText(),
-										textFieldFirstSurname.getText(),
-										textFieldSecondSurname.getText(),
-										passwordFieldPassword.getPassword().toString(),
-										calendar,
-										countryComboBox.getSelectedItem().toString(),
-										"",
-										0,
-										0.0f,
-										""
-										);
-								dbManager.storePlayer(player);
-								System.out.println("Jugador " + textFieldName.getText() + " ha sido registrado correctamente.");
+							if (exists == 0) {
+								String username = textFieldUsername.getText();
+								String name = textFieldName.getText();
+								String firstSurname = textFieldFirstSurname.getText();
+								String secondSurname = textFieldSecondSurname.getText();
+								String password = String.valueOf(passwordFieldPassword.getPassword());
+								Date date = birthDateChooser.getDate();
+								GregorianCalendar calendar = new GregorianCalendar();
+								calendar.setTime(date);
+								String country = countryComboBox.getSelectedItem().toString();
+								if (coach.isSelected()) {
+									Trainer trainer = new Trainer(
+											username,
+											name,
+											firstSurname,
+											secondSurname,
+											password,
+											calendar,
+											country,
+											new Vector<String>()
+											);
+									dbManager.storeTrainer(trainer);
+									System.out.println("Entrenador " + username + " ha sido registrado correctamente.");
+								} else if (player.isSelected()) {
+									Player player = new Player(
+											username,
+											name,
+											firstSurname,
+											secondSurname,
+											password,
+											calendar,
+											country,
+											"",
+											0,
+											0.0f,
+											""
+											);
+									dbManager.storePlayer(player);
+									System.out.println("Jugador " + username + " ha sido registrado correctamente.");
+								}
+							} else {
+								System.out.println("Ese nombre de usuario ya está utilizado.");
 							}
 							dbManager.disconnect();
-						} catch (UserRepositoryException ex) {
+						} catch (UserRepositoryException e1) {
 							System.out.println("Error accediendo a la base de datos.");
-							ex.printStackTrace();
+							e1.printStackTrace();
 						}
 					} else {
 						System.out.println("La fecha de nacimiento no puede ser superior a la actual.");
