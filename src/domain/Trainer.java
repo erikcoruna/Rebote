@@ -6,21 +6,21 @@ import java.util.Vector;
 public class Trainer extends User {
 	public Vector<String> teams;
 
-	public Trainer(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
+	public Trainer(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
 			String country, Vector<String> teams) {
-		super(id, name, firstSurname, secondSurname, password, birthDate, country);
+		super(id, username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.teams = teams;
 	}
 	
-	public Trainer(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
+	public Trainer(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
 			String country, Vector<String> teams) {
-		super(name, firstSurname, secondSurname, password, birthDate, country);
+		super(username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.teams = teams;
 	}
 	
-	public Trainer(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
+	public Trainer(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,
 			String country) {
-		super(name, firstSurname, secondSurname, password, birthDate, country);
+		super(username, name, firstSurname, secondSurname, password, birthDate, country);
 	}
 	
 	public Trainer() {

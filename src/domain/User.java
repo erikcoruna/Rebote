@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 
 public class User {
 	public int id = -1;
+	public String username;
 	public String name;
 	public String firstSurname;
 	public String secondSurname;
@@ -11,9 +12,10 @@ public class User {
 	public GregorianCalendar birthDate;
 	public String country;
 	
-	public User(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+	public User(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
 		super();
 		this.id = id;
+		this.username = username;
 		this.name = name;
 		this.firstSurname = firstSurname;
 		this.secondSurname = secondSurname;
@@ -22,8 +24,9 @@ public class User {
 		this.country = country;
 	}
 	
-	public User(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+	public User(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
 		super();
+		this.username = username;
 		this.name = name;
 		this.firstSurname = firstSurname;
 		this.secondSurname = secondSurname;
@@ -48,6 +51,14 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getName() {

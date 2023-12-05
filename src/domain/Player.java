@@ -8,26 +8,26 @@ public class Player extends User {
 	public float weight;
 	public String team;
 	
-	public Player(int id, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
+	public Player(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
 			float weight, String team) {
-		super(id, name, firstSurname, secondSurname, password, birthDate, country);
+		super(id, username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
 		this.team = team;
 	}
 	
-	public Player(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
+	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
 			float weight, String team) {
-		super(name, firstSurname, secondSurname, password, birthDate, country);
+		super(username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
 		this.team = team;
 	}
 	
-	public Player(String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
-		super(name, firstSurname, secondSurname, password, birthDate, country);
+	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+		super(username, name, firstSurname, secondSurname, password, birthDate, country);
 	}
 	
 	public Player() {
