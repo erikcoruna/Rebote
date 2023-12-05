@@ -159,33 +159,39 @@ public class WindowRegister extends JFrame {
 						try {
 							System.out.println("Conectando con la base de datos...");
 							dbManager.connect("src/db/rebote.db");
-							dbManager.createUserTable();
 							
 							Date date = birthDateChooser.getDate();
 							GregorianCalendar calendar = new GregorianCalendar();
 							calendar.setTime(date);
 							
 							if (coach.isSelected()) {
+								dbManager.createTrainerTable();
 								Trainer trainer = new Trainer(
 										textFieldName.getText(),
 										textFieldFirstSurname.getText(),
 										textFieldSecondSurname.getText(),
 										passwordFieldPassword.getPassword().toString(),
 										calendar,
-										countryComboBox.getSelectedItem().toString()
+										countryComboBox.getSelectedItem().toString(),
+										new Vector<String>()
 										);
-								dbManager.storeUser(trainer);
+								dbManager.storeTrainer(trainer);
 								System.out.println("Entrenador " + textFieldName.getText() + " ha sido registrado correctamente.");
 							} else if (player.isSelected()) {
+								dbManager.createPlayerTable();
 								Player player = new Player(
 										textFieldName.getText(),
 										textFieldFirstSurname.getText(),
 										textFieldSecondSurname.getText(),
 										passwordFieldPassword.getPassword().toString(),
 										calendar,
-										countryComboBox.getSelectedItem().toString()
+										countryComboBox.getSelectedItem().toString(),
+										"",
+										0,
+										0.0f,
+										""
 										);
-								dbManager.storeUser(player);
+								dbManager.storePlayer(player);
 								System.out.println("Jugador " + textFieldName.getText() + " ha sido registrado correctamente.");
 							}
 							dbManager.disconnect();
