@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.supercsv.prefs.CsvPreference;
 
 import domain.IFileManager;
 import domain.Player;
+import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
 
@@ -36,13 +36,17 @@ public class CSVFileManager implements IFileManager {
 	public static void main(String[] args) {
 		CSVFileManager fileManager = new CSVFileManager();
 		List<Trainer> trainersList = new ArrayList<>();
-		Vector<String> teams = new Vector<>(Arrays.asList("Test", "Test2"));
-		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 22, 4), "España", teams));
-		trainersList.add(new Trainer(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 24, 7), "Francia", teams));
+		Vector<Team> teams = new Vector<>();
+		Team team1 = new Team("team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.");
+		Team team2 = new Team("team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.");
+		teams.add(team1);
+		teams.add(team2);
+		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", teams));
+		trainersList.add(new Trainer(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", teams));
 		
 		List<Player> playersList = new ArrayList<>();
-		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 22, 4), "España", "A1", 170, 60.3f, "Test"));
-		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 24, 7), "Francia", "A2", 196, 75.4f, "Test2"));
+		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.3f, team1));
+		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", "A2", 196, 75.4f, team2));
 		try {
 			fileManager.exportTrainersToFile(trainersList, Paths.get("src/io/trainers.csv"));
 			System.out.println(fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv")));
@@ -104,7 +108,14 @@ public class CSVFileManager implements IFileManager {
 				player.setCategory(row.get("category"));
 				player.setHeight(Integer.parseInt(row.get("height")));
 				player.setWeight(Float.parseFloat(row.get("weight")));
-				player.setTeam(row.get("team"));
+				String teamStr = row.get("team").replaceAll("[\\[\\]]", "");
+				String[] teamSplit = teamStr.split(", ");
+				Team team = new Team();
+				team.setName(teamSplit[0]);
+				team.setCity(teamSplit[1]);
+				team.setStadium(teamSplit[2]);
+				team.setDescription(teamSplit[3]);
+				player.setTeam(team);
 				playerList.add(player);
 			}
 			return playerList;
@@ -131,9 +142,15 @@ public class CSVFileManager implements IFileManager {
 				trainer.setPassword(row.get("password"));
 				trainer.setBirthDate(stringToCalendar(row.get("birthDate")));
 				trainer.setCountry(row.get("country"));
-				Vector<String> teams = new Vector<String>();
-				for (String team : row.get("teams").split(",")) {
-					teams.add(team.replaceAll("[\\[\\]]", ""));
+				Vector<Team> teams = new Vector<>();
+				for (String teamStr : row.get("teams").split("], ")) {
+					String[] teamSplit = teamStr.split(", ");
+					Team team = new Team();
+					team.setName(teamSplit[0].replaceAll("[\\[\\]]", ""));
+					team.setCity(teamSplit[1]);
+					team.setStadium(teamSplit[2]);
+					team.setDescription(teamSplit[3].replaceAll("[\\[\\]]", ""));
+					teams.add(team);
 				}
 				trainer.setTeams(teams);
 				trainersList.add(trainer);
@@ -164,7 +181,7 @@ public class CSVFileManager implements IFileManager {
 				row.put(playerHeaders[8], player.getCategory());
 				row.put(playerHeaders[9], String.valueOf(player.getHeight()));
 				row.put(playerHeaders[10], String.valueOf(player.getWeight()));
-				row.put(playerHeaders[11], player.getTeam());
+				row.put(playerHeaders[11], player.getTeam().toString());
 				
 				csvWriter.write(row, playerHeaders);
 			}

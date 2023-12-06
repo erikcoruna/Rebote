@@ -34,6 +34,7 @@ import com.toedter.calendar.JDateChooser;
 
 import db.SQLiteDBManager;
 import domain.Player;
+import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
 
@@ -198,7 +199,7 @@ public class WindowRegister extends JFrame {
 											password,
 											calendar,
 											country,
-											new Vector<String>()
+											new Vector<Team>()
 											);
 									dbManager.storeTrainer(trainer);
 									System.out.println("Entrenador " + username + " ha sido registrado correctamente.");
@@ -214,7 +215,7 @@ public class WindowRegister extends JFrame {
 											"",
 											0,
 											0.0f,
-											""
+											new Team()
 											);
 									dbManager.storePlayer(player);
 									System.out.println("Jugador " + username + " ha sido registrado correctamente.");

@@ -6,10 +6,10 @@ public class Player extends User {
 	public String category;
 	public int height;
 	public float weight;
-	public String team;
+	public Team team;
 	
 	public Player(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
-			float weight, String team) {
+			float weight, Team team) {
 		super(id, username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
@@ -18,7 +18,7 @@ public class Player extends User {
 	}
 	
 	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
-			float weight, String team) {
+			float weight, Team team) {
 		super(username, name, firstSurname, secondSurname, password, birthDate, country);
 		this.category = category;
 		this.height = height;
@@ -58,11 +58,11 @@ public class Player extends User {
 		this.weight = weight;
 	}
 
-	public String getTeam() {
+	public Team getTeam() {
 		return team;
 	}
 
-	public void setTeam(String team) {
+	public void setTeam(Team team) {
 		this.team = team;
 	}
 

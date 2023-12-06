@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import domain.IUserRepository;
 import domain.Player;
+import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
 
@@ -103,7 +104,7 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(8, player.getCategory());
 			preparedStatement.setInt(9, player.getHeight());
 			preparedStatement.setFloat(10, player.getWeight());
-			preparedStatement.setString(11, player.getTeam());
+			preparedStatement.setString(11, player.getTeam().toString());
 			
 			preparedStatement.executeUpdate();
 			
@@ -168,7 +169,16 @@ public class SQLiteDBManager implements IUserRepository {
 				player.setCategory(resultSet.getString("category"));
 				player.setHeight(resultSet.getInt("height"));
 				player.setWeight(resultSet.getFloat("weight"));
-				player.setTeam(resultSet.getString("team"));
+				String teamStr = resultSet.getString("team").replaceAll("[\\[\\]]", "");
+				String[] teamSplit = teamStr.split(", ");
+				Team team = new Team();
+				if (!teamSplit[0].toString().equals("null")) {
+					team.setName(teamSplit[0]);
+					team.setCity(teamSplit[1]);
+					team.setStadium(teamSplit[2]);
+					team.setDescription(teamSplit[3]);
+				}
+				player.setTeam(team);
 				return player;
 			} else {
 				return null;
@@ -196,9 +206,17 @@ public class SQLiteDBManager implements IUserRepository {
 				trainer.setPassword(resultSet.getString("password"));
 				trainer.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
 				trainer.setCountry(resultSet.getString("country"));
-				Vector<String> teams = new Vector<String>();
-				for (String team : resultSet.getString("teams").split(",")) {
-					teams.add(team.replaceAll("[\\[\\]]", ""));
+				Vector<Team> teams = new Vector<>();
+				for (String teamStr : resultSet.getString("teams").split("], ")) {
+					String[] teamSplit = teamStr.split(", ");
+					Team team = new Team();
+					if (!teamSplit[0].toString().equals("[]")) {
+						team.setName(teamSplit[0].replaceAll("[\\[\\]]", ""));
+						team.setCity(teamSplit[1]);
+						team.setStadium(teamSplit[2]);
+						team.setDescription(teamSplit[3].replaceAll("[\\[\\]]", ""));
+					}
+					teams.add(team);
 				}
 				trainer.setTeams(teams);
 				return trainer;
@@ -275,8 +293,8 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(7, player.getCountry());
 			preparedStatement.setString(8, player.getCategory());
 			preparedStatement.setInt(9, player.getHeight());
-			preparedStatement.setFloat(10, player.getHeight());
-			preparedStatement.setString(11, player.getTeam());
+			preparedStatement.setFloat(10, player.getWeight());
+			preparedStatement.setString(11, player.getTeam().toString());
 			preparedStatement.setInt(12, player.getId());
 			
 			preparedStatement.executeUpdate();
