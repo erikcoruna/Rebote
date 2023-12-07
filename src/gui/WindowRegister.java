@@ -1,7 +1,6 @@
 package gui;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,9 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,7 +49,6 @@ public class WindowRegister extends JFrame {
 	public JTextField textFieldFirstSurname = new JTextField();
 	public JTextField textFieldSecondSurname = new JTextField();
 	public JPasswordField passwordFieldPassword = new JPasswordField();
-	public JPasswordField passwordFieldPassword2 = new JPasswordField();
 	public JDateChooser birthDateChooser = new JDateChooser();
 	public JComboBox<String> countryComboBox = new JComboBox<>(new Vector<>(Arrays.asList(
 			"España", "Francia", "Portugal", "Alemania", "Italia"
@@ -62,7 +57,7 @@ public class WindowRegister extends JFrame {
 	public JRadioButton player = new JRadioButton("Jugador");
 	
 	public WindowRegister() {
-		setSize(480, 860);
+		setSize(480, 800);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Registrarse");
@@ -86,8 +81,6 @@ public class WindowRegister extends JFrame {
 		textFieldName.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
-		JLabel labelPassword2 = new JLabel("Introduzca de nuevo su contraseña:");
-		passwordFieldPassword2.setPreferredSize(new Dimension(300, 20));
 		JLabel labelBirthDate = new JLabel("Fecha nacimiento: ");
 		birthDateChooser.setDateFormatString("yyyy-MM-dd");
 		JLabel labelCountry = new JLabel("Seleccione su país:");
@@ -116,10 +109,6 @@ public class WindowRegister extends JFrame {
 		panel.add(labelPassword, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(passwordFieldPassword, gbc);
-		panel.add(new JLabel(" "), gbc);
-		panel.add(labelPassword2, gbc);
-		panel.add(new JLabel(" "), gbc);
-		panel.add(passwordFieldPassword2, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(labelBirthDate, gbc);
 		panel.add(new JLabel(" "), gbc);
@@ -160,7 +149,7 @@ public class WindowRegister extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!textFieldUsername.getText().isEmpty() && !textFieldName.getText().isEmpty() && !textFieldFirstSurname.getText().isEmpty() && !textFieldSecondSurname.getText().isEmpty()
-						&& !passwordFieldPassword.getPassword().toString().isEmpty() && !passwordFieldPassword2.getPassword().toString().isEmpty()
+						&& !passwordFieldPassword.getPassword().toString().isEmpty()
 						&& !(birthDateChooser.getDate() == null) && (coach.isSelected() || player.isSelected())) {
 					if (birthDateChooser.getDate().before(new Date())) {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
@@ -276,16 +265,6 @@ public class WindowRegister extends JFrame {
 			}
 		});
 		passwordFieldPassword.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		passwordFieldPassword2.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				logger.info("Salido del campo de texto.");
