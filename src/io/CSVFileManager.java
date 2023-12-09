@@ -23,6 +23,7 @@ import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import domain.IFileManager;
+import domain.League;
 import domain.Player;
 import domain.Team;
 import domain.Trainer;
@@ -37,8 +38,8 @@ public class CSVFileManager implements IFileManager {
 		CSVFileManager fileManager = new CSVFileManager();
 		List<Trainer> trainersList = new ArrayList<>();
 		Vector<Team> teams = new Vector<>();
-		Team team1 = new Team("team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.");
-		Team team2 = new Team("team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.");
+		Team team1 = new Team("team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A);
+		Team team2 = new Team("team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.", League.B);
 		teams.add(team1);
 		teams.add(team2);
 		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", teams));

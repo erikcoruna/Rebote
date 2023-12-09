@@ -6,13 +6,15 @@ public class Team {
 	public String city;
 	public String stadium;
 	public String description;
+	public League league;
 	
-	public Team(String name, String city, String stadium, String description) {
+	public Team(String name, String city, String stadium, String description, League league) {
 		super();
 		this.name = name;
 		this.city = city;
 		this.stadium = stadium;
 		this.description = description;
+		this.league = league;
 	}
 	
 	public Team() {
@@ -49,6 +51,14 @@ public class Team {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public League getLeague() {
+		return league;
+	}
+
+	public void setLeague(League league) {
+		this.league = league;
 	}
 
 	@Override

@@ -19,8 +19,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -28,10 +30,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import com.toedter.calendar.JDateChooser;
 
 import db.SQLiteDBManager;
+import domain.League;
 import domain.Player;
 import domain.Team;
 import domain.UserRepositoryException;
@@ -50,7 +54,7 @@ public class WindowHomePlayer extends JFrame {
 	private JButton buttonSearch;
 	private JScrollPane scrollPaneSearch;
 	public static void main(String[] args) {
-		new WindowHomePlayer(new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.4f, new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.")));
+		new WindowHomePlayer(new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.4f, new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A)));
 	}
 	
 	public static void updatePlayer(Player player) {
@@ -65,12 +69,17 @@ public class WindowHomePlayer extends JFrame {
 	}
 	
 	private void addTeamPanel(Team team) {
-		JPanel panelCenter = new JPanel(new GridLayout(2, 1));
+		JPanel panelCenter = new JPanel(new GridLayout(1, 3));
+		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 		panelCenter.setMaximumSize(new Dimension(this.getWidth() - 50, 100));
 		panelCenter.setPreferredSize(new Dimension(this.getWidth() - 50, 100));
     	panelCenter.setBackground(Color.WHITE);
+    	JLabel labelIcon = new JLabel();
+    	ImageIcon icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
+    	labelIcon.setIcon(icon);
     	JLabel labelNameSearch = new JLabel(team.getName());
     	JLabel labelCitySearch = new JLabel(team.getCity());
+    	panelCenter.add(labelIcon);
     	panelCenter.add(labelNameSearch);
     	panelCenter.add(labelCitySearch);
     	panelTeamsSearch.add(panelCenter);
@@ -286,12 +295,12 @@ public class WindowHomePlayer extends JFrame {
         panelNorthSearch.add(buttonSearch);
         
         List<Team> teams = new ArrayList<>();
-        teams.add(new Team("team1", "Bilbao", "Bilbao", "Equipo baloncesto Bilbao."));
-        teams.add(new Team("team1", "Barakaldo", "Barakaldo", "Equipo baloncesto Barakaldo."));
-        teams.add(new Team("team1", "Trapaga", "Trapaga", "Equipo baloncesto Trapaga."));
-        teams.add(new Team("team1", "Sestao", "Sestao", "Equipo baloncesto Sestao."));
-        teams.add(new Team("team1", "Portu", "Portu", "Equipo baloncesto Portu."));
-        teams.add(new Team("team2", "Portu", "Portu", "Equipo baloncesto Portu."));
+        teams.add(new Team("team1", "Bilbao", "Bilbao", "Equipo baloncesto Bilbao.", League.A));
+        teams.add(new Team("team1", "Barakaldo", "Barakaldo", "Equipo baloncesto Barakaldo.", League.B));
+        teams.add(new Team("team1", "Trapaga", "Trapaga", "Equipo baloncesto Trapaga.", League.C));
+        teams.add(new Team("team1", "Sestao", "Sestao", "Equipo baloncesto Sestao.", League.A));
+        teams.add(new Team("team1", "Portu", "Portu", "Equipo baloncesto Portu.", League.B));
+        teams.add(new Team("team2", "Portu", "Portu", "Equipo baloncesto Portu.", League.C));
         
         panelTeamsSearch = new JPanel();
         panelTeamsSearch.setLayout(new BoxLayout(panelTeamsSearch, BoxLayout.Y_AXIS));
@@ -317,6 +326,11 @@ public class WindowHomePlayer extends JFrame {
 						addTeamPanel(team);
 					}
 				}
+				if (panelTeamsSearch.getComponentCount() == 0) {
+					JLabel labelNoTeam = new JLabel("No hay ningún equipo con ese nombre.");
+					panelTeamsSearch.add(labelNoTeam);
+				}
+				
 				panelTeamsSearch.revalidate();
 				panelTeamsSearch.repaint();
 			}
