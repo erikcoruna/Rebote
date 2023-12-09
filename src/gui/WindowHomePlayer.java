@@ -1,28 +1,33 @@
 package gui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Vector;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -37,6 +42,13 @@ import javax.swing.JOptionPane;
 public class WindowHomePlayer extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
+	private JPanel panelSearch;
+	private JPanel panelNorthSearch;
+	private JPanel panelTeamsSearch;
+	private JTextField textFieldSearch;
+	private JButton buttonSearch;
+	private JScrollPane scrollPaneSearch;
 	public static void main(String[] args) {
 		new WindowHomePlayer(new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.4f, new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.")));
 	}
@@ -52,6 +64,27 @@ public class WindowHomePlayer extends JFrame {
 		}
 	}
 	
+	private void addTeamPanel(Team team) {
+		JPanel panelCenter = new JPanel(new GridLayout(2, 1));
+		panelCenter.setMaximumSize(new Dimension(this.getWidth() - 50, 100));
+		panelCenter.setPreferredSize(new Dimension(this.getWidth() - 50, 100));
+    	panelCenter.setBackground(Color.WHITE);
+    	JLabel labelNameSearch = new JLabel(team.getName());
+    	JLabel labelCitySearch = new JLabel(team.getCity());
+    	panelCenter.add(labelNameSearch);
+    	panelCenter.add(labelCitySearch);
+    	panelTeamsSearch.add(panelCenter);
+    	panelTeamsSearch.add(Box.createRigidArea(new Dimension(0, 10)));
+    	
+    	panelCenter.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(team.getCity());
+			}
+		});
+	}
+	
 	public WindowHomePlayer(Player player) {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
@@ -62,7 +95,7 @@ public class WindowHomePlayer extends JFrame {
 		//Un ejemplo de JTabbedPane, para saber como implementarlo en nuestro código
 		JTabbedPane tabbedPanel = new JTabbedPane(); 
 		
-		JPanel paneProfile = new JPanel(new GridBagLayout());
+		JPanel panelProfile = new JPanel(new GridBagLayout());
        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -86,36 +119,36 @@ public class WindowHomePlayer extends JFrame {
 		JButton buttonChangeBirthDate = new JButton("Cambiar");
 		JButton buttonChangeCountry = new JButton("Cambiar");
         
-        paneProfile.add(labelUsername, gbc);
+        panelProfile.add(labelUsername, gbc);
         gbc.gridy = 1;
-        paneProfile.add(labelName, gbc);       
+        panelProfile.add(labelName, gbc);       
         gbc.gridy = 2;
-        paneProfile.add(labelFirstSurname, gbc);       
+        panelProfile.add(labelFirstSurname, gbc);       
         gbc.gridy = 3;
-        paneProfile.add(labelSecondSurname, gbc);
+        panelProfile.add(labelSecondSurname, gbc);
         gbc.gridy = 4;
-        paneProfile.add(labelPassword, gbc);
+        panelProfile.add(labelPassword, gbc);
         gbc.gridy = 5;
-		paneProfile.add(labelBirthDate, gbc);
+		panelProfile.add(labelBirthDate, gbc);
 		gbc.gridy = 6;
-		paneProfile.add(labelCountry, gbc);
+		panelProfile.add(labelCountry, gbc);
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		paneProfile.add(buttonChangeUsername, gbc);
+		panelProfile.add(buttonChangeUsername, gbc);
 		gbc.gridy = 1;
-		paneProfile.add(buttonChangeName, gbc);
+		panelProfile.add(buttonChangeName, gbc);
 		gbc.gridy = 2;
-		paneProfile.add(buttonChangeFirstSurname, gbc);
+		panelProfile.add(buttonChangeFirstSurname, gbc);
 		gbc.gridy = 3;
-		paneProfile.add(buttonChangeSecondSurname, gbc);
+		panelProfile.add(buttonChangeSecondSurname, gbc);
 		gbc.gridy = 4;
-		paneProfile.add(buttonChangePassword, gbc);
+		panelProfile.add(buttonChangePassword, gbc);
 		gbc.gridy = 5;
-		paneProfile.add(buttonChangeBirthDate, gbc);
+		panelProfile.add(buttonChangeBirthDate, gbc);
 		gbc.gridy = 6;
-		paneProfile.add(buttonChangeCountry, gbc);
+		panelProfile.add(buttonChangeCountry, gbc);
 		
-		JScrollPane scrollPane = new JScrollPane(paneProfile);
+		JScrollPane scrollPane = new JScrollPane(panelProfile);
 		
         tabbedPanel.addTab("Tu perfil", scrollPane);
         
@@ -241,10 +274,54 @@ public class WindowHomePlayer extends JFrame {
        // }
 		tabbedPanel.addTab("Tu equipo", scrollPaneTeam);
 
-        JPanel panelSearch = new JPanel();
-        panelSearch.add(new JLabel("Buscador de otros jugadores y equipos"));
+        panelSearch = new JPanel(new BorderLayout());
+        
+        panelNorthSearch = new JPanel(new GridLayout(1, 2));
+        
+        textFieldSearch = new JTextField();
+        buttonSearch = new JButton("Buscar");
+        
+        panelSearch.add(panelNorthSearch, BorderLayout.NORTH);
+        panelNorthSearch.add(textFieldSearch);
+        panelNorthSearch.add(buttonSearch);
+        
+        List<Team> teams = new ArrayList<>();
+        teams.add(new Team("team1", "Bilbao", "Bilbao", "Equipo baloncesto Bilbao."));
+        teams.add(new Team("team1", "Barakaldo", "Barakaldo", "Equipo baloncesto Barakaldo."));
+        teams.add(new Team("team1", "Trapaga", "Trapaga", "Equipo baloncesto Trapaga."));
+        teams.add(new Team("team1", "Sestao", "Sestao", "Equipo baloncesto Sestao."));
+        teams.add(new Team("team1", "Portu", "Portu", "Equipo baloncesto Portu."));
+        teams.add(new Team("team2", "Portu", "Portu", "Equipo baloncesto Portu."));
+        
+        panelTeamsSearch = new JPanel();
+        panelTeamsSearch.setLayout(new BoxLayout(panelTeamsSearch, BoxLayout.Y_AXIS));
+        
+        for (Team team : teams) {
+        	addTeamPanel(team);
+        }
+        
+        scrollPaneSearch = new JScrollPane(panelTeamsSearch);
+        scrollPaneSearch.getVerticalScrollBar().setUnitIncrement(16);
+        panelSearch.add(scrollPaneSearch, BorderLayout.CENTER);
+        
         tabbedPanel.addTab("Buscador", panelSearch);
-
+        
+        buttonSearch.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String textSearch = textFieldSearch.getText().toLowerCase();
+				panelTeamsSearch.removeAll();
+				for (Team team : teams) {
+					if (team.getName().toLowerCase().contains(textSearch)) {
+						addTeamPanel(team);
+					}
+				}
+				panelTeamsSearch.revalidate();
+				panelTeamsSearch.repaint();
+			}
+		});
+        
         JPanel panelGame = new JPanel();
         panelGame.add(new JLabel("Registro de partidos que habéis jugado"));
         tabbedPanel.addTab("Partidos", panelGame);
@@ -252,5 +329,4 @@ public class WindowHomePlayer extends JFrame {
  
 		setVisible(true);
 	}
-	
 }
