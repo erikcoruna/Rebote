@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Vector;
 
 import domain.IUserRepository;
+import domain.League;
 import domain.Player;
 import domain.Team;
 import domain.Trainer;
@@ -81,6 +82,15 @@ public class SQLiteDBManager implements IUserRepository {
 		}
 	}
 	
+	public void createTeamTable() throws UserRepositoryException {
+		try (Statement statement = connection.createStatement()) {
+			statement.executeUpdate("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,"
+					+ " city VARCHAR, stadium VARCHAR, description VARCHAR, league VARCHAR)");
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error creando la tabla 'team' en la base de datos.");
+		}
+	}
+	
 	public void dropTable(String tableName) throws UserRepositoryException {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("DROP TABLE IF EXISTS " + tableName);
@@ -145,6 +155,31 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 		} catch (SQLException e) {
 			throw new UserRepositoryException("No se ha podido guardar el entrenador en la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public void storeTeam(Team team) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO team (name, city,"
+				+ " stadium, description, league) VALUES (?, ?, ?, ?, ?)");
+				Statement statement = connection.createStatement()) {
+			preparedStatement.setString(1, team.getName());
+			preparedStatement.setString(2, team.getCity());
+			preparedStatement.setString(3, team.getStadium());
+			preparedStatement.setString(4, team.getDescription());
+			preparedStatement.setString(5, team.getLeague().toString());
+			
+			preparedStatement.executeUpdate();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT last_insert_rowid() AS id FROM team");
+			if (resultSet.next()) {
+				int newId = resultSet.getInt("id");
+				team.setId(newId);
+			} else {
+				throw new UserRepositoryException("Error generando el id en la base de datos.");
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido guardar el equipo en la base de datos.", e);
 		}
 	}
 	
@@ -229,6 +264,31 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public Team getTeam(int id) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, city, stadium,"
+				+ " description, league FROM team WHERE id = ?")) {
+			preparedStatement.setInt(1, id);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				Team team = new Team();
+				team.setId(resultSet.getInt("id"));
+				team.setName(resultSet.getString("name"));
+				team.setCity(resultSet.getString("city"));
+				team.setStadium(resultSet.getString("stadium"));
+				team.setDescription(resultSet.getString("description"));
+				team.setLeague(League.valueOf(resultSet.getString("league")));
+				return team;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo el equipo con ese id.", e);
+		}
+	}
+	
+	@Override
 	public List<Player> getAllPlayers() throws UserRepositoryException {
 		List<Player> players = new ArrayList<>();
 		try (Statement statement = connection.createStatement()) {
@@ -261,6 +321,21 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public List<Team> getAllTeams() throws UserRepositoryException {
+		List<Team> teams = new ArrayList<>();
+		try (Statement statement = connection.createStatement()) {
+			ResultSet resultSet = statement.executeQuery("SELECT id, name, city, stadium, description, league FROM team");
+			
+			while (resultSet.next()) {
+				teams.add(getTeam(resultSet.getInt("id")));
+			}
+			return teams;
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo los equipos de la base de datos.", e);
+		}
+	}
+	
+	@Override
 	public void deletePlayer(Player player) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM player WHERE id = ?")) {
 			preparedStatement.setInt(1, player.getId());
@@ -276,7 +351,17 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(1, trainer.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el jugador " + trainer.getId() + " de la base de datos.", e);
+			throw new UserRepositoryException("No se ha podido eliminar el entrenador " + trainer.getId() + " de la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public void deleteTeam(Team team) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM team WHERE id = ?")) {
+			preparedStatement.setInt(1, team.getId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido eliminar el equipo " + team.getId() + " de la base de datos.", e);
 		}
 	}
 	
@@ -316,6 +401,23 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(7, trainer.getCountry());
 			preparedStatement.setString(8, trainer.getTeams().toString());
 			preparedStatement.setInt(9, trainer.getId());
+			
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido actualizar el jugador en la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public void updateTeam(Team team) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE team SET name = ?, city = ?, stadium = ?, description = ?,"
+				+ " league = ? WHERE id = ?")) {
+			preparedStatement.setString(1, team.getName());
+			preparedStatement.setString(2, team.getCity());
+			preparedStatement.setString(3, team.getStadium());
+			preparedStatement.setString(4, team.getDescription());
+			preparedStatement.setString(5, team.getLeague().toString());
+			preparedStatement.setInt(6, team.getId());
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

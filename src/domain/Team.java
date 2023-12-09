@@ -2,11 +2,22 @@ package domain;
 
 public class Team {
 	
+	public int id = -1;
 	public String name;
 	public String city;
 	public String stadium;
 	public String description;
 	public League league;
+	
+	public Team(int id, String name, String city, String stadium, String description, League league) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.city = city;
+		this.stadium = stadium;
+		this.description = description;
+		this.league = league;
+	}
 	
 	public Team(String name, String city, String stadium, String description, League league) {
 		super();
@@ -19,6 +30,14 @@ public class Team {
 	
 	public Team() {
 		super();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
