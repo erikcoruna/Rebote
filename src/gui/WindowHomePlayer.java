@@ -6,9 +6,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -184,11 +188,20 @@ public class WindowHomePlayer extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String birthDate = JOptionPane.showInputDialog(null, "Ingresa tu nueva fecha de nacimiento (yyyy-MM-dd):", "Fecha de nacimiento", JOptionPane.PLAIN_MESSAGE);
-				if (birthDate != null && !birthDate.isBlank()) {
-					player.setBirthDate(dbManager.stringToCalendar(birthDate));
+				JPanel panel = new JPanel(new GridLayout(2, 1));
+				JLabel label = new JLabel("Elige tu nueva fecha de nacimiento (yyyy-MM-dd):");
+				JDateChooser dateChooser = new JDateChooser();
+				dateChooser.setDateFormatString("yyyy-MM-dd");
+				panel.add(label);
+				panel.add(dateChooser);
+				int result = JOptionPane.showConfirmDialog(null, panel, "Fecha de nacimiento", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				if (result == 0 && dateChooser.getDate() != null) {
+					Date date = dateChooser.getDate();
+					GregorianCalendar calendar = new GregorianCalendar();
+					calendar.setTime(date);
+					player.setBirthDate(calendar);
 					updatePlayer(player);
-					labelBirthDate.setText("Fecha de nacimiento: " + birthDate);
+					labelBirthDate.setText("Fecha de nacimiento: " + dbManager.calendarToString(calendar));
 				}
 			}
 		});
@@ -197,8 +210,16 @@ public class WindowHomePlayer extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String country = JOptionPane.showInputDialog(null, "Ingresa tu nuevo país:", "País", JOptionPane.PLAIN_MESSAGE);
-				if (country != null && !country.isBlank()) {
+				JPanel panel = new JPanel(new GridLayout(2, 1));
+				JLabel label = new JLabel("Elige tu nuevo país:");
+				JComboBox<String> comboBox = new JComboBox<>(new Vector<>(Arrays.asList(
+						"España", "Francia", "Portugal", "Alemania", "Italia"
+						)));
+				panel.add(label);
+				panel.add(comboBox);
+				int result = JOptionPane.showConfirmDialog(null, panel, "País", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				String country = comboBox.getSelectedItem().toString();
+				if (result == 0 && country != null) {
 					player.setCountry(country);
 					updatePlayer(player);
 					labelCountry.setText("País: " + country);
