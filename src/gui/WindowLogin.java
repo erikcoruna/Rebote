@@ -103,7 +103,7 @@ public class WindowLogin extends JFrame {
 						
 						for (Player player : dbManager.getAllPlayers()) {
 							if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {
-								new WindowHomePlayer();
+								new WindowHomePlayer(player);
 								dispose();
 							}
 						}

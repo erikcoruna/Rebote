@@ -32,7 +32,7 @@ public class SQLiteDBManager implements IUserRepository {
 		try {
 			calendar.setTime(isoDateFormat.parse(str));
 		} catch (ParseException e) {
-			calendar.setTime(null);
+			e.printStackTrace();
 		}
 		return calendar;
 	}
