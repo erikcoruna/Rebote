@@ -205,11 +205,11 @@ public class SQLiteDBManager implements IUserRepository {
 				String[] teamSplit = teamStr.split(", ");
 				Team team = new Team();
 				if (!teamSplit[0].toString().equals("null")) {
-					team.setName(teamSplit[0]);
-					team.setCity(teamSplit[1]);
-					team.setStadium(teamSplit[2]);
-					team.setDescription(teamSplit[3]);
-					team.setLeague(League.valueOf(teamSplit[4]));
+					team.setName(teamSplit[1]);
+					team.setCity(teamSplit[2]);
+					team.setStadium(teamSplit[3]);
+					team.setDescription(teamSplit[4]);
+					team.setLeague(League.valueOf(teamSplit[5]));
 				}
 				player.setTeam(team);
 				player.setCategory(resultSet.getString("category"));
@@ -247,11 +247,11 @@ public class SQLiteDBManager implements IUserRepository {
 				String[] teamSplit = teamStr.split(", ");
 				Team team = new Team();
 				if (!teamSplit[0].toString().equals("null")) {
-					team.setName(teamSplit[0]);
-					team.setCity(teamSplit[1]);
-					team.setStadium(teamSplit[2]);
-					team.setDescription(teamSplit[3]);
-					team.setLeague(League.valueOf(teamSplit[4]));
+					team.setName(teamSplit[1]);
+					team.setCity(teamSplit[2]);
+					team.setStadium(teamSplit[3]);
+					team.setDescription(teamSplit[4]);
+					team.setLeague(League.valueOf(teamSplit[5]));
 				}
 				trainer.setTeam(team);
 				

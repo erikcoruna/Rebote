@@ -57,6 +57,6 @@ public class Player extends User {
 
 	@Override
 	public String toString() {
-		return "Player [category=" + category + ", height=" + height + ", weight=" + weight + "]";
+		return "[" + category + ", " + height + ", " + weight + "]";
 	}
 }

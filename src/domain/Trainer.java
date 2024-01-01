@@ -17,9 +17,4 @@ public class Trainer extends User {
 	public Trainer() {
 		super();
 	}
-
-	@Override
-	public String toString() {
-		return "Trainer []";
-	}
 }

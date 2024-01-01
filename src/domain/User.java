@@ -42,13 +42,6 @@ public class User {
 		super();
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", name=" + name + ", firstSurname=" + firstSurname
-				+ ", secondSurname=" + secondSurname + ", password=" + password + ", birthDate=" + birthDate
-				+ ", country=" + country + ", team=" + team + "]";
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -119,6 +112,13 @@ public class User {
 
 	public void setTeam(Team team) {
 		this.team = team;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + id + ", " + username + ", " + name + ", " + firstSurname
+				+ ", " + secondSurname + ", " + password + ", " + birthDate
+				+ ", " + country + ", " + team + "]";
 	}
 }
 
