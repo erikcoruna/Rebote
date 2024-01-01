@@ -37,17 +37,14 @@ public class CSVFileManager implements IFileManager {
 	public static void main(String[] args) {
 		CSVFileManager fileManager = new CSVFileManager();
 		List<Trainer> trainersList = new ArrayList<>();
-		Vector<Team> teams = new Vector<>();
-		Team team1 = new Team("team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A);
-		Team team2 = new Team("team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.", League.B);
-		teams.add(team1);
-		teams.add(team2);
-		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", teams));
-		trainersList.add(new Trainer(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", teams));
+		Team team1 = new Team(1, "team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A);
+		Team team2 = new Team(2, "team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.", League.B);
+		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", team1));
+		trainersList.add(new Trainer(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", team2));
 		
 		List<Player> playersList = new ArrayList<>();
-		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.3f, team1));
-		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", "A2", 196, 75.4f, team2));
+		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.3f));
+		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", team2, 196, 75.4f));
 		try {
 			fileManager.exportTrainersToFile(trainersList, Paths.get("src/io/trainers.csv"));
 			System.out.println(fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv")));
@@ -96,7 +93,7 @@ public class CSVFileManager implements IFileManager {
 			List<Player> playerList = new ArrayList<>();
 			
 			csvReader.getHeader(false);
-			while((row = csvReader.read(playerHeaders)) != null) {
+			while ((row = csvReader.read(playerHeaders)) != null) {
 				Player player = new Player();
 				player.setId(Integer.parseInt(row.get("id")));
 				player.setUsername(row.get("username"));
@@ -106,16 +103,16 @@ public class CSVFileManager implements IFileManager {
 				player.setPassword(row.get("password"));
 				player.setBirthDate(stringToCalendar(row.get("birthDate")));
 				player.setCountry(row.get("country"));
-				player.setCategory(row.get("category"));
 				player.setHeight(Integer.parseInt(row.get("height")));
 				player.setWeight(Float.parseFloat(row.get("weight")));
 				String teamStr = row.get("team").replaceAll("[\\[\\]]", "");
 				String[] teamSplit = teamStr.split(", ");
 				Team team = new Team();
-				team.setName(teamSplit[0]);
-				team.setCity(teamSplit[1]);
-				team.setStadium(teamSplit[2]);
-				team.setDescription(teamSplit[3]);
+				team.setName(teamSplit[1]);
+				team.setCity(teamSplit[2]);
+				team.setStadium(teamSplit[3]);
+				team.setDescription(teamSplit[4]);
+				team.setLeague(League.valueOf(teamSplit[5]));
 				player.setTeam(team);
 				playerList.add(player);
 			}
@@ -143,17 +140,15 @@ public class CSVFileManager implements IFileManager {
 				trainer.setPassword(row.get("password"));
 				trainer.setBirthDate(stringToCalendar(row.get("birthDate")));
 				trainer.setCountry(row.get("country"));
-				Vector<Team> teams = new Vector<>();
-				for (String teamStr : row.get("teams").split("], ")) {
-					String[] teamSplit = teamStr.split(", ");
-					Team team = new Team();
-					team.setName(teamSplit[0].replaceAll("[\\[\\]]", ""));
-					team.setCity(teamSplit[1]);
-					team.setStadium(teamSplit[2]);
-					team.setDescription(teamSplit[3].replaceAll("[\\[\\]]", ""));
-					teams.add(team);
-				}
-				trainer.setTeams(teams);
+				String teamStr = row.get("team").replaceAll("[\\[\\]]", "");
+				String[] teamSplit = teamStr.split(", ");
+				Team team = new Team();
+				team.setName(teamSplit[1]);
+				team.setCity(teamSplit[2]);
+				team.setStadium(teamSplit[3]);
+				team.setDescription(teamSplit[4]);
+				team.setLeague(League.valueOf(teamSplit[5]));
+				trainer.setTeam(team);
 				trainersList.add(trainer);
 			}
 			return trainersList;
@@ -179,10 +174,9 @@ public class CSVFileManager implements IFileManager {
 				row.put(playerHeaders[5], player.getPassword());
 				row.put(playerHeaders[6], calendarToString(player.getBirthDate()));
 				row.put(playerHeaders[7], player.getCountry());
-				row.put(playerHeaders[8], player.getCategory());
-				row.put(playerHeaders[9], String.valueOf(player.getHeight()));
-				row.put(playerHeaders[10], String.valueOf(player.getWeight()));
-				row.put(playerHeaders[11], player.getTeam().toString());
+				row.put(playerHeaders[8], String.valueOf(player.getHeight()));
+				row.put(playerHeaders[9], String.valueOf(player.getWeight()));
+				row.put(playerHeaders[10], player.getTeam().toString());
 				
 				csvWriter.write(row, playerHeaders);
 			}
@@ -206,7 +200,7 @@ public class CSVFileManager implements IFileManager {
 				row.put(trainerHeaders[5], trainer.getPassword());
 				row.put(trainerHeaders[6], calendarToString(trainer.getBirthDate()));
 				row.put(trainerHeaders[7], trainer.getCountry());
-				row.put(trainerHeaders[8], trainer.getTeams().toString());
+				row.put(trainerHeaders[8], trainer.getTeam().toString());
 				
 				csvWriter.write(row, trainerHeaders);
 			}

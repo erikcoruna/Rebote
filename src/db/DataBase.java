@@ -32,10 +32,10 @@ public class DataBase {
 			
 			dbManager.createPlayerTable();
 			
-			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, "A1", 170, 60.4f);
-			Player anderPlayer = new Player("ander.player", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2, "A2", 196, 76.2f);
-			Player ikerPlayer = new Player("iker.player", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3, "B1", 175, 65.7f);
-			Player hugoPlayer = new Player("hugo.player", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4, "B2", 171, 63.3f);
+			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.4f);
+			Player anderPlayer = new Player("ander.player", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2, 196, 76.2f);
+			Player ikerPlayer = new Player("iker.player", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3, 175, 65.7f);
+			Player hugoPlayer = new Player("hugo.player", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4, 171, 63.3f);
 			
 			dbManager.storePlayer(erikPlayer);
 			dbManager.storePlayer(anderPlayer);

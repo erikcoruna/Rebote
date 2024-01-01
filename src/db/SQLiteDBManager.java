@@ -102,7 +102,7 @@ public class SQLiteDBManager implements IUserRepository {
 	@Override
 	public void storePlayer(Player player) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO player (username, name, firstSurname,"
-				+ " secondSurname, password, birthDate, country, team, category, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				+ " secondSurname, password, birthDate, country, team, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				Statement statement = connection.createStatement()) {
 			preparedStatement.setString(1, player.getUsername());
 			preparedStatement.setString(2, player.getName());
@@ -112,9 +112,8 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(6, calendarToString(player.getBirthDate()));
 			preparedStatement.setString(7, player.getCountry());
 			preparedStatement.setString(8, player.getTeam().toString());
-			preparedStatement.setString(9, player.getCategory());
-			preparedStatement.setInt(10, player.getHeight());
-			preparedStatement.setFloat(11, player.getWeight());
+			preparedStatement.setInt(9, player.getHeight());
+			preparedStatement.setFloat(10, player.getWeight());
 			
 			preparedStatement.executeUpdate();
 			
@@ -186,7 +185,7 @@ public class SQLiteDBManager implements IUserRepository {
 	@Override
 	public Player getPlayer(int id) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
-				+ " password, birthDate, country, team, category, height, weight FROM player WHERE id = ?")) {
+				+ " password, birthDate, country, team, height, weight FROM player WHERE id = ?")) {
 			preparedStatement.setInt(1, id);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -212,7 +211,6 @@ public class SQLiteDBManager implements IUserRepository {
 					team.setLeague(League.valueOf(teamSplit[5]));
 				}
 				player.setTeam(team);
-				player.setCategory(resultSet.getString("category"));
 				player.setHeight(resultSet.getInt("height"));
 				player.setWeight(resultSet.getFloat("weight"));
 				
@@ -370,7 +368,7 @@ public class SQLiteDBManager implements IUserRepository {
 	@Override
 	public void updatePlayer(Player player) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE player SET username = ?, name = ?, firstSurname = ?, secondSurname = ?,"
-				+ " password = ?, birthDate = ?, country = ?, team = ?, category = ?, height = ?, weight = ?  WHERE id = ?")) {
+				+ " password = ?, birthDate = ?, country = ?, team = ?, height = ?, weight = ?  WHERE id = ?")) {
 			preparedStatement.setString(1, player.getUsername());
 			preparedStatement.setString(2, player.getName());
 			preparedStatement.setString(3, player.getFirstSurname());
@@ -379,10 +377,9 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(6, calendarToString(player.getBirthDate()));
 			preparedStatement.setString(7, player.getCountry());
 			preparedStatement.setString(8, player.getTeam().toString());
-			preparedStatement.setString(9, player.getCategory());
-			preparedStatement.setInt(10, player.getHeight());
-			preparedStatement.setFloat(11, player.getWeight());
-			preparedStatement.setInt(12, player.getId());
+			preparedStatement.setInt(9, player.getHeight());
+			preparedStatement.setFloat(10, player.getWeight());
+			preparedStatement.setInt(11, player.getId());
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
