@@ -11,8 +11,9 @@ public class User {
 	public String password;
 	public GregorianCalendar birthDate;
 	public String country;
+	public Team team;
 	
-	public User(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+	public User(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, Team team) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -22,9 +23,10 @@ public class User {
 		this.password = password;
 		this.birthDate = birthDate;
 		this.country = country;
+		this.team = team;
 	}
 	
-	public User(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
+	public User(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, Team team) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -33,6 +35,7 @@ public class User {
 		this.password = password;
 		this.birthDate = birthDate;
 		this.country = country;
+		this.team = team;
 	}
 	
 	public User() {
@@ -41,8 +44,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", firstSurname=" + firstSurname + ", secondSurname="
-				+ secondSurname + ", password=" + password + ", birthDate=" + birthDate + ", country=" + country + "]";
+		return "User [id=" + id + ", username=" + username + ", name=" + name + ", firstSurname=" + firstSurname
+				+ ", secondSurname=" + secondSurname + ", password=" + password + ", birthDate=" + birthDate
+				+ ", country=" + country + ", team=" + team + "]";
 	}
 
 	public int getId() {
@@ -107,6 +111,14 @@ public class User {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 }
 

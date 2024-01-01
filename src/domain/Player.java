@@ -6,28 +6,25 @@ public class Player extends User {
 	public String category;
 	public int height;
 	public float weight;
-	public Team team;
 	
-	public Player(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
-			float weight, Team team) {
-		super(id, username, name, firstSurname, secondSurname, password, birthDate, country);
+	public Player(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, Team team, int height,
+			float weight) {
+		super(id, username, name, firstSurname, secondSurname, password, birthDate, country, team);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
-		this.team = team;
 	}
 	
-	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, String category, int height,
-			float weight, Team team) {
-		super(username, name, firstSurname, secondSurname, password, birthDate, country);
+	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, Team team, String category, int height,
+			float weight) {
+		super(username, name, firstSurname, secondSurname, password, birthDate, country, team);
 		this.category = category;
 		this.height = height;
 		this.weight = weight;
-		this.team = team;
 	}
 	
-	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country) {
-		super(username, name, firstSurname, secondSurname, password, birthDate, country);
+	public Player(String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate, String country, Team team) {
+		super(username, name, firstSurname, secondSurname, password, birthDate, country, team);
 	}
 	
 	public Player() {
@@ -58,18 +55,8 @@ public class Player extends User {
 		this.weight = weight;
 	}
 
-	public Team getTeam() {
-		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
-	}
-
 	@Override
 	public String toString() {
-		return "Player [category=" + category + ", height=" + height + ", weight=" + weight + ", team=" + team + "]";
+		return "Player [category=" + category + ", height=" + height + ", weight=" + weight + "]";
 	}
-	
-	
 }
