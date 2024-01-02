@@ -18,8 +18,6 @@ public class DataBase {
 			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("src/db/rebote.db");
 			
-			dbManager.createTeamTable();
-			
 			Team team1 = new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A);
 			Team team2 = new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B);
 			Team team3 = new Team("team3", "Barakaldo", "Barakaldo Basket", "Este es el equipo de Barakaldo.", League.C);
@@ -30,7 +28,9 @@ public class DataBase {
 			dbManager.storeTeam(team3);
 			dbManager.storeTeam(team4);
 			
-			dbManager.createPlayerTable();
+			System.out.println(dbManager.getAllTeams());
+			
+
 			
 			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.4f);
 			Player anderPlayer = new Player("ander.player", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2, 196, 76.2f);
@@ -50,7 +50,7 @@ public class DataBase {
 			dbManager.updatePlayer(hugoPlayer);
 			System.out.println(dbManager.getPlayer(4));
 			
-			dbManager.createTrainerTable();
+
 			
 			Trainer erikTrainer = new Trainer("erik.trainer", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1);
 			Trainer anderTrainer = new Trainer("ander.trainer", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2);
