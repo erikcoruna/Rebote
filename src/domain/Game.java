@@ -1,45 +1,49 @@
 package domain;
 
 public class Game {
-	private String id;
-	private String location;
+	private int id = -1;
+	private String stadium;
 	private String referee;
-	private String teamName1;
-	private String teamName2;
-	private Integer teamScore1;
-	private Integer teamScore2;
-	private Integer teamFoults1;
-	private Integer teamFoults2;
+	private int team1;
+	private int team2;
+	private int teamScore1;
+	private int teamScore2;
+	private int teamFoults1;
+	private int teamFoults2;
 	
-	public Game(String id, String location, String referee, String teamName1, String teamName2,
-			Integer teamScore1, Integer teamScore2,
-			Integer teamFoults1, Integer teamFoults2) {
+	public Game(int id, String stadium, String referee, int team1, int team2,
+			int teamScore1, int teamScore2,
+			int teamFoults1, int teamFoults2) {
 		super();
 		this.id = id;
-		this.location = location;
+		this.stadium = stadium;
 		this.referee = referee;
-		this.teamName1 = teamName1;
-		this.teamName2 = teamName2;
+		this.team1 = team1;
+		this.team2 = team2;
 		this.teamScore1 = teamScore1;
 		this.teamScore2 = teamScore2;
 		this.teamFoults1 = teamFoults1;
 		this.teamFoults2 = teamFoults2;
 	}
 
-	public String getId() {
+	public Game() {
+		super();
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getStadium() {
+		return stadium;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setStadium(String stadium) {
+		this.stadium = stadium;
 	}
 
 	public String getReferee() {
@@ -50,51 +54,51 @@ public class Game {
 		this.referee = referee;
 	}
 
-	public String getTeamName1() {
-		return teamName1;
+	public int getTeam1() {
+		return team1;
 	}
 
-	public void setTeamName1(String teamName1) {
-		this.teamName1 = teamName1;
+	public void setTeam1(int team1) {
+		this.team1 = team1;
 	}
 
-	public String getTeamName2() {
-		return teamName2;
+	public int getTeam2() {
+		return team2;
 	}
 
-	public void setTeamName2(String teamName2) {
-		this.teamName2 = teamName2;
+	public void setTeam2(int team2) {
+		this.team2 = team2;
 	}
 
-	public Integer getTeamScore1() {
+	public int getTeamScore1() {
 		return teamScore1;
 	}
 
-	public void setTeamScore1(Integer teamScore1) {
+	public void setTeamScore1(int teamScore1) {
 		this.teamScore1 = teamScore1;
 	}
 
-	public Integer getTeamScore2() {
+	public int getTeamScore2() {
 		return teamScore2;
 	}
 
-	public void setTeamScore2(Integer teamScore2) {
+	public void setTeamScore2(int teamScore2) {
 		this.teamScore2 = teamScore2;
 	}
 
-	public Integer getTeamFoults1() {
+	public int getTeamFoults1() {
 		return teamFoults1;
 	}
 
-	public void setTeamFoults1(Integer teamFoults1) {
+	public void setTeamFoults1(int teamFoults1) {
 		this.teamFoults1 = teamFoults1;
 	}
 
-	public Integer getTeamFoults2() {
+	public int getTeamFoults2() {
 		return teamFoults2;
 	}
 
-	public void setTeamFoults2(Integer teamFoults2) {
+	public void setTeamFoults2(int teamFoults2) {
 		this.teamFoults2 = teamFoults2;
 	}
 }

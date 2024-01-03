@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import domain.Game;
 import domain.IUserRepository;
 import domain.League;
 import domain.Player;
@@ -89,6 +90,16 @@ public class SQLiteDBManager implements IUserRepository {
 					+ " city VARCHAR, stadium VARCHAR, description VARCHAR, league VARCHAR)");
 		} catch (SQLException e) {
 			throw new UserRepositoryException("Error creando la tabla 'team' en la base de datos.");
+		}
+	}
+	
+	public void createGameTable() throws UserRepositoryException {
+		try (Statement statement = connection.createStatement()) {
+			statement.executeUpdate("CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY AUTOINCREMENT, stadium VARCHAR,"
+					+ " referee VARCHAR, team1 INTEGER, team2 INTEGER, teamScore1 INTEGER, teamScore2 INTEGER,"
+					+ " teamFoults1 INTEGER, teamFoults2 INTEGER)");
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error creando la tabla 'game' en la base de datos.");
 		}
 	}
 	
@@ -192,6 +203,34 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public void storeGame(Game game) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO game (stadium, referee,"
+				+ " team1, team2, teamScore1, teamScore2, teamFoults1, teamFoults2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				Statement statement = connection.createStatement()) {
+			preparedStatement.setString(1, game.getStadium());
+			preparedStatement.setString(2, game.getReferee());
+			preparedStatement.setInt(3, game.getTeam1());
+			preparedStatement.setInt(4, game.getTeam2());
+			preparedStatement.setInt(5, game.getTeamScore1());
+			preparedStatement.setInt(6, game.getTeamScore2());
+			preparedStatement.setInt(7, game.getTeamFoults1());
+			preparedStatement.setInt(8, game.getTeamFoults2());
+			
+			preparedStatement.executeUpdate();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT last_insert_rowid() AS id FROM game");
+			if (resultSet.next()) {
+				int newId = resultSet.getInt("id");
+				game.setId(newId);
+			} else {
+				throw new UserRepositoryException("Error generando el id en la base de datos.");
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido guardar el partido en la base de datos.", e);
+		}
+	}
+	
+	@Override
 	public Player getPlayer(int id) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
 				+ " password, birthDate, country, team_id, height, weight FROM player WHERE id = ?")) {
@@ -278,6 +317,35 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public Game getGame(int id) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, stadium, referee, team1,"
+				+ " team2, teamScore1, teamScore2, teamFoults1, teamFoults2 FROM game WHERE id = ?")) {
+			preparedStatement.setInt(1, id);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				Game game = new Game();
+				game.setId(resultSet.getInt("id"));
+				game.setStadium(resultSet.getString("stadium"));
+				game.setReferee(resultSet.getString("referee"));
+				game.setTeam1(resultSet.getInt("team1"));
+				game.setTeam2(resultSet.getInt("team2"));
+				game.setTeamScore1(resultSet.getInt("teamScore1"));
+				game.setTeamScore2(resultSet.getInt("teamScore2"));
+				game.setTeamFoults1(resultSet.getInt("teamFoults1"));
+				game.setTeamFoults2(resultSet.getInt("teamFoults2"));
+				
+				return game;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo el partido con ese id.", e);
+		}
+	}
+	
+	@Override
 	public List<Player> getAllPlayers() throws UserRepositoryException {
 		List<Player> players = new ArrayList<>();
 		try (Statement statement = connection.createStatement()) {
@@ -325,6 +393,22 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public List<Game> getAllGames() throws UserRepositoryException {
+		List<Game> games = new ArrayList<>();
+		try (Statement statement = connection.createStatement()) {
+			ResultSet resultSet = statement.executeQuery("SELECT id, stadium, referee, team1, team2, teamScore1, teamScore2,"
+					+ " teamFoults1, teamFoults2 FROM game");
+			
+			while (resultSet.next()) {
+				games.add(getGame(resultSet.getInt("id")));
+			}
+			return games;
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo los partidos de la base de datos.", e);
+		}
+	}
+	
+	@Override
 	public void deletePlayer(Player player) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM player WHERE id = ?")) {
 			preparedStatement.setInt(1, player.getId());
@@ -351,6 +435,16 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new UserRepositoryException("No se ha podido eliminar el equipo " + team.getId() + " de la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public void deleteGame(Game game) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM game WHERE id = ?")) {
+			preparedStatement.setInt(1, game.getId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido eliminar el partido " + game.getId() + " de la base de datos.", e);
 		}
 	}
 	
@@ -400,7 +494,7 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el jugador en la base de datos.", e);
+			throw new UserRepositoryException("No se ha podido actualizar el entrenador en la base de datos.", e);
 		}
 	}
 	
@@ -417,7 +511,28 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el jugador en la base de datos.", e);
+			throw new UserRepositoryException("No se ha podido actualizar el equipo en la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public void updateGame(Game game) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE game SET stadium = ?, referee = ?, team1 = ?, team2 = ?,"
+				+ " teamScore1 = ?, teamScore2 = ?, teamFoults1 = ?, teamFoults2 = ? WHERE id = ?")) {
+			preparedStatement.setString(1, game.getStadium());
+			preparedStatement.setString(2, game.getReferee());
+			preparedStatement.setInt(3, game.getTeam1());
+			preparedStatement.setInt(4, game.getTeam2());
+			preparedStatement.setInt(5, game.getTeam2());
+			preparedStatement.setInt(6, game.getTeamScore1());
+			preparedStatement.setInt(7, game.getTeamScore2());
+			preparedStatement.setInt(8, game.getTeamFoults1());
+			preparedStatement.setInt(9, game.getTeamFoults2());
+			preparedStatement.setInt(10, game.getId());
+			
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido actualizar el partido en la base de datos.", e);
 		}
 	}
 }
