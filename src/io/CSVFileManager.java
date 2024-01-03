@@ -22,6 +22,7 @@ import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import db.SQLiteDBManager;
+import domain.Game;
 import domain.IFileManager;
 import domain.League;
 import domain.Player;
@@ -34,6 +35,7 @@ public class CSVFileManager implements IFileManager {
 	public String[] playerHeaders = getAttributeNames(Player.class);
 	public String[] trainerHeaders = getAttributeNames(Trainer.class);
 	public String[] teamHeaders = getAttributeNames(Team.class);
+	public String[] gameHeaders = getAttributeNames(Game.class);
 	private SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static void main(String[] args) {
 		CSVFileManager fileManager = new CSVFileManager();
@@ -204,6 +206,45 @@ public class CSVFileManager implements IFileManager {
 			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
 		}
 	}
+	
+	@Override
+	public void importGamesFromFile(Path path) throws UserRepositoryException {
+		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
+			Map<String, String> row;
+			
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			
+			csvReader.getHeader(false);
+			while((row = csvReader.read(gameHeaders)) != null) {
+				Game game = new Game();
+				try {
+					game.setId(Integer.parseInt(row.get("id")));
+				} catch (NumberFormatException e) {
+					throw new UserRepositoryException("El campo id no puede estar vacío.", e);
+				}
+				game.setStadium(row.get("stadium"));
+				game.setReferee(row.get("referee"));
+				game.setTeam1(Integer.valueOf(row.get("team1")));
+				game.setTeam2(Integer.valueOf(row.get("team2")));
+				game.setTeamScore1(Integer.valueOf(row.get("teamScore1")));
+				game.setTeamScore2(Integer.valueOf(row.get("teamScore2")));
+				game.setTeamFoults1(Integer.valueOf(row.get("teamFoults1")));
+				game.setTeamFoults2(Integer.valueOf(row.get("teamFoults2")));
+				if (dbManager.getGame(game.getId()) != null) {
+					dbManager.updateGame(game);
+				} else {
+					game.setId(-1);
+					dbManager.storeGame(game);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+		} catch (IOException e) {
+			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+		}
+	}
 
 	@Override
 	public void exportPlayersToFile(Path path) throws UserRepositoryException {
@@ -301,6 +342,39 @@ public class CSVFileManager implements IFileManager {
 				
 				try {
 					csvWriter.write(row, teamHeaders);
+				} catch (IOException e) {
+					System.out.println("Error escribiendo fichero CSV.");
+					e.printStackTrace();
+				}
+			};
+		} catch (IOException e) {
+			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
+		}
+	}
+	
+	@Override
+	public void exportGamesToFile(Path path) throws UserRepositoryException {
+		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
+			csvWriter.writeHeader(gameHeaders);
+			
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			
+			for (Game game : dbManager.getAllGames()) {
+				Map<String, String> row = new HashMap<>();
+				row.put(gameHeaders[0], String.valueOf(game.getId()));
+				row.put(gameHeaders[1], game.getStadium());
+				row.put(gameHeaders[2], game.getReferee());
+				row.put(gameHeaders[3], String.valueOf(game.getTeam1()));
+				row.put(gameHeaders[4], String.valueOf(game.getTeam2()));
+				row.put(gameHeaders[5], String.valueOf(game.getTeamScore1()));
+				row.put(gameHeaders[6], String.valueOf(game.getTeamScore2()));
+				row.put(gameHeaders[7], String.valueOf(game.getTeamFoults1()));
+				row.put(gameHeaders[8], String.valueOf(game.getTeamFoults2()));
+				
+				try {
+					csvWriter.write(row, gameHeaders);
 				} catch (IOException e) {
 					System.out.println("Error escribiendo fichero CSV.");
 					e.printStackTrace();
