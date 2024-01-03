@@ -36,19 +36,10 @@ public class CSVFileManager implements IFileManager {
 	private SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static void main(String[] args) {
 		CSVFileManager fileManager = new CSVFileManager();
-		List<Trainer> trainersList = new ArrayList<>();
-		Team team1 = new Team(1, "team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A);
-		Team team2 = new Team(2, "team2", "Barakaldo", "Barakaldo basket", "Este es el equipo de baloncesto de Barakaldo.", League.B);
-		trainersList.add(new Trainer(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", team1));
-		trainersList.add(new Trainer(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", team2));
-		
-		List<Player> playersList = new ArrayList<>();
-		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.3f));
-		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", team2, 196, 75.4f));
 		try {
-//			fileManager.exportTrainersToFile(trainersList, Paths.get("src/io/trainers.csv"));
+			fileManager.exportTrainersToFile(Paths.get("src/io/trainers.csv"));
 			fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv"));
-//			fileManager.exportPlayersToFile(playersList, Paths.get("src/io/players.csv"));
+			fileManager.exportPlayersToFile(Paths.get("src/io/players.csv"));
 			fileManager.importPlayersFromFile(Paths.get("src/io/players.csv"));
 		} catch (UserRepositoryException e) {
 			e.printStackTrace();
@@ -88,7 +79,7 @@ public class CSVFileManager implements IFileManager {
 	
 	@Override
 	public void importPlayersFromFile(Path path) throws UserRepositoryException {
-		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/players.csv"), CsvPreference.STANDARD_PREFERENCE)) {
+		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
@@ -127,8 +118,9 @@ public class CSVFileManager implements IFileManager {
 		}
 	}
 
+	@Override
 	public void importTrainersFromFile(Path path) throws UserRepositoryException {
-		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/trainers.csv"), CsvPreference.STANDARD_PREFERENCE)) {
+		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
@@ -167,8 +159,8 @@ public class CSVFileManager implements IFileManager {
 	}
 
 	@Override
-	public void exportPlayersToFile(List<Player> players, Path path) throws UserRepositoryException {
-		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter("src/io/players.csv"), CsvPreference.STANDARD_PREFERENCE)) {
+	public void exportPlayersToFile(Path path) throws UserRepositoryException {
+		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(playerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
@@ -206,8 +198,8 @@ public class CSVFileManager implements IFileManager {
 	}
 
 	@Override
-	public void exportTrainersToFile(List<Trainer> trainers, Path path) throws UserRepositoryException {
-		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter("src/io/trainers.csv"), CsvPreference.STANDARD_PREFERENCE)) {
+	public void exportTrainersToFile(Path path) throws UserRepositoryException {
+		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(trainerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
