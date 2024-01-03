@@ -188,9 +188,11 @@ public class WindowRegister extends JFrame {
 											password,
 											calendar,
 											country,
-											new Vector<Team>()
+											null
 											);
 									dbManager.storeTrainer(trainer);
+									dispose();
+									new WindowLogin();
 									System.out.println("Entrenador " + username + " ha sido registrado correctamente.");
 								} else if (player.isSelected()) {
 									Player player = new Player(
@@ -201,12 +203,13 @@ public class WindowRegister extends JFrame {
 											password,
 											calendar,
 											country,
-											"",
+											null,
 											0,
-											0.0f,
-											new Team()
+											0.0f
 											);
 									dbManager.storePlayer(player);
+									dispose();
+									new WindowLogin();
 									System.out.println("Jugador " + username + " ha sido registrado correctamente.");
 								}
 							} else {
