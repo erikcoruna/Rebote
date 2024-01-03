@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.io.CsvMapWriter;
@@ -22,6 +21,7 @@ import org.supercsv.io.ICsvMapReader;
 import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
+import db.SQLiteDBManager;
 import domain.IFileManager;
 import domain.League;
 import domain.Player;
@@ -46,10 +46,10 @@ public class CSVFileManager implements IFileManager {
 		playersList.add(new Player(1, "erik.coruna", "Erik", "Coruña", "Rodríguez", "prueba", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.3f));
 		playersList.add(new Player(2, "ander.herrero", "Ander", "Herrero", "Pascual", "prueba", new GregorianCalendar(2004, 7 - 1, 26), "Francia", team2, 196, 75.4f));
 		try {
-			fileManager.exportTrainersToFile(trainersList, Paths.get("src/io/trainers.csv"));
-			System.out.println(fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv")));
-			fileManager.exportPlayersToFile(playersList, Paths.get("src/io/players.csv"));
-			System.out.println(fileManager.importPlayersFromFile(Paths.get("src/io/players.csv")));
+//			fileManager.exportTrainersToFile(trainersList, Paths.get("src/io/trainers.csv"));
+			fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv"));
+//			fileManager.exportPlayersToFile(playersList, Paths.get("src/io/players.csv"));
+			fileManager.importPlayersFromFile(Paths.get("src/io/players.csv"));
 		} catch (UserRepositoryException e) {
 			e.printStackTrace();
 		}
@@ -87,10 +87,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public List<Player> importPlayersFromFile(Path path) throws UserRepositoryException {
+	public void importPlayersFromFile(Path path) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/players.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
-			List<Player> playerList = new ArrayList<>();
+			
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
 			
 			csvReader.getHeader(false);
 			while ((row = csvReader.read(playerHeaders)) != null) {
@@ -103,20 +106,20 @@ public class CSVFileManager implements IFileManager {
 				player.setPassword(row.get("password"));
 				player.setBirthDate(stringToCalendar(row.get("birthDate")));
 				player.setCountry(row.get("country"));
+				try {
+					player.setTeam(dbManager.getTeam(Integer.parseInt(row.get("team"))));
+				} catch (NumberFormatException e) {
+					player.setTeam(null);
+				}
 				player.setHeight(Integer.parseInt(row.get("height")));
 				player.setWeight(Float.parseFloat(row.get("weight")));
-				String teamStr = row.get("team").replaceAll("[\\[\\]]", "");
-				String[] teamSplit = teamStr.split(", ");
-				Team team = new Team();
-				team.setName(teamSplit[1]);
-				team.setCity(teamSplit[2]);
-				team.setStadium(teamSplit[3]);
-				team.setDescription(teamSplit[4]);
-				team.setLeague(League.valueOf(teamSplit[5]));
-				player.setTeam(team);
-				playerList.add(player);
+				try {
+					dbManager.updatePlayer(player);
+				} catch (UserRepositoryException e) {
+					player.setId(-1);
+					dbManager.storePlayer(player);
+				}
 			}
-			return playerList;
 		} catch (FileNotFoundException e) {
 			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
 		} catch (IOException e) {
@@ -124,10 +127,13 @@ public class CSVFileManager implements IFileManager {
 		}
 	}
 
-	public List<Trainer> importTrainersFromFile(Path path) throws UserRepositoryException {
+	public void importTrainersFromFile(Path path) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader("src/io/trainers.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
-			List<Trainer> trainersList = new ArrayList<>();
+			
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(trainerHeaders)) != null) {
@@ -140,18 +146,19 @@ public class CSVFileManager implements IFileManager {
 				trainer.setPassword(row.get("password"));
 				trainer.setBirthDate(stringToCalendar(row.get("birthDate")));
 				trainer.setCountry(row.get("country"));
-				String teamStr = row.get("team").replaceAll("[\\[\\]]", "");
-				String[] teamSplit = teamStr.split(", ");
-				Team team = new Team();
-				team.setName(teamSplit[1]);
-				team.setCity(teamSplit[2]);
-				team.setStadium(teamSplit[3]);
-				team.setDescription(teamSplit[4]);
-				team.setLeague(League.valueOf(teamSplit[5]));
-				trainer.setTeam(team);
-				trainersList.add(trainer);
+				try {
+					trainer.setTeam(dbManager.getTeam(Integer.parseInt(row.get("team"))));
+				} catch (NumberFormatException e) {
+					trainer.setTeam(null);
+				}
+				
+				try {
+					dbManager.updateTrainer(trainer);
+				} catch (UserRepositoryException e) {
+					trainer.setId(-1);
+					dbManager.storeTrainer(trainer);
+				}
 			}
-			return trainersList;
 		} catch (FileNotFoundException e) {
 			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
 		} catch (IOException e) {
@@ -164,7 +171,11 @@ public class CSVFileManager implements IFileManager {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter("src/io/players.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(playerHeaders);
 			
-			for (Player player : players) {
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			
+			for (Player player : dbManager.getAllPlayers()) {
 				Map<String, String> row = new HashMap<>();
 				row.put(playerHeaders[0], String.valueOf(player.getId()));
 				row.put(playerHeaders[1], player.getUsername());
@@ -174,12 +185,21 @@ public class CSVFileManager implements IFileManager {
 				row.put(playerHeaders[5], player.getPassword());
 				row.put(playerHeaders[6], calendarToString(player.getBirthDate()));
 				row.put(playerHeaders[7], player.getCountry());
-				row.put(playerHeaders[8], String.valueOf(player.getHeight()));
-				row.put(playerHeaders[9], String.valueOf(player.getWeight()));
-				row.put(playerHeaders[10], player.getTeam().toString());
-				
-				csvWriter.write(row, playerHeaders);
-			}
+				try {
+					row.put(playerHeaders[8], String.valueOf(player.getTeam().getId()));
+				} catch (NullPointerException e) {
+					row.put(playerHeaders[8], null);
+				}
+				row.put(playerHeaders[9], String.valueOf(player.getHeight()));
+				row.put(playerHeaders[10], String.valueOf(player.getWeight()));
+					
+				try {
+					csvWriter.write(row, playerHeaders);
+				} catch (IOException e) {
+					System.out.println("Error escribiendo fichero CSV.");
+					e.printStackTrace();
+				}
+			};
 		} catch (IOException e) {
 			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
 		}
@@ -190,7 +210,11 @@ public class CSVFileManager implements IFileManager {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter("src/io/trainers.csv"), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(trainerHeaders);
 			
-			for (Trainer trainer : trainers) {
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			
+			for (Trainer trainer : dbManager.getAllTrainers()) {
 				Map<String, String> row = new HashMap<>();
 				row.put(trainerHeaders[0], String.valueOf(trainer.getId()));
 				row.put(trainerHeaders[1], trainer.getUsername());
@@ -200,10 +224,19 @@ public class CSVFileManager implements IFileManager {
 				row.put(trainerHeaders[5], trainer.getPassword());
 				row.put(trainerHeaders[6], calendarToString(trainer.getBirthDate()));
 				row.put(trainerHeaders[7], trainer.getCountry());
-				row.put(trainerHeaders[8], trainer.getTeam().toString());
+				try {
+					row.put(trainerHeaders[8], String.valueOf(trainer.getTeam().getId()));
+				} catch (NullPointerException e) {
+					row.put(trainerHeaders[8], null);
+				}
 				
-				csvWriter.write(row, trainerHeaders);
-			}
+				try {
+					csvWriter.write(row, trainerHeaders);
+				} catch (IOException e) {
+					System.out.println("Error escribiendo fichero CSV.");
+					e.printStackTrace();
+				}
+			};
 		} catch (IOException e) {
 			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
 		}

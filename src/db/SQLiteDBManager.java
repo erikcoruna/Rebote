@@ -112,7 +112,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, player.getPassword());
 			preparedStatement.setString(6, calendarToString(player.getBirthDate()));
 			preparedStatement.setString(7, player.getCountry());
-			preparedStatement.setInt(8, player.getTeam().getId());
+			try {
+				preparedStatement.setInt(8, player.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Jugador sin equipo: " + player.getName());
+			}
 			preparedStatement.setInt(9, player.getHeight());
 			preparedStatement.setFloat(10, player.getWeight());
 			
@@ -142,7 +146,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, trainer.getPassword());
 			preparedStatement.setString(6, calendarToString(trainer.getBirthDate()));
 			preparedStatement.setString(7, trainer.getCountry());
-			preparedStatement.setInt(8, trainer.getTeam().getId());
+			try {
+				preparedStatement.setInt(8, trainer.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Entrenador sin equipo: " + trainer.getName());
+			}
 			
 			preparedStatement.executeUpdate();
 			
@@ -201,7 +209,7 @@ public class SQLiteDBManager implements IUserRepository {
 				player.setPassword(resultSet.getString("password"));
 				player.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
 				player.setCountry(resultSet.getString("country"));
-				player.setTeam(getTeam(resultSet.getInt("id")));
+				player.setTeam(getTeam(resultSet.getInt("team_id")));
 				player.setHeight(resultSet.getInt("height"));
 				player.setWeight(resultSet.getFloat("weight"));
 				
@@ -232,7 +240,7 @@ public class SQLiteDBManager implements IUserRepository {
 				trainer.setPassword(resultSet.getString("password"));
 				trainer.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
 				trainer.setCountry(resultSet.getString("country"));
-				trainer.setTeam(getTeam(resultSet.getInt("id")));
+				trainer.setTeam(getTeam(resultSet.getInt("team_id")));
 				
 				return trainer;
 			} else {
@@ -357,7 +365,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, player.getPassword());
 			preparedStatement.setString(6, calendarToString(player.getBirthDate()));
 			preparedStatement.setString(7, player.getCountry());
-			preparedStatement.setInt(8, player.getTeam().getId());
+			try {
+				preparedStatement.setInt(8, player.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Jugador sin equipo: " + player.getName());
+			}
 			preparedStatement.setInt(9, player.getHeight());
 			preparedStatement.setFloat(10, player.getWeight());
 			preparedStatement.setInt(11, player.getId());
@@ -379,7 +391,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, trainer.getPassword());
 			preparedStatement.setString(6, calendarToString(trainer.getBirthDate()));
 			preparedStatement.setString(7, trainer.getCountry());
-			preparedStatement.setInt(8, trainer.getTeam().getId());
+			try {
+				preparedStatement.setInt(8, trainer.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Entrenador sin equipo: " + trainer.getName());
+			}
 			preparedStatement.setInt(9, trainer.getId());
 			
 			preparedStatement.executeUpdate();

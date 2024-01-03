@@ -1,3 +1,4 @@
-id,username,name,firstSurname,secondSurname,password,birthDate,country,teams
-1,erik.coruna,Erik,Coruña,Rodríguez,prueba,2004-04-22,España,"[[team1, Bilbao, Bilbao basket, Este es el equipo de baloncesto de Bilbao.], [team2, Barakaldo, Barakaldo basket, Este es el equipo de baloncesto de Barakaldo.]]"
-2,ander.herrero,Ander,Herrero,Pascual,prueba,2004-07-26,Francia,"[[team1, Bilbao, Bilbao basket, Este es el equipo de baloncesto de Bilbao.], [team2, Barakaldo, Barakaldo basket, Este es el equipo de baloncesto de Barakaldo.]]"
+id,username,name,firstSurname,secondSurname,password,birthDate,country,team
+1,erik.trainer,Erik,Coruña,Rodríguez,prueba1,2004-04-22,España,
+2,ander.trainer,Ander,Herrero,Pascual,prueba2,2004-01-20,España,2
+4,hugo.trainer,Hugo,Rey,García,prueba4,2004-03-16,Francia,4

@@ -1,3 +1,4 @@
-id,username,name,firstSurname,secondSurname,password,birthDate,country,category,height,weight,team
-1,erik.coruna,Erik,Coruña,Rodríguez,prueba,2004-04-22,España,A1,170,60.3,"[team1, Bilbao, Bilbao basket, Este es el equipo de baloncesto de Bilbao.]"
-2,ander.herrero,Ander,Herrero,Pascual,prueba,2004-07-26,Francia,A2,196,75.4,"[team2, Barakaldo, Barakaldo basket, Este es el equipo de baloncesto de Barakaldo.]"
+id,username,name,firstSurname,secondSurname,password,birthDate,country,team,height,weight
+1,erik.player,Erik,Coruña,Rodríguez,prueba1,2004-04-22,España,,270,60.4
+2,ander.player,Ander,Herrero,Pascual,prueba2,2004-01-20,España,2,196,76.2
+4,hugo.player,Hugo,Rey,García,prueba4,2004-03-16,Francia,4,171,63.3

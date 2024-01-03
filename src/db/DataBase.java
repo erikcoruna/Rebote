@@ -32,7 +32,7 @@ public class DataBase {
 			
 
 			
-			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1, 170, 60.4f);
+			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f);
 			Player anderPlayer = new Player("ander.player", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2, 196, 76.2f);
 			Player ikerPlayer = new Player("iker.player", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3, 175, 65.7f);
 			Player hugoPlayer = new Player("hugo.player", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4, 171, 63.3f);
@@ -52,7 +52,7 @@ public class DataBase {
 			
 
 			
-			Trainer erikTrainer = new Trainer("erik.trainer", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", team1);
+			Trainer erikTrainer = new Trainer("erik.trainer", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null);
 			Trainer anderTrainer = new Trainer("ander.trainer", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2);
 			Trainer ikerTrainer = new Trainer("iker.trainer", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3);
 			Trainer hugoTrainer = new Trainer("hugo.trainer", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4);
