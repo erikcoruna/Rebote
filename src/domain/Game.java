@@ -1,5 +1,4 @@
 package domain;
-import java.util.LinkedHashMap;
 
 public class Game {
 	private String id;
@@ -7,14 +6,14 @@ public class Game {
 	private String referee;
 	private String teamName1;
 	private String teamName2;
-	private LinkedHashMap<String, Integer> teamScore1;
-	private LinkedHashMap<String, Integer> teamScore2;
-	private LinkedHashMap<String, Integer> teamFoults1;
-	private LinkedHashMap<String, Integer> teamFoults2;
+	private Integer teamScore1;
+	private Integer teamScore2;
+	private Integer teamFoults1;
+	private Integer teamFoults2;
 	
 	public Game(String id, String location, String referee, String teamName1, String teamName2,
-			LinkedHashMap<String, Integer> teamScore1, LinkedHashMap<String, Integer> teamScore2,
-			LinkedHashMap<String, Integer> teamFoults1, LinkedHashMap<String, Integer> teamFoults2) {
+			Integer teamScore1, Integer teamScore2,
+			Integer teamFoults1, Integer teamFoults2) {
 		super();
 		this.id = id;
 		this.location = location;
@@ -67,35 +66,35 @@ public class Game {
 		this.teamName2 = teamName2;
 	}
 
-	public LinkedHashMap<String, Integer> getTeamScore1() {
+	public Integer getTeamScore1() {
 		return teamScore1;
 	}
 
-	public void setTeamScore1(LinkedHashMap<String, Integer> teamScore1) {
+	public void setTeamScore1(Integer teamScore1) {
 		this.teamScore1 = teamScore1;
 	}
 
-	public LinkedHashMap<String, Integer> getTeamScore2() {
+	public Integer getTeamScore2() {
 		return teamScore2;
 	}
 
-	public void setTeamScore2(LinkedHashMap<String, Integer> teamScore2) {
+	public void setTeamScore2(Integer teamScore2) {
 		this.teamScore2 = teamScore2;
 	}
 
-	public LinkedHashMap<String, Integer> getTeamFoults1() {
+	public Integer getTeamFoults1() {
 		return teamFoults1;
 	}
 
-	public void setTeamFoults1(LinkedHashMap<String, Integer> teamFoults1) {
+	public void setTeamFoults1(Integer teamFoults1) {
 		this.teamFoults1 = teamFoults1;
 	}
 
-	public LinkedHashMap<String, Integer> getTeamFoults2() {
+	public Integer getTeamFoults2() {
 		return teamFoults2;
 	}
 
-	public void setTeamFoults2(LinkedHashMap<String, Integer> teamFoults2) {
+	public void setTeamFoults2(Integer teamFoults2) {
 		this.teamFoults2 = teamFoults2;
 	}
 }
