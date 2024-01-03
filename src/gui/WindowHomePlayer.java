@@ -53,9 +53,6 @@ public class WindowHomePlayer extends JFrame {
 	private JTextField textFieldSearch;
 	private JButton buttonSearch;
 	private JScrollPane scrollPaneSearch;
-	public static void main(String[] args) {
-		new WindowHomePlayer(new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", "A1", 170, 60.4f, new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A)));
-	}
 	
 	public static void updatePlayer(Player player) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
