@@ -46,6 +46,8 @@ public class CSVFileManager implements IFileManager {
 			fileManager.importPlayersFromFile(Paths.get("src/io/players.csv"));
 			fileManager.exportTeamsToFile(Paths.get("src/io/teams.csv"));
 			fileManager.importTeamsFromFile(Paths.get("src/io/teams.csv"));
+			fileManager.exportGamesToFile(Paths.get("src/io/games.csv"));
+			fileManager.importGamesFromFile(Paths.get("src/io/games.csv"));
 		} catch (UserRepositoryException e) {
 			e.printStackTrace();
 		}
