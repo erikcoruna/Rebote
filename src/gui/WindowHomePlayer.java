@@ -45,6 +45,7 @@ public class WindowHomePlayer extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
+	private JPanel panelTeam;
 	private JPanel panelSearch;
 	private JPanel panelNorthSearch;
 	private JPanel panelTeamsSearch;
@@ -264,19 +265,32 @@ public class WindowHomePlayer extends JFrame {
 			}
 		});
         
-        //https://docs.oracle.com/javase/tutorial/uiswing/components/scrollpane.html
-        //Para hacer que haya solo scroll vertical
-        JPanel panelTeam = new JPanel();
-        JScrollPane scrollPaneTeam = new JScrollPane(panelTeam);
-        scrollPaneTeam.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneTeam.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-       // for(Player p : players) {
-       //	JTable tableTeammates = new JTable(tableModel);
-       // 	String[] columnNames = {"ID", "Categoría", "Autor", "Coordenadas"};
-       //	DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-       //	panelTeam.add(tableTeammates);
-       // }
-		tabbedPanel.addTab("Tu equipo", scrollPaneTeam);
+//        //https://docs.oracle.com/javase/tutorial/uiswing/components/scrollpane.html
+//        //Para hacer que haya solo scroll vertical
+//        JPanel panelTeam = new JPanel();
+//        JScrollPane scrollPaneTeam = new JScrollPane(panelTeam);
+//        scrollPaneTeam.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		scrollPaneTeam.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//       // for(Player p : players) {
+//       //	JTable tableTeammates = new JTable(tableModel);
+//       // 	String[] columnNames = {"ID", "Categoría", "Autor", "Coordenadas"};
+//       //	DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+//       //	panelTeam.add(tableTeammates);
+//       // }
+//		tabbedPanel.addTab("Tu equipo", scrollPaneTeam);
+        
+        panelTeam = new JPanel(new BorderLayout());
+        
+        Team playerTeam = player.getTeam();
+        
+        if (playerTeam !=null) {
+        	addTeamPanel(playerTeam);
+        } else {
+        	JLabel labelNoTeam = new JLabel("No estás inscrito en ningún equipo");
+        	panelTeam.add(labelNoTeam);
+        }
+        
+        tabbedPanel.addTab("Tu equipo", panelTeam);
 
         panelSearch = new JPanel(new BorderLayout());
         
