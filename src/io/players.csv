@@ -1,4 +1,4 @@
 id,username,name,firstSurname,secondSurname,password,birthDate,country,team,height,weight
-1,erik.player,Erik,Coruña,Rodríguez,prueba1,2004-04-22,España,,270,60.4
+1,erik.player,Erik,Coruña,Rodríguez,prueba1,2004-04-22,España,,170,60.4
 2,ander.player,Ander,Herrero,Pascual,prueba2,2004-01-20,España,2,196,76.2
 4,hugo.player,Hugo,Rey,García,prueba4,2004-03-16,Francia,4,171,63.3
