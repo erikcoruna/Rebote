@@ -32,6 +32,7 @@ public class WindowTeam extends JFrame {
 	private List<Game> gamesPlayedList = new ArrayList<>();
 	private int gameIndex;
 	
+	private Team team1;
 	private JLabel team1NameLabel;
 	private JLabel team1LeagueLabel;
 	private JLabel team1PointsLabel;
@@ -46,13 +47,14 @@ public class WindowTeam extends JFrame {
 	private JButton previousButton;
 	private JButton nextButton;
 	
-	private void updateGame(Team team1) {
+	private void updateGame() {
 		if (gamesPlayedList.size() > 0 && gameIndex >= 0 && gameIndex < gamesPlayedList.size()) {
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			try {
 				System.out.println("Conectando con la base de datos...");
 				dbManager.connect("src/db/rebote.db");
 				Game currentGame = gamesPlayedList.get(gameIndex);
+				team1 = dbManager.getTeam(currentGame.getTeam1());
 				team1NameLabel.setText(team1.getName().toUpperCase());
 				team1LeagueLabel.setIcon(new ImageIcon("src/img/" + team1.getLeague() + ".png"));
 				team1PointsLabel.setText("P: " + currentGame.getTeamScore1());
@@ -69,22 +71,22 @@ public class WindowTeam extends JFrame {
 		}
 	}
 	
-	private void showPreviousGame(Team team1) {
+	private void showPreviousGame() {
 		if (gameIndex < gamesPlayedList.size() - 1) {
 			nextButton.setEnabled(true);
 			gameIndex++;
-			updateGame(team1);
+			updateGame();
 			if (gameIndex == gamesPlayedList.size() - 1) {
 				previousButton.setEnabled(false);
 			}
 		}
 	}
 	
-	private void showNextGame(Team team1) {
+	private void showNextGame() {
 		if (gameIndex > 0) {
 			previousButton.setEnabled(true);
 			gameIndex--;
-			updateGame(team1);
+			updateGame();
 			if (gameIndex == 0) {
 				nextButton.setEnabled(false);
 			}
@@ -94,7 +96,6 @@ public class WindowTeam extends JFrame {
 	public WindowTeam(Team team) {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(team.getName());
 		setIconImage(new ImageIcon("src/img/" + team.getLeague() + ".png").getImage());
 		
@@ -150,10 +151,11 @@ public class WindowTeam extends JFrame {
 					gamesPanel.add(team1Panel, BorderLayout.WEST);
 					gamesPanel.add(team2Panel, BorderLayout.EAST);
 					
-					team1NameLabel = new JLabel(team.getName().toUpperCase());
+					team1 = dbManager.getTeam(gamesPlayedList.get(gamesPlayedList.size() - 1).getTeam1());
+					team1NameLabel = new JLabel(team1.getName().toUpperCase());
 					team1NameLabel.setHorizontalAlignment(JLabel.CENTER);
 					team1LeagueLabel = new JLabel();
-					ImageIcon team1Icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
+					ImageIcon team1Icon = new ImageIcon("src/img/" + team1.getLeague() + ".png");
 					team1LeagueLabel.setIcon(team1Icon);
 					team1PointsLabel = new JLabel("P: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamScore1());
 					team1PointsLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -197,7 +199,7 @@ public class WindowTeam extends JFrame {
 							
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								showPreviousGame(team);
+								showPreviousGame();
 							}
 						});
 						
@@ -205,7 +207,7 @@ public class WindowTeam extends JFrame {
 							
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								showNextGame(team);
+								showNextGame();
 							}
 						});
 					}

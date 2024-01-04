@@ -85,7 +85,7 @@ public class WindowHomePlayer extends JFrame {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(team.getCity());
+				new WindowTeam(team);
 			}
 		});
 	}
