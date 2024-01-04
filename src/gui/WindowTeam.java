@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ public class WindowTeam extends JFrame {
 		
 		// https://stackoverflow.com/questions/9660987/how-to-get-a-tab-character
 		// Para coger el caracter tab en html.
-		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s&#9;&#9;Estadio: %s<br/><br/>Descripción: %s",
+		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s",
 				team.getCity(),
 				team.getStadium(),
 				team.getDescription()));
@@ -53,7 +54,7 @@ public class WindowTeam extends JFrame {
 		panel.add(stuffLabel, BorderLayout.CENTER);
 		
 		JPanel southPanel = new JPanel(new BorderLayout());
-		southPanel.setBackground(Color.PINK);
+		southPanel.setBackground(Color.WHITE);
 		JLabel gamesPlayedLabel = new JLabel("Partidos jugados");
 		gamesPlayedLabel.setHorizontalAlignment(JLabel.CENTER);
 		gamesPlayedLabel.setFont(new Font("Agency FB", Font.BOLD, 20));
@@ -81,30 +82,44 @@ public class WindowTeam extends JFrame {
 				if (gamesPlayed.size() >= 1) {
 					JPanel gamesPanel = new JPanel(new BorderLayout());
 					southPanel.add(gamesPanel, BorderLayout.CENTER);
-					JPanel team1Panel = new JPanel();
-					JPanel team2Panel = new JPanel();
+					JPanel team1Panel = new JPanel(new GridLayout(2, 2));
+					team1Panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+					JPanel team2Panel = new JPanel(new GridLayout(2, 2));
+					team2Panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 					gamesPanel.add(team1Panel, BorderLayout.WEST);
 					gamesPanel.add(team2Panel, BorderLayout.EAST);
 					
-					JLabel team1NameLabel = new JLabel(team.getName());
+					JLabel team1NameLabel = new JLabel(team.getName().toUpperCase());
+					team1NameLabel.setHorizontalAlignment(JLabel.CENTER);
 					JLabel team1LeagueLabel = new JLabel();
 					ImageIcon team1Icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
 					team1LeagueLabel.setIcon(team1Icon);
-					JLabel team1PointsLabel = new JLabel("Puntos: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore1());
+					JLabel team1PointsLabel = new JLabel("P: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore1());
+					team1PointsLabel.setHorizontalAlignment(JLabel.CENTER);
+					JLabel team1FoultsLabel = new JLabel("F: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamFoults1());
+					team1FoultsLabel.setHorizontalAlignment(JLabel.CENTER);
+					
+					JLabel vsLabel = new JLabel("VS");
+					vsLabel.setFont(new Font("Agency FB", Font.BOLD, 40));
+					vsLabel.setHorizontalAlignment(JLabel.CENTER);
+					gamesPanel.add(vsLabel, BorderLayout.CENTER);
 					
 					Team team2 = dbManager.getTeam(gamesPlayed.get(gamesPlayed.size() - 1).getTeam2());
-					JLabel team2NameLabel = new JLabel(team2.getName());
+					JLabel team2NameLabel = new JLabel(team2.getName().toUpperCase());
 					JLabel team2LeagueLabel = new JLabel();
 					ImageIcon team2Icon = new ImageIcon("src/img/" + team2.getLeague() + ".png");
 					team2LeagueLabel.setIcon(team2Icon);
-					JLabel team2PointsLabel = new JLabel("Puntos: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore2());
+					JLabel team2PointsLabel = new JLabel("P: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore2());
+					JLabel team2FoultsLabel = new JLabel("F: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamFoults2());
 					
 					team1Panel.add(team1NameLabel);
 					team1Panel.add(team1LeagueLabel);
 					team1Panel.add(team1PointsLabel);
+					team1Panel.add(team1FoultsLabel);
 					team2Panel.add(team2NameLabel);
 					team2Panel.add(team2LeagueLabel);
 					team2Panel.add(team2PointsLabel);
+					team2Panel.add(team2FoultsLabel);
 					
 					JButton previousButton = new JButton("<<");
 					JButton nextButton = new JButton(">>");
