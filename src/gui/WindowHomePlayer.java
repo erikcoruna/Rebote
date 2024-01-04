@@ -377,6 +377,7 @@ public class WindowHomePlayer extends JFrame {
         	System.out.println("No se ha podido acceder a la base de datos.");
         	e.printStackTrace();
         }
+        
         JPanel panelGame = new JPanel();
         panelGame.add(new JLabel("Registro de partidos que habéis jugado"));
         tabbedPanel.addTab("Partidos", panelGame);
