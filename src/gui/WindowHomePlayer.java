@@ -97,6 +97,10 @@ public class WindowHomePlayer extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Home");
+		if (player.getTeam() != null) {
+			setIconImage(new ImageIcon("src/img/" + player.getTeam().getLeague() + ".png").getImage());
+		}
+		
 		
 		//https://www.discoduroderoer.es/como-crear-pestanas-con-la-clase-jtabbedpane-en-java/
 		//Un ejemplo de JTabbedPane, para saber como implementarlo en nuestro código
@@ -275,6 +279,10 @@ public class WindowHomePlayer extends JFrame {
         
         Team playerTeam = player.getTeam();
         
+        JLabel labelNoTeam = new JLabel("No estás inscrito en ningún equipo");
+    	labelNoTeam.setHorizontalAlignment(JLabel.CENTER);
+    	labelNoTeam.setFont(new Font("Agency FB", Font.BOLD, 20));
+        
         if (playerTeam != null) {
         	JLabel labelTeamStuff = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s</html>",
     				playerTeam.getCity(),
@@ -282,10 +290,33 @@ public class WindowHomePlayer extends JFrame {
     				playerTeam.getDescription()));
         	labelTeamStuff.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 0));
         	panelTeam.add(labelTeamStuff, BorderLayout.NORTH);
+        	
+        	JButton leaveButton = new JButton("Salir del equipo");
+        	panelTeam.add(leaveButton, BorderLayout.SOUTH);
+        	
+        	leaveButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						System.out.println("Conectando con la base de datos...");
+						dbManager.connect("src/db/rebote.db");
+						System.out.println("Has salido del equipo " + player.getTeam().getName());
+						player.setTeam(null);
+						dbManager.updatePlayer(player);
+						panelTeam.remove(labelTeamStuff);
+						panelTeam.remove(leaveButton);
+						panelTeam.add(labelNoTeam);
+						WindowHomePlayer.this.setIconImage(null);
+						panelTeam.revalidate();
+						panelTeam.repaint();
+					} catch (UserRepositoryException e1) {
+						System.out.println("No se ha podido acceder a la base de datos.");
+						e1.printStackTrace();
+					}
+				}
+			});
         } else {
-        	JLabel labelNoTeam = new JLabel("No estás inscrito en ningún equipo");
-        	labelNoTeam.setHorizontalAlignment(JLabel.CENTER);
-        	labelNoTeam.setFont(new Font("Agency FB", Font.BOLD, 20));
         	panelTeam.add(labelNoTeam, BorderLayout.CENTER);
         }
         
