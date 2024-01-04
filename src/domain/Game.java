@@ -25,6 +25,20 @@ public class Game {
 		this.teamFoults1 = teamFoults1;
 		this.teamFoults2 = teamFoults2;
 	}
+	
+	public Game(String stadium, String referee, int team1, int team2,
+			int teamScore1, int teamScore2,
+			int teamFoults1, int teamFoults2) {
+		super();
+		this.stadium = stadium;
+		this.referee = referee;
+		this.team1 = team1;
+		this.team2 = team2;
+		this.teamScore1 = teamScore1;
+		this.teamScore2 = teamScore2;
+		this.teamFoults1 = teamFoults1;
+		this.teamFoults2 = teamFoults2;
+	}
 
 	public Game() {
 		super();
@@ -100,5 +114,12 @@ public class Game {
 
 	public void setTeamFoults2(int teamFoults2) {
 		this.teamFoults2 = teamFoults2;
+	}
+
+	@Override
+	public String toString() {
+		return "Game [id=" + id + ", stadium=" + stadium + ", referee=" + referee + ", team1=" + team1 + ", team2="
+				+ team2 + ", teamScore1=" + teamScore1 + ", teamScore2=" + teamScore2 + ", teamFoults1=" + teamFoults1
+				+ ", teamFoults2=" + teamFoults2 + "]";
 	}
 }

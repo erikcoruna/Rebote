@@ -50,6 +50,7 @@ public class SQLiteDBManager implements IUserRepository {
 			createPlayerTable();
 			createTrainerTable();
 			createTeamTable();
+			createGameTable();
 		} catch (ClassNotFoundException e) {
 			throw new UserRepositoryException("Error cargando el driver de la base de datos.", e);
 		} catch (SQLException e) {

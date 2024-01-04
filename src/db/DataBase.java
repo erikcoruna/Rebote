@@ -2,6 +2,7 @@ package db;
 
 import java.util.GregorianCalendar;
 
+import domain.Game;
 import domain.League;
 import domain.Player;
 import domain.Team;
@@ -69,6 +70,17 @@ public class DataBase {
 			hugoTrainer.setSecondSurname("García");
 			dbManager.updateTrainer(hugoTrainer);
 			System.out.println(dbManager.getTrainer(4));
+			
+			Game game1 = new Game("Bilbao Basket", "Referee1", 1, 2, 50, 49, 6, 7);
+			Game game2 = new Game("Bilbao Basket", "Referee1", 1, 3, 55, 40, 4, 8);
+			Game game3 = new Game("Bilbao Basket", "Referee1", 2, 3, 51, 60, 7, 9);
+			
+			dbManager.storeGame(game1);
+			dbManager.storeGame(game2);
+			dbManager.storeGame(game3);
+			
+			System.out.println(dbManager.getGame(1));
+			System.out.println(dbManager.getAllGames());
 			
 			dbManager.disconnect();
 		} catch (UserRepositoryException e) {
