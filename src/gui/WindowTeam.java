@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,68 @@ public class WindowTeam extends JFrame {
 	}
 	private static final long serialVersionUID = 1L;
 
+	private List<Game> gamesPlayedList = new ArrayList<>();
+	private int gameIndex;
+	
+	private JLabel team1NameLabel;
+	private JLabel team1LeagueLabel;
+	private JLabel team1PointsLabel;
+	private JLabel team1FoultsLabel;
+	private JLabel vsLabel;
+	private Team team2;
+	private JLabel team2NameLabel;
+	private JLabel team2LeagueLabel;
+	private JLabel team2PointsLabel;
+	private JLabel team2FoultsLabel;
+	
+	private JButton previousButton;
+	private JButton nextButton;
+	
+	private void updateGame(Team team1) {
+		if (gamesPlayedList.size() > 0 && gameIndex >= 0 && gameIndex < gamesPlayedList.size()) {
+			SQLiteDBManager dbManager = new SQLiteDBManager();
+			try {
+				System.out.println("Conectando con la base de datos...");
+				dbManager.connect("src/db/rebote.db");
+				Game currentGame = gamesPlayedList.get(gameIndex);
+				team1NameLabel.setText(team1.getName().toUpperCase());
+				team1LeagueLabel.setIcon(new ImageIcon("src/img/" + team1.getLeague() + ".png"));
+				team1PointsLabel.setText("P: " + currentGame.getTeamScore1());
+				team1FoultsLabel.setText("F: " + currentGame.getTeamFoults1());
+				team2 = dbManager.getTeam(currentGame.getTeam2());
+				team2NameLabel.setText(team2.getName().toUpperCase());
+				team2LeagueLabel.setIcon(new ImageIcon("src/img/" + team2.getLeague() + ".png"));
+				team2PointsLabel.setText("P: " + currentGame.getTeamScore2());
+				team2FoultsLabel.setText("F: " + currentGame.getTeamFoults2());
+			} catch (UserRepositoryException e) {
+				System.out.println("No se ha podido acceder a la base de datos.");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void showPreviousGame(Team team1) {
+		if (gameIndex < gamesPlayedList.size() - 1) {
+			nextButton.setEnabled(true);
+			gameIndex++;
+			updateGame(team1);
+			if (gameIndex == gamesPlayedList.size() - 1) {
+				previousButton.setEnabled(false);
+			}
+		}
+	}
+	
+	private void showNextGame(Team team1) {
+		if (gameIndex > 0) {
+			previousButton.setEnabled(true);
+			gameIndex--;
+			updateGame(team1);
+			if (gameIndex == 0) {
+				nextButton.setEnabled(false);
+			}
+		}
+	}
+	
 	public WindowTeam(Team team) {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
@@ -70,16 +134,13 @@ public class WindowTeam extends JFrame {
 			dbManager.connect("src/db/rebote.db");
 			
 			if (!dbManager.getAllGames().isEmpty()) {
-				List<Game> gamesPlayed = new ArrayList<>();
 				for (Game game : dbManager.getAllGames()) {
 					if (game.getTeam1() == team.getId() || game.getTeam2() == team.getId()) {
-						gamesPlayed.add(game);
-						if (gamesPlayed.size() >= 5) {
-							break;
-						}
+						gamesPlayedList.add(game);
 					}
 				}
-				if (gamesPlayed.size() >= 1) {
+				if (gamesPlayedList.size() >= 1) {
+					gameIndex = gamesPlayedList.size() - 1;
 					JPanel gamesPanel = new JPanel(new BorderLayout());
 					southPanel.add(gamesPanel, BorderLayout.CENTER);
 					JPanel team1Panel = new JPanel(new GridLayout(2, 2));
@@ -89,28 +150,28 @@ public class WindowTeam extends JFrame {
 					gamesPanel.add(team1Panel, BorderLayout.WEST);
 					gamesPanel.add(team2Panel, BorderLayout.EAST);
 					
-					JLabel team1NameLabel = new JLabel(team.getName().toUpperCase());
+					team1NameLabel = new JLabel(team.getName().toUpperCase());
 					team1NameLabel.setHorizontalAlignment(JLabel.CENTER);
-					JLabel team1LeagueLabel = new JLabel();
+					team1LeagueLabel = new JLabel();
 					ImageIcon team1Icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
 					team1LeagueLabel.setIcon(team1Icon);
-					JLabel team1PointsLabel = new JLabel("P: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore1());
+					team1PointsLabel = new JLabel("P: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamScore1());
 					team1PointsLabel.setHorizontalAlignment(JLabel.CENTER);
-					JLabel team1FoultsLabel = new JLabel("F: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamFoults1());
+					team1FoultsLabel = new JLabel("F: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamFoults1());
 					team1FoultsLabel.setHorizontalAlignment(JLabel.CENTER);
 					
-					JLabel vsLabel = new JLabel("VS");
+					vsLabel = new JLabel("VS");
 					vsLabel.setFont(new Font("Agency FB", Font.BOLD, 40));
 					vsLabel.setHorizontalAlignment(JLabel.CENTER);
 					gamesPanel.add(vsLabel, BorderLayout.CENTER);
 					
-					Team team2 = dbManager.getTeam(gamesPlayed.get(gamesPlayed.size() - 1).getTeam2());
-					JLabel team2NameLabel = new JLabel(team2.getName().toUpperCase());
-					JLabel team2LeagueLabel = new JLabel();
+					team2 = dbManager.getTeam(gamesPlayedList.get(gamesPlayedList.size() - 1).getTeam2());
+					team2NameLabel = new JLabel(team2.getName().toUpperCase());
+					team2LeagueLabel = new JLabel();
 					ImageIcon team2Icon = new ImageIcon("src/img/" + team2.getLeague() + ".png");
 					team2LeagueLabel.setIcon(team2Icon);
-					JLabel team2PointsLabel = new JLabel("P: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamScore2());
-					JLabel team2FoultsLabel = new JLabel("F: " + gamesPlayed.get(gamesPlayed.size() - 1).getTeamFoults2());
+					team2PointsLabel = new JLabel("P: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamScore2());
+					team2FoultsLabel = new JLabel("F: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamFoults2());
 					
 					team1Panel.add(team1NameLabel);
 					team1Panel.add(team1LeagueLabel);
@@ -121,13 +182,33 @@ public class WindowTeam extends JFrame {
 					team2Panel.add(team2PointsLabel);
 					team2Panel.add(team2FoultsLabel);
 					
-					JButton previousButton = new JButton("<<");
-					JButton nextButton = new JButton(">>");
-					JPanel buttonsPanel = new JPanel();
+					if (gamesPlayedList.size() > 1) {
+						previousButton = new JButton("<<");
+						nextButton = new JButton(">>");
+						JPanel buttonsPanel = new JPanel();
+						
+						southPanel.add(buttonsPanel, BorderLayout.SOUTH);
+						previousButton.setEnabled(false);
+						buttonsPanel.add(previousButton);
+						buttonsPanel.add(nextButton);
 					
-					southPanel.add(buttonsPanel, BorderLayout.SOUTH);
-					buttonsPanel.add(previousButton);
-					buttonsPanel.add(nextButton);
+					
+						previousButton.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								showPreviousGame(team);
+							}
+						});
+						
+						nextButton.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								showNextGame(team);
+							}
+						});
+					}
 				} else {
 					southPanel.add(noGamesLabel, BorderLayout.CENTER);
 				}
