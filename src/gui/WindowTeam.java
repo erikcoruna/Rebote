@@ -29,7 +29,7 @@ import domain.UserRepositoryException;
 
 public class WindowTeam extends JFrame {
 	public static void main(String[] args) {
-		new WindowTeam(new Team(1, "Team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", 15, 10, League.A), new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f));
+		new WindowTeam(new Team(1, "Team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A), new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f));
 	}
 	private static final long serialVersionUID = 1L;
 

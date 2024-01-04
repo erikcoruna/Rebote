@@ -8,29 +8,23 @@ public class Team {
 	public String stadium;
 	public String description;
 	public League league;
-	public int victory = 0;
-	public int defeat = 0;
 	
-	public Team(int id, String name, String city, String stadium, String description, int victory, int defeat, League league) {
+	public Team(int id, String name, String city, String stadium, String description, League league) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.city = city;
 		this.stadium = stadium;
 		this.description = description;
-		this.victory = victory;
-		this.defeat = defeat;
 		this.league = league;
 	}
 	
-	public Team(String name, String city, String stadium, String description, int victory, int defeat, League league) {
+	public Team(String name, String city, String stadium, String description, League league) {
 		super();
 		this.name = name;
 		this.city = city;
 		this.stadium = stadium;
 		this.description = description;
-		this.victory = victory;
-		this.defeat = defeat;
 		this.league = league;
 	}
 	
@@ -78,22 +72,6 @@ public class Team {
 		this.description = description;
 	}
 
-	public int getVictory() {
-		return victory;
-	}
-
-	public void setVictory(int victory) {
-		this.victory = victory;
-	}
-
-	public int getDefeat() {
-		return defeat;
-	}
-
-	public void setDefeat(int defeat) {
-		this.defeat = defeat;
-	}
-
 	public League getLeague() {
 		return league;
 	}
@@ -105,6 +83,6 @@ public class Team {
 	@Override
 	public String toString() {
 		return "[" + id + ", " + name + ", " + city + ", " + stadium + ", "
-				+ description + ", " + league + ", " + victory + " victorias, " + defeat + " derrotas" + "]";
+				+ description + ", " + league + "]";
 	}
 }
