@@ -303,48 +303,48 @@ public class WindowHomePlayer extends JFrame {
         panelNorthSearch.add(textFieldSearch);
         panelNorthSearch.add(buttonSearch);
         
-        List<Team> teams = new ArrayList<>();
-        teams.add(new Team("team1", "Bilbao", "Bilbao", "Equipo baloncesto Bilbao.", League.A));
-        teams.add(new Team("team1", "Barakaldo", "Barakaldo", "Equipo baloncesto Barakaldo.", League.B));
-        teams.add(new Team("team1", "Trapaga", "Trapaga", "Equipo baloncesto Trapaga.", League.C));
-        teams.add(new Team("team1", "Sestao", "Sestao", "Equipo baloncesto Sestao.", League.A));
-        teams.add(new Team("team1", "Portu", "Portu", "Equipo baloncesto Portu.", League.B));
-        teams.add(new Team("team2", "Portu", "Portu", "Equipo baloncesto Portu.", League.C));
+        try {
+        	System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			List<Team> teams = new ArrayList<>(dbManager.getAllTeams());
         
-        panelTeamsSearch = new JPanel();
-        panelTeamsSearch.setLayout(new BoxLayout(panelTeamsSearch, BoxLayout.Y_AXIS));
-        
-        for (Team team : teams) {
-        	addTeamPanel(team);
-        }
-        
-        scrollPaneSearch = new JScrollPane(panelTeamsSearch);
-        scrollPaneSearch.getVerticalScrollBar().setUnitIncrement(16);
-        panelSearch.add(scrollPaneSearch, BorderLayout.CENTER);
-        
-        tabbedPanel.addTab("Buscador", panelSearch);
-        
-        buttonSearch.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String textSearch = textFieldSearch.getText().toLowerCase();
-				panelTeamsSearch.removeAll();
-				for (Team team : teams) {
-					if (team.getName().toLowerCase().contains(textSearch)) {
-						addTeamPanel(team);
-					}
-				}
-				if (panelTeamsSearch.getComponentCount() == 0) {
-					JLabel labelNoTeam = new JLabel("No hay ningún equipo con ese nombre.");
-					panelTeamsSearch.add(labelNoTeam);
-				}
+	        panelTeamsSearch = new JPanel();
+	        panelTeamsSearch.setLayout(new BoxLayout(panelTeamsSearch, BoxLayout.Y_AXIS));
+	        
+	        for (Team team : teams) {
+	        	addTeamPanel(team);
+	        }
+	        
+	        scrollPaneSearch = new JScrollPane(panelTeamsSearch);
+	        scrollPaneSearch.getVerticalScrollBar().setUnitIncrement(16);
+	        panelSearch.add(scrollPaneSearch, BorderLayout.CENTER);
+	        
+	        tabbedPanel.addTab("Buscador", panelSearch);
+	        
+	        buttonSearch.addActionListener(new ActionListener() {
 				
-				panelTeamsSearch.revalidate();
-				panelTeamsSearch.repaint();
-			}
-		});
-        
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String textSearch = textFieldSearch.getText().toLowerCase();
+					panelTeamsSearch.removeAll();
+					for (Team team : teams) {
+						if (team.getName().toLowerCase().contains(textSearch)) {
+							addTeamPanel(team);
+						}
+					}
+					if (panelTeamsSearch.getComponentCount() == 0) {
+						JLabel labelNoTeam = new JLabel("No hay ningún equipo con ese nombre.");
+						panelTeamsSearch.add(labelNoTeam);
+					}
+					
+					panelTeamsSearch.revalidate();
+					panelTeamsSearch.repaint();
+				}
+			});
+        } catch (UserRepositoryException e) {
+        	System.out.println("No se ha podido acceder a la base de datos.");
+        	e.printStackTrace();
+        }
         JPanel panelGame = new JPanel();
         panelGame.add(new JLabel("Registro de partidos que habéis jugado"));
         tabbedPanel.addTab("Partidos", panelGame);
