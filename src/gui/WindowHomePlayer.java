@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -64,7 +65,7 @@ public class WindowHomePlayer extends JFrame {
 		}
 	}
 	
-	private void addTeamPanel(Team team) {
+	private void addTeamPanel(Team team, Player player) {
 		JPanel panelCenter = new JPanel(new GridLayout(1, 3));
 		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 		panelCenter.setMaximumSize(new Dimension(this.getWidth() - 50, 100));
@@ -85,7 +86,8 @@ public class WindowHomePlayer extends JFrame {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new WindowTeam(team);
+				new WindowTeam(team, player);
+				dispose();
 			}
 		});
 	}
@@ -100,6 +102,8 @@ public class WindowHomePlayer extends JFrame {
 		//Un ejemplo de JTabbedPane, para saber como implementarlo en nuestro código
 		JTabbedPane tabbedPanel = new JTabbedPane(); 
 		
+		
+		// Tu perfil
 		JPanel panelProfile = new JPanel(new GridBagLayout());
        
         GridBagConstraints gbc = new GridBagConstraints();
@@ -265,33 +269,30 @@ public class WindowHomePlayer extends JFrame {
 			}
 		});
         
-//        //https://docs.oracle.com/javase/tutorial/uiswing/components/scrollpane.html
-//        //Para hacer que haya solo scroll vertical
-//        JPanel panelTeam = new JPanel();
-//        JScrollPane scrollPaneTeam = new JScrollPane(panelTeam);
-//        scrollPaneTeam.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		scrollPaneTeam.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//       // for(Player p : players) {
-//       //	JTable tableTeammates = new JTable(tableModel);
-//       // 	String[] columnNames = {"ID", "Categoría", "Autor", "Coordenadas"};
-//       //	DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-//       //	panelTeam.add(tableTeammates);
-//       // }
-//		tabbedPanel.addTab("Tu equipo", scrollPaneTeam);
         
+        // Tu equipo
         panelTeam = new JPanel(new BorderLayout());
         
         Team playerTeam = player.getTeam();
         
-        if (playerTeam !=null) {
-        	addTeamPanel(playerTeam);
+        if (playerTeam != null) {
+        	JLabel labelTeamStuff = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s</html>",
+    				playerTeam.getCity(),
+    				playerTeam.getStadium(),
+    				playerTeam.getDescription()));
+        	labelTeamStuff.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 0));
+        	panelTeam.add(labelTeamStuff, BorderLayout.NORTH);
         } else {
         	JLabel labelNoTeam = new JLabel("No estás inscrito en ningún equipo");
-        	panelTeam.add(labelNoTeam);
+        	labelNoTeam.setHorizontalAlignment(JLabel.CENTER);
+        	labelNoTeam.setFont(new Font("Agency FB", Font.BOLD, 20));
+        	panelTeam.add(labelNoTeam, BorderLayout.CENTER);
         }
         
         tabbedPanel.addTab("Tu equipo", panelTeam);
 
+        
+        // Buscador
         panelSearch = new JPanel(new BorderLayout());
         
         panelNorthSearch = new JPanel(new GridLayout(1, 2));
@@ -312,7 +313,7 @@ public class WindowHomePlayer extends JFrame {
 	        panelTeamsSearch.setLayout(new BoxLayout(panelTeamsSearch, BoxLayout.Y_AXIS));
 	        
 	        for (Team team : teams) {
-	        	addTeamPanel(team);
+	        	addTeamPanel(team, player);
 	        }
 	        
 	        scrollPaneSearch = new JScrollPane(panelTeamsSearch);
@@ -329,7 +330,7 @@ public class WindowHomePlayer extends JFrame {
 					panelTeamsSearch.removeAll();
 					for (Team team : teams) {
 						if (team.getName().toLowerCase().contains(textSearch)) {
-							addTeamPanel(team);
+							addTeamPanel(team, player);
 						}
 					}
 					if (panelTeamsSearch.getComponentCount() == 0) {

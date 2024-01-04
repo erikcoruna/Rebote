@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -20,12 +21,15 @@ import javax.swing.JPanel;
 import db.SQLiteDBManager;
 import domain.Game;
 import domain.League;
+import domain.Player;
 import domain.Team;
+import domain.Trainer;
+import domain.User;
 import domain.UserRepositoryException;
 
 public class WindowTeam extends JFrame {
 	public static void main(String[] args) {
-		new WindowTeam(new Team(1, "Team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A));
+		new WindowTeam(new Team(1, "Team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A), new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f));
 	}
 	private static final long serialVersionUID = 1L;
 
@@ -46,6 +50,8 @@ public class WindowTeam extends JFrame {
 	
 	private JButton previousButton;
 	private JButton nextButton;
+	private JButton joinButton;
+	private JButton backButton;
 	
 	private void updateGame() {
 		if (gamesPlayedList.size() > 0 && gameIndex >= 0 && gameIndex < gamesPlayedList.size()) {
@@ -93,7 +99,7 @@ public class WindowTeam extends JFrame {
 		}
 	}
 	
-	public WindowTeam(Team team) {
+	public WindowTeam(Team team, User user) {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setTitle(team.getName());
@@ -129,6 +135,8 @@ public class WindowTeam extends JFrame {
 		noGamesLabel.setHorizontalAlignment(JLabel.CENTER);
 		noGamesLabel.setFont(new Font("Agency FB", Font.BOLD, 15));
 		noGamesLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+		joinButton = new JButton("Unirse");
+		backButton = new JButton("Atrás");
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
 			System.out.println("Conectando con la base de datos...");
@@ -150,6 +158,10 @@ public class WindowTeam extends JFrame {
 					team2Panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 					gamesPanel.add(team1Panel, BorderLayout.WEST);
 					gamesPanel.add(team2Panel, BorderLayout.EAST);
+					JPanel buttonsPanel = new JPanel();
+					buttonsPanel.add(joinButton);
+					buttonsPanel.add(backButton);
+					gamesPanel.add(buttonsPanel, BorderLayout.SOUTH);
 					
 					team1 = dbManager.getTeam(gamesPlayedList.get(gamesPlayedList.size() - 1).getTeam1());
 					team1NameLabel = new JLabel(team1.getName().toUpperCase());
@@ -187,12 +199,14 @@ public class WindowTeam extends JFrame {
 					if (gamesPlayedList.size() > 1) {
 						previousButton = new JButton("<<");
 						nextButton = new JButton(">>");
-						JPanel buttonsPanel = new JPanel();
+						JPanel buttonsPanel2 = new JPanel();
 						
-						southPanel.add(buttonsPanel, BorderLayout.SOUTH);
+						southPanel.add(buttonsPanel2, BorderLayout.SOUTH);
 						previousButton.setEnabled(false);
-						buttonsPanel.add(previousButton);
-						buttonsPanel.add(nextButton);
+						buttonsPanel2.add(joinButton);
+						buttonsPanel2.add(previousButton);
+						buttonsPanel2.add(nextButton);
+						buttonsPanel2.add(backButton);
 					
 					
 						previousButton.addActionListener(new ActionListener() {
@@ -213,14 +227,65 @@ public class WindowTeam extends JFrame {
 					}
 				} else {
 					southPanel.add(noGamesLabel, BorderLayout.CENTER);
+					JPanel buttonsPanel3 = new JPanel();
+					buttonsPanel3.add(joinButton);
+					buttonsPanel3.add(backButton);
+					southPanel.add(buttonsPanel3, BorderLayout.SOUTH);
 				}
 			} else {
 				southPanel.add(noGamesLabel, BorderLayout.CENTER);
+				JPanel buttonsPanel4 = new JPanel();
+				buttonsPanel4.add(joinButton);
+				buttonsPanel4.add(backButton);
+				southPanel.add(buttonsPanel4, BorderLayout.SOUTH);
 			}
 		} catch (UserRepositoryException e) {
 			System.out.println("No se ha podido acceder a la base de datos.");
 			e.printStackTrace();
 		}
+		
+		joinButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (user instanceof Player) {
+					Player player = (Player) user;
+					player.setTeam(team);
+					try {
+						dbManager.updatePlayer(player);
+					} catch (UserRepositoryException e1) {
+						System.out.println("No se ha podido acceder a la base de datos.");
+						e1.printStackTrace();
+					}
+				} else if (user instanceof Trainer) {
+					Trainer trainer = (Trainer) user;
+					trainer.setTeam(team);
+					try {
+						dbManager.updateTrainer(trainer);
+					} catch (UserRepositoryException e2) {
+						System.out.println("No se ha podido acceder a la base de datos.");
+						e2.printStackTrace();
+					}
+				}
+				System.out.println("Unido al equipo " + team.getName());
+			}
+		});
+		
+		backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (user instanceof Player) {
+					Player player = (Player) user;
+					new WindowHomePlayer(player);
+					dispose();
+				} else if (user instanceof Trainer) {
+					Trainer trainer = (Trainer) user;
+//					new WindowHomeTrainer(trainer);
+					dispose();
+				}
+			}
+		});
 		
 		panel.add(southPanel, BorderLayout.SOUTH);
 		
