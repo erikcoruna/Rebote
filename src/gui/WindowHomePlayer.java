@@ -14,9 +14,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -455,7 +459,9 @@ public class WindowHomePlayer extends JFrame {
         try {
         	System.out.println("Conectando con la base de datos...");
 			dbManager.connect("src/db/rebote.db");
-			List<Game> games = new ArrayList<>(dbManager.getAllGames());
+			Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
+			Set<Game> games = new TreeSet<>(gameComparator);
+			games.addAll(dbManager.getAllGames());
         
 	        panelGamesSearch = new JPanel();
 	        panelGamesSearch.setLayout(new BoxLayout(panelGamesSearch, BoxLayout.Y_AXIS));
