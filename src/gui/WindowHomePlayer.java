@@ -34,6 +34,7 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
 import db.SQLiteDBManager;
+import domain.Game;
 import domain.League;
 import domain.Player;
 import domain.Team;
@@ -47,12 +48,18 @@ public class WindowHomePlayer extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel panelTeam;
-	private JPanel panelSearch;
+	private JPanel panelTeams;
+	private JPanel panelGames;
 	private JPanel panelNorthSearch;
 	private JPanel panelTeamsSearch;
-	private JTextField textFieldSearch;
-	private JButton buttonSearch;
-	private JScrollPane scrollPaneSearch;
+	private JPanel panelNorthGames;
+	private JPanel panelGamesSearch;
+	private JTextField textFieldTeams;
+	private JTextField textFieldGames;
+	private JButton buttonSearchTeams;
+	private JButton buttonSearchGames;
+	private JScrollPane scrollPaneTeams;
+	private JScrollPane scrollPaneGames;
 	
 	public static void updatePlayer(Player player) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
@@ -66,23 +73,23 @@ public class WindowHomePlayer extends JFrame {
 	}
 	
 	private void addTeamPanel(Team team, Player player) {
-		JPanel panelCenter = new JPanel(new GridLayout(1, 3));
-		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-		panelCenter.setMaximumSize(new Dimension(this.getWidth() - 50, 100));
-		panelCenter.setPreferredSize(new Dimension(this.getWidth() - 50, 100));
-    	panelCenter.setBackground(Color.WHITE);
+		JPanel panelCenterTeams = new JPanel(new GridLayout(1, 3));
+		panelCenterTeams.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		panelCenterTeams.setMaximumSize(new Dimension(this.getWidth() - 50, 100));
+		panelCenterTeams.setPreferredSize(new Dimension(this.getWidth() - 50, 100));
+    	panelCenterTeams.setBackground(Color.WHITE);
     	JLabel labelIcon = new JLabel();
     	ImageIcon icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
     	labelIcon.setIcon(icon);
     	JLabel labelNameSearch = new JLabel(team.getName());
     	JLabel labelCitySearch = new JLabel(team.getCity());
-    	panelCenter.add(labelIcon);
-    	panelCenter.add(labelNameSearch);
-    	panelCenter.add(labelCitySearch);
-    	panelTeamsSearch.add(panelCenter);
+    	panelCenterTeams.add(labelIcon);
+    	panelCenterTeams.add(labelNameSearch);
+    	panelCenterTeams.add(labelCitySearch);
+    	panelTeamsSearch.add(panelCenterTeams);
     	panelTeamsSearch.add(Box.createRigidArea(new Dimension(0, 10)));
     	
-    	panelCenter.addMouseListener(new MouseAdapter() {
+    	panelCenterTeams.addMouseListener(new MouseAdapter() {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -90,6 +97,60 @@ public class WindowHomePlayer extends JFrame {
 				dispose();
 			}
 		});
+	}
+	
+	private void addGamePanel(Game game) {
+		JPanel panelCenterGames = new JPanel(new BorderLayout());
+		panelCenterGames.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		panelCenterGames.setMaximumSize(new Dimension(this.getWidth() - 50, 150));
+		panelCenterGames.setPreferredSize(new Dimension(this.getWidth() - 50, 150));
+    	panelCenterGames.setBackground(Color.WHITE);
+    	SQLiteDBManager dbManager = new SQLiteDBManager();
+    	try {
+    		System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			
+			Team team1 = dbManager.getTeam(game.getTeam1());
+			JPanel team1Panel = new JPanel(new GridLayout(2, 2));
+			team1Panel.setBackground(Color.WHITE);
+			JLabel team1NameLabel = new JLabel(team1.getName().toUpperCase());
+			JLabel team1LeagueLabel = new JLabel();
+			ImageIcon team1Icon = new ImageIcon("src/img/" + team1.getLeague() + ".png");
+			team1LeagueLabel.setIcon(team1Icon);
+			JLabel team1PointsLabel = new JLabel("P: " + game.getTeamScore1());
+			JLabel team1FoultsLabel = new JLabel("F: " + game.getTeamFoults1());
+			team1Panel.add(team1NameLabel);
+			team1Panel.add(team1LeagueLabel);
+			team1Panel.add(team1PointsLabel);
+			team1Panel.add(team1FoultsLabel);
+			panelCenterGames.add(team1Panel, BorderLayout.WEST);
+			
+			JLabel vsLabel = new JLabel("VS");
+			vsLabel.setFont(new Font("Agency FB", Font.BOLD, 40));
+			vsLabel.setHorizontalAlignment(JLabel.CENTER);
+			panelCenterGames.add(vsLabel, BorderLayout.CENTER);
+			
+			Team team2 = dbManager.getTeam(game.getTeam2());
+			JPanel team2Panel = new JPanel(new GridLayout(2, 2));
+			team2Panel.setBackground(Color.WHITE);
+			JLabel team2NameLabel = new JLabel(team2.getName().toUpperCase());
+			JLabel team2LeagueLabel = new JLabel();
+			ImageIcon team2Icon = new ImageIcon("src/img/" + team2.getLeague() + ".png");
+			team2LeagueLabel.setIcon(team2Icon);
+			JLabel team2PointsLabel = new JLabel("P: " + game.getTeamScore2());
+			JLabel team2FoultsLabel = new JLabel("F: " + game.getTeamFoults2());
+			team2Panel.add(team2NameLabel);
+			team2Panel.add(team2LeagueLabel);
+			team2Panel.add(team2PointsLabel);
+			team2Panel.add(team2FoultsLabel);
+			panelCenterGames.add(team2Panel, BorderLayout.EAST);
+			
+			panelGamesSearch.add(panelCenterGames);
+	    	panelGamesSearch.add(Box.createRigidArea(new Dimension(0, 10)));
+    	} catch (UserRepositoryException e) {
+    		System.out.println("No se ha podido acceder a la base de datos.");
+    		e.printStackTrace();
+    	}
 	}
 	
 	public WindowHomePlayer(Player player) {
@@ -324,16 +385,16 @@ public class WindowHomePlayer extends JFrame {
 
         
         // Buscador
-        panelSearch = new JPanel(new BorderLayout());
+        panelTeams = new JPanel(new BorderLayout());
         
         panelNorthSearch = new JPanel(new GridLayout(1, 2));
         
-        textFieldSearch = new JTextField();
-        buttonSearch = new JButton("Buscar");
+        textFieldTeams = new JTextField();
+        buttonSearchTeams = new JButton("Buscar");
         
-        panelSearch.add(panelNorthSearch, BorderLayout.NORTH);
-        panelNorthSearch.add(textFieldSearch);
-        panelNorthSearch.add(buttonSearch);
+        panelTeams.add(panelNorthSearch, BorderLayout.NORTH);
+        panelNorthSearch.add(textFieldTeams);
+        panelNorthSearch.add(buttonSearchTeams);
         
         try {
         	System.out.println("Conectando con la base de datos...");
@@ -347,17 +408,17 @@ public class WindowHomePlayer extends JFrame {
 	        	addTeamPanel(team, player);
 	        }
 	        
-	        scrollPaneSearch = new JScrollPane(panelTeamsSearch);
-	        scrollPaneSearch.getVerticalScrollBar().setUnitIncrement(16);
-	        panelSearch.add(scrollPaneSearch, BorderLayout.CENTER);
+	        scrollPaneTeams = new JScrollPane(panelTeamsSearch);
+	        scrollPaneTeams.getVerticalScrollBar().setUnitIncrement(16);
+	        panelTeams.add(scrollPaneTeams, BorderLayout.CENTER);
 	        
-	        tabbedPanel.addTab("Buscador", panelSearch);
+	        tabbedPanel.addTab("Buscador", panelTeams);
 	        
-	        buttonSearch.addActionListener(new ActionListener() {
+	        buttonSearchTeams.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String textSearch = textFieldSearch.getText().toLowerCase();
+					String textSearch = textFieldTeams.getText().toLowerCase();
 					panelTeamsSearch.removeAll();
 					for (Team team : teams) {
 						if (team.getName().toLowerCase().contains(textSearch)) {
@@ -377,11 +438,70 @@ public class WindowHomePlayer extends JFrame {
         	System.out.println("No se ha podido acceder a la base de datos.");
         	e.printStackTrace();
         }
-        JPanel panelGame = new JPanel();
-        panelGame.add(new JLabel("Registro de partidos que habéis jugado"));
-        tabbedPanel.addTab("Partidos", panelGame);
+        
+        
+        // Partidos
+        panelGames = new JPanel(new BorderLayout());
+        
+        panelNorthGames = new JPanel(new GridLayout(1, 2));
+        
+        textFieldGames = new JTextField();
+        buttonSearchGames = new JButton("Buscar");
+        
+        panelGames.add(panelNorthGames, BorderLayout.NORTH);
+        panelNorthGames.add(textFieldGames);
+        panelNorthGames.add(buttonSearchGames);
+        
+        try {
+        	System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			List<Game> games = new ArrayList<>(dbManager.getAllGames());
+        
+	        panelGamesSearch = new JPanel();
+	        panelGamesSearch.setLayout(new BoxLayout(panelGamesSearch, BoxLayout.Y_AXIS));
+	        
+	        for (Game game : games) {
+	        	addGamePanel(game);
+	        }
+	        
+	        scrollPaneGames = new JScrollPane(panelGamesSearch);
+	        scrollPaneGames.getVerticalScrollBar().setUnitIncrement(16);
+	        panelGames.add(scrollPaneGames, BorderLayout.CENTER);
+	        
+	        tabbedPanel.addTab("Partidos", panelGames);
+	        
+	        buttonSearchGames.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String textSearch = textFieldGames.getText().toLowerCase();
+					panelGamesSearch.removeAll();
+					for (Game game : games) {
+						try {
+							Team team1 = dbManager.getTeam(game.getTeam1());
+							Team team2 = dbManager.getTeam(game.getTeam2());
+							if (team1.getName().toLowerCase().contains(textSearch) || team2.getName().toLowerCase().contains(textSearch)) {
+								addGamePanel(game);
+							}
+						} catch (UserRepositoryException e1) {
+							System.out.println("No se ha podido acceder a la base de datos");
+							e1.printStackTrace();
+						}
+					}
+					if (panelGamesSearch.getComponentCount() == 0) {
+						JLabel labelNoGame = new JLabel("No hay ningún partido.");
+						panelGamesSearch.add(labelNoGame);
+					}
+					
+					panelGamesSearch.revalidate();
+					panelGamesSearch.repaint();
+				}
+			});
+        } catch (UserRepositoryException e) {
+        	System.out.println("No se ha podido acceder a la base de datos.");
+        	e.printStackTrace();
+        }
         add(tabbedPanel);
- 
 		setVisible(true);
 	}
 }
