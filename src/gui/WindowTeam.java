@@ -281,7 +281,7 @@ public class WindowTeam extends JFrame {
 					dispose();
 				} else if (user instanceof Trainer) {
 					Trainer trainer = (Trainer) user;
-//					new WindowHomeTrainer(trainer);
+					new WindowHomeTrainer(trainer);
 					dispose();
 				}
 			}

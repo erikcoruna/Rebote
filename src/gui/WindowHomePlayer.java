@@ -65,7 +65,7 @@ public class WindowHomePlayer extends JFrame {
 	private JScrollPane scrollPaneTeams;
 	private JScrollPane scrollPaneGames;
 	
-	public static void updatePlayer(Player player) {
+	private static void updatePlayer(Player player) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
 			System.out.println("Conectando con la base de datos...");

@@ -109,7 +109,7 @@ public class WindowLogin extends JFrame {
 						}
 						for (Trainer trainer : dbManager.getAllTrainers()) {
 							if (trainer.getUsername().equals(inputUsername) && String.valueOf(trainer.getPassword()).equals(inputPassword)) {
-								new WindowHomeTrainer();
+								new WindowHomeTrainer(trainer);
 								dispose();
 							}
 						}
