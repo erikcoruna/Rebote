@@ -19,10 +19,10 @@ public class DataBase {
 			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("src/db/rebote.db");
 			
-			Team team1 = new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A);
-			Team team2 = new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B);
-			Team team3 = new Team("team3", "Barakaldo", "Barakaldo Basket", "Este es el equipo de Barakaldo.", League.C);
-			Team team4 = new Team("team4", "Bilbao 2", "Bilbao Basket 2", "Este es el equipo de Bilbao 2.", League.C);
+			Team team1 = new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", 15, 10, League.A);
+			Team team2 = new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", 7, 18, League.B);
+			Team team3 = new Team("team3", "Barakaldo", "Barakaldo Basket", "Este es el equipo de Barakaldo.", 21, 4, League.C);
+			Team team4 = new Team("team4", "Bilbao 2", "Bilbao Basket 2", "Este es el equipo de Bilbao 2.", 13, 12, League.C);
 			
 			dbManager.storeTeam(team1);
 			dbManager.storeTeam(team2);
