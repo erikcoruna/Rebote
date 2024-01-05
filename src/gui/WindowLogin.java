@@ -119,7 +119,6 @@ public class WindowLogin extends JFrame {
 						e1.printStackTrace();
 					}
 				}
-				//fileManager.confirmButtonPressed(textFieldName.getText(), passwordFieldPassword.getPassword());
 				logger.info("Pulsado el botón confirm.");
 			}
 		});

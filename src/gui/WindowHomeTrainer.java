@@ -49,6 +49,8 @@ public class WindowHomeTrainer extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
+	private JPanel panelTeam;
+	private JPanel panelNorthTeam;
 	private JPanel panelTeams;
 	private JPanel panelGames;
 	private JPanel panelNorthSearch;
@@ -71,6 +73,17 @@ public class WindowHomeTrainer extends JFrame {
 			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("src/db/rebote.db");
 			dbManager.updateTrainer(trainer);
+		} catch (UserRepositoryException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void updateTeam(Team team) {
+		SQLiteDBManager dbManager = new SQLiteDBManager();
+		try {
+			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("src/db/rebote.db");
+			dbManager.updateTeam(team);
 		} catch (UserRepositoryException e) {
 			e.printStackTrace();
 		}
@@ -335,8 +348,139 @@ public class WindowHomeTrainer extends JFrame {
 						}
 					}
 				});
-		     // Tu equipo
 		        
+		        
+		     // Tu equipo
+		        panelTeam = new JPanel(new BorderLayout());
+		        
+		        Team trainerTeam = trainer.getTeam();
+		        
+		        JLabel labelNoTeam = new JLabel("No estás inscrito en ningún equipo");
+		    	labelNoTeam.setHorizontalAlignment(JLabel.CENTER);
+		    	labelNoTeam.setFont(new Font("Agency FB", Font.BOLD, 20));
+		        
+		        if (trainerTeam != null) {
+		        	JLabel labelNameTeam = new JLabel("Nombre: " + trainerTeam.getName());
+		        	JLabel labelCityTeam = new JLabel("Ciudad: " + trainerTeam.getCity());
+		        	JLabel labelStadiumTeam = new JLabel("Estadio: " + trainerTeam.getStadium());
+		        	JLabel labelDescriptionTeam = new JLabel("Descripción: " + trainerTeam.getDescription());
+		        	JButton buttonChangeNameTeam = new JButton("Cambiar");
+		        	JButton buttonChangeCityTeam = new JButton("Cambiar");
+		        	JButton buttonChangeStadiumTeam = new JButton("Cambiar");
+		        	JButton buttonChangeDescriptionTeam = new JButton("Cambiar");
+		        	panelNorthTeam = new JPanel(new GridBagLayout());
+		        	
+		        	gbc.gridy = 0;
+		        	gbc.gridx = 0;
+		        	
+		        	panelNorthTeam.add(labelNameTeam, gbc);
+		        	gbc.gridy = 1;
+		        	panelNorthTeam.add(labelCityTeam, gbc);
+		        	gbc.gridy = 2;
+		        	panelNorthTeam.add(labelStadiumTeam, gbc);
+		        	gbc.gridy = 3;
+		        	panelNorthTeam.add(labelDescriptionTeam, gbc);
+		        	gbc.gridx = 1;
+		        	gbc.gridy = 0;
+		        	panelNorthTeam.add(buttonChangeNameTeam, gbc);
+		        	gbc.gridy = 1;
+		        	panelNorthTeam.add(buttonChangeCityTeam, gbc);
+		        	gbc.gridy = 2;
+		        	panelNorthTeam.add(buttonChangeStadiumTeam, gbc);
+		        	gbc.gridy = 3;
+		        	panelNorthTeam.add(buttonChangeDescriptionTeam, gbc);
+		        	
+		        	panelTeam.add(panelNorthTeam, BorderLayout.CENTER);
+		        	
+		        	JButton leaveButton = new JButton("Salir del equipo");
+		        	panelTeam.add(leaveButton, BorderLayout.SOUTH);
+		        	
+		        	buttonChangeNameTeam.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String name = JOptionPane.showInputDialog(null, "Ingresa el nuevo nombre:", "Nombre", JOptionPane.PLAIN_MESSAGE);
+							if (name != null && !name.isBlank()) {
+								trainerTeam.setName(name);
+								updateTeam(trainerTeam);
+								labelNameTeam.setText("Nombre: " + name);
+							}
+						}
+					});
+		        	
+		        	buttonChangeCityTeam.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String city = JOptionPane.showInputDialog(null, "Ingresa la nueva ciudad:", "Ciudad", JOptionPane.PLAIN_MESSAGE);
+							if (city != null && !city.isBlank()) {
+								trainerTeam.setCity(city);
+								updateTeam(trainerTeam);
+								labelCityTeam.setText("Ciudad: " + city);
+							}
+						}
+					});
+		        	
+		        	buttonChangeStadiumTeam.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String stadium = JOptionPane.showInputDialog(null, "Ingresa el nuevo estadio:", "Estadio", JOptionPane.PLAIN_MESSAGE);
+							if (stadium != null && !stadium.isBlank()) {
+								trainerTeam.setStadium(stadium);
+								updateTeam(trainerTeam);
+								labelStadiumTeam.setText("Estadio: " + stadium);
+							}
+						}
+					});
+		        	
+		        	buttonChangeDescriptionTeam.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String description = JOptionPane.showInputDialog(null, "Ingresa la nueva descripción:", "Descripción", JOptionPane.PLAIN_MESSAGE);
+							if (description != null && !description.isBlank()) {
+								trainerTeam.setDescription(description);
+								updateTeam(trainerTeam);
+								labelDescriptionTeam.setText("Descripción: " + description);
+							}
+						}
+					});
+		        	
+		        	leaveButton.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								System.out.println("Conectando con la base de datos...");
+								dbManager.connect("src/db/rebote.db");
+								System.out.println("Has salido del equipo " + trainer.getTeam().getName());
+								trainer.setTeam(null);
+								dbManager.updateTrainer(trainer);
+								panelNorthTeam.remove(labelNameTeam);
+								panelNorthTeam.remove(labelCityTeam);
+								panelNorthTeam.remove(labelStadiumTeam);
+								panelNorthTeam.remove(labelDescriptionTeam);
+								panelNorthTeam.remove(buttonChangeNameTeam);
+								panelNorthTeam.remove(buttonChangeCityTeam);
+								panelNorthTeam.remove(buttonChangeStadiumTeam);
+								panelNorthTeam.remove(buttonChangeDescriptionTeam);
+								panelTeam.remove(leaveButton);
+								panelNorthTeam.add(labelNoTeam, BorderLayout.CENTER);
+								WindowHomeTrainer.this.setIconImage(null);
+								panelTeam.revalidate();
+								panelTeam.repaint();
+							} catch (UserRepositoryException e1) {
+								System.out.println("No se ha podido acceder a la base de datos.");
+								e1.printStackTrace();
+							}
+						}
+					});
+		        } else {
+		        	panelTeam.add(labelNoTeam, BorderLayout.CENTER);
+		        }
+		        
+		        tabbedPanel.addTab("Tu equipo", panelTeam);
 		        
 		        
 		     // Buscador
