@@ -597,6 +597,30 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public void updateReferee(Referee referee) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE referee SET username = ?, name = ?, firstSurname = ?, secondSurname = ?,"
+				+ " password = ?, birthDate = ?, country = ?, team_id = ? WHERE id = ?")) {
+			preparedStatement.setString(1, referee.getUsername());
+			preparedStatement.setString(2, referee.getName());
+			preparedStatement.setString(3, referee.getFirstSurname());
+			preparedStatement.setString(4, referee.getSecondSurname());
+			preparedStatement.setString(5, referee.getPassword());
+			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
+			preparedStatement.setString(7, referee.getCountry());
+			try {
+				preparedStatement.setInt(8, referee.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Entrenador sin equipo: " + referee.getName());
+			}
+			preparedStatement.setInt(9, referee.getId());
+			
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido actualizar el entrenador en la base de datos.", e);
+		}
+	}
+	
+	@Override
 	public void updateTeam(Team team) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE team SET name = ?, city = ?, stadium = ?, description = ?,"
 				+ " league = ? WHERE id = ?")) {

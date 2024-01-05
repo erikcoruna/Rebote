@@ -21,6 +21,7 @@ public interface IUserRepository {
 	public void deleteGame(Game game) throws UserRepositoryException;
 	public void updatePlayer(Player player) throws UserRepositoryException;
 	public void updateTrainer(Trainer trainer) throws UserRepositoryException;
+	public void updateReferee(Referee referee) throws UserRepositoryException;
 	public void updateTeam(Team team) throws UserRepositoryException;
 	public void updateGame(Game game) throws UserRepositoryException;
 	public Player getPlayer(int id) throws UserRepositoryException;
