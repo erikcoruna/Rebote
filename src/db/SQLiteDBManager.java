@@ -85,6 +85,15 @@ public class SQLiteDBManager implements IUserRepository {
 		}
 	}
 	
+	public void createRefereeTable() throws UserRepositoryException {
+		try (Statement statement = connection.createStatement()) {
+			statement.executeUpdate("CREATE TABLE IF NOT EXISTS referee (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, name VARCHAR,"
+					+ " firstSurname VARCHAR, secondSurname VARCHAR, password VARCHAR, birthDate TEXT, country VARCHAR, team_id INTEGER, FOREIGN KEY(team_id) REFERENCES team(id))");
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error creando la tabla 'referee' en la base de datos.");
+		}
+	}
+	
 	public void createTeamTable() throws UserRepositoryException {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,"
