@@ -517,6 +517,16 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public void deleteReferee(Referee referee) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM referee WHERE id = ?")) {
+			preparedStatement.setInt(1, referee.getId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido eliminar el arbitro " + referee.getId() + " de la base de datos.", e);
+		}
+	}
+	
+	@Override
 	public void deleteTeam(Team team) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM team WHERE id = ?")) {
 			preparedStatement.setInt(1, team.getId());
