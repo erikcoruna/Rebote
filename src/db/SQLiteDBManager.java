@@ -187,11 +187,10 @@ public class SQLiteDBManager implements IUserRepository {
 		}
 	}
 	
-	//REVISAR PORQUE UN ARBITRO NO PUEDE SER DE UN EQUIPO
 	@Override
 	public void storeReferee(Referee referee) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO referee (username, name, firstSurname,"
-				+ " secondSurname, password, birthDate, country, team_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				+ " secondSurname, password, birthDate, country, team_id) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)");
 				Statement statement = connection.createStatement()) {
 			preparedStatement.setString(1, referee.getUsername());
 			preparedStatement.setString(2, referee.getName());
@@ -200,11 +199,6 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, referee.getPassword());
 			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
 			preparedStatement.setString(7, referee.getCountry());
-			try {
-				preparedStatement.setInt(8, referee.getTeam().getId());
-			} catch (NullPointerException e) {
-				System.out.println("Entrenador sin equipo: " + referee.getName());
-			}
 			
 			preparedStatement.executeUpdate();
 			
@@ -336,7 +330,7 @@ public class SQLiteDBManager implements IUserRepository {
 	@Override
 	public Referee getReferee(int id) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
-				+ " password, birthDate, country, team_id FROM referee WHERE id = ?")) {
+				+ " password, birthDate, country FROM referee WHERE id = ?")) {
 			preparedStatement.setInt(1, id);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -351,14 +345,13 @@ public class SQLiteDBManager implements IUserRepository {
 				referee.setPassword(resultSet.getString("password"));
 				referee.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
 				referee.setCountry(resultSet.getString("country"));
-				referee.setTeam(getTeam(resultSet.getInt("team_id")));
 				
 				return referee;
 			} else {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el entrenador con ese id.", e);
+			throw new UserRepositoryException("Error obteniendo el arbitro con ese id.", e);
 		}
 	}
 	
@@ -445,7 +438,7 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 			return trainers;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los usuarios de la base de datos.", e);
+			throw new UserRepositoryException("Error obteniendo los entrenadores de la base de datos.", e);
 		}
 	}
 	
@@ -454,14 +447,14 @@ public class SQLiteDBManager implements IUserRepository {
 		List<Referee> referee = new ArrayList<>();
 		try (Statement statement = connection.createStatement()) {
 			ResultSet resultSet = statement.executeQuery("SELECT id, username, name, firstSurname, secondSurname,"
-					+ " password, birthDate, country, team_id FROM referee");
+					+ " password, birthDate, country FROM referee");
 			
 			while (resultSet.next()) {
 				referee.add(getReferee(resultSet.getInt("id")));
 			}
 			return referee;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los usuarios de la base de datos.", e);
+			throw new UserRepositoryException("Error obteniendo los arbitros de la base de datos.", e);
 		}
 	}
 	
@@ -599,7 +592,7 @@ public class SQLiteDBManager implements IUserRepository {
 	@Override
 	public void updateReferee(Referee referee) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE referee SET username = ?, name = ?, firstSurname = ?, secondSurname = ?,"
-				+ " password = ?, birthDate = ?, country = ?, team_id = ? WHERE id = ?")) {
+				+ " password = ?, birthDate = ?, country = ? WHERE id = ?")) {
 			preparedStatement.setString(1, referee.getUsername());
 			preparedStatement.setString(2, referee.getName());
 			preparedStatement.setString(3, referee.getFirstSurname());
@@ -607,16 +600,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(5, referee.getPassword());
 			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
 			preparedStatement.setString(7, referee.getCountry());
-			try {
-				preparedStatement.setInt(8, referee.getTeam().getId());
-			} catch (NullPointerException e) {
-				System.out.println("Entrenador sin equipo: " + referee.getName());
-			}
-			preparedStatement.setInt(9, referee.getId());
+			preparedStatement.setInt(8, referee.getId());
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el entrenador en la base de datos.", e);
+			throw new UserRepositoryException("No se ha podido actualizar el arbitro en la base de datos.", e);
 		}
 	}
 	
