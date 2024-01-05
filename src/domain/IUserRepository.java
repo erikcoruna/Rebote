@@ -24,10 +24,12 @@ public interface IUserRepository {
 	public void updateGame(Game game) throws UserRepositoryException;
 	public Player getPlayer(int id) throws UserRepositoryException;
 	public Trainer getTrainer(int id) throws UserRepositoryException;
+	public Referee getReferee(int id) throws UserRepositoryException;
 	public Team getTeam(int id) throws UserRepositoryException;
 	public Game getGame(int id) throws UserRepositoryException;
 	public List<Player> getAllPlayers() throws UserRepositoryException;
 	public List<Trainer> getAllTrainers() throws UserRepositoryException;
+	public List<Referee> getAllReferees() throws UserRepositoryException;
 	public List<Team> getAllTeams() throws UserRepositoryException;
 	public List<Game> getAllGames() throws UserRepositoryException;
 }

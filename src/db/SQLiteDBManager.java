@@ -334,6 +334,35 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
+	public Referee getReferee(int id) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
+				+ " password, birthDate, country, team_id FROM referee WHERE id = ?")) {
+			preparedStatement.setInt(1, id);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				Referee referee = new Referee();
+				referee.setId(resultSet.getInt("id"));
+				referee.setUsername(resultSet.getString("username"));
+				referee.setName(resultSet.getString("name"));
+				referee.setFirstSurname(resultSet.getString("firstSurname"));
+				referee.setSecondSurname(resultSet.getString("secondSurname"));
+				referee.setPassword(resultSet.getString("password"));
+				referee.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
+				referee.setCountry(resultSet.getString("country"));
+				referee.setTeam(getTeam(resultSet.getInt("team_id")));
+				
+				return referee;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo el entrenador con ese id.", e);
+		}
+	}
+	
+	@Override
 	public Team getTeam(int id) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, city, stadium,"
 				+ " description, league FROM team WHERE id = ?")) {
@@ -415,6 +444,22 @@ public class SQLiteDBManager implements IUserRepository {
 				trainers.add(getTrainer(resultSet.getInt("id")));
 			}
 			return trainers;
+		} catch (SQLException e) {
+			throw new UserRepositoryException("Error obteniendo los usuarios de la base de datos.", e);
+		}
+	}
+	
+	@Override
+	public List<Referee> getAllReferees() throws UserRepositoryException {
+		List<Referee> referee = new ArrayList<>();
+		try (Statement statement = connection.createStatement()) {
+			ResultSet resultSet = statement.executeQuery("SELECT id, username, name, firstSurname, secondSurname,"
+					+ " password, birthDate, country, team_id FROM referee");
+			
+			while (resultSet.next()) {
+				referee.add(getReferee(resultSet.getInt("id")));
+			}
+			return referee;
 		} catch (SQLException e) {
 			throw new UserRepositoryException("Error obteniendo los usuarios de la base de datos.", e);
 		}
