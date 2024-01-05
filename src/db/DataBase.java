@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import domain.Game;
 import domain.League;
 import domain.Player;
+import domain.Referee;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
@@ -36,7 +37,7 @@ public class DataBase {
 			Player erikPlayer = new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f);
 			Player anderPlayer = new Player("ander.player", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2, 196, 76.2f);
 			Player ikerPlayer = new Player("iker.player", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3, 175, 65.7f);
-			Player hugoPlayer = new Player("hugo.player", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4, 171, 63.3f);
+			Player hugoPlayer = new Player("hugo.player", "Hugo", "Rey", "Insausti", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4, 171, 63.3f);
 			
 			dbManager.storePlayer(erikPlayer);
 			dbManager.storePlayer(anderPlayer);
@@ -53,10 +54,30 @@ public class DataBase {
 			
 
 			
+			Referee erikReferee = new Referee("erik.referee", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null);
+			Referee anderReferee = new Referee("ander.referee", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", null);
+			Referee ikerReferee = new Referee("iker.referee", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", null);
+			Referee hugoReferee = new Referee("hugo.referee", "Hugo", "Rey", "Insausti", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", null);
+			
+			dbManager.storeReferee(erikReferee);
+			dbManager.storeReferee(anderReferee);
+			dbManager.storeReferee(ikerReferee);
+			dbManager.storeReferee(hugoReferee);
+			
+			System.out.println(dbManager.getReferee(1));
+			System.out.println(dbManager.getAllReferees());
+			dbManager.deleteReferee(ikerReferee);
+			hugoReferee.setCountry("Francia");
+			hugoReferee.setSecondSurname("García");
+			dbManager.updateReferee(hugoReferee);
+			System.out.println(dbManager.getReferee(4));
+			
+			
+			
 			Trainer erikTrainer = new Trainer("erik.trainer", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null);
 			Trainer anderTrainer = new Trainer("ander.trainer", "Ander", "Herrero", "Pascual", "prueba2", new GregorianCalendar(2004, 1 - 1, 20), "España", team2);
 			Trainer ikerTrainer = new Trainer("iker.trainer", "Iker", "Larrinaga", "Fortuna", "prueba3", new GregorianCalendar(2004, 2 - 1, 18), "España", team3);
-			Trainer hugoTrainer = new Trainer("hugo.trainer", "Hugo", "Rey", "Rodríguez", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4);
+			Trainer hugoTrainer = new Trainer("hugo.trainer", "Hugo", "Rey", "Insausti", "prueba4", new GregorianCalendar(2004, 3 - 1, 16), "España", team4);
 			
 			dbManager.storeTrainer(erikTrainer);
 			dbManager.storeTrainer(anderTrainer);
@@ -71,6 +92,8 @@ public class DataBase {
 			dbManager.updateTrainer(hugoTrainer);
 			System.out.println(dbManager.getTrainer(4));
 			
+			
+			//TODO ACTUALIZAR REFEREE PARA QUE SEA UNA PERSONA REAL
 			Game game1 = new Game("Bilbao Basket", "Referee1", 1, 2, 50, 49, 6, 7);
 			Game game2 = new Game("Bilbao Basket", "Referee1", 1, 3, 55, 40, 4, 8);
 			Game game3 = new Game("Bilbao Basket", "Referee1", 2, 3, 51, 60, 7, 9);
