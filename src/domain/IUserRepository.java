@@ -5,11 +5,13 @@ import java.util.List;
 public interface IUserRepository {
 	public void createPlayerTable() throws UserRepositoryException;
 	public void createTrainerTable() throws UserRepositoryException;
+	public void createRefereeTable() throws UserRepositoryException;
 	public void createTeamTable() throws UserRepositoryException;
 	public void createGameTable() throws UserRepositoryException;
 	public void dropTable(String tableName) throws UserRepositoryException;
 	public void storePlayer(Player player) throws UserRepositoryException;
 	public void storeTrainer(Trainer trainer) throws UserRepositoryException;
+	public void storeReferee(Referee referee) throws UserRepositoryException;
 	public void storeTeam(Team team) throws UserRepositoryException;
 	public void storeGame(Game game) throws UserRepositoryException;
 	public void deletePlayer(Player player) throws UserRepositoryException;

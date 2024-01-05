@@ -11,12 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Vector;
 
 import domain.Game;
 import domain.IUserRepository;
 import domain.League;
 import domain.Player;
+import domain.Referee;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
@@ -184,6 +184,39 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 		} catch (SQLException e) {
 			throw new UserRepositoryException("No se ha podido guardar el entrenador en la base de datos.", e);
+		}
+	}
+	
+	//REVISAR PORQUE UN ARBITRO NO PUEDE SER DE UN EQUIPO
+	@Override
+	public void storeReferee(Referee referee) throws UserRepositoryException {
+		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO referee (username, name, firstSurname,"
+				+ " secondSurname, password, birthDate, country, team_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				Statement statement = connection.createStatement()) {
+			preparedStatement.setString(1, referee.getUsername());
+			preparedStatement.setString(2, referee.getName());
+			preparedStatement.setString(3, referee.getFirstSurname());
+			preparedStatement.setString(4, referee.getSecondSurname());
+			preparedStatement.setString(5, referee.getPassword());
+			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
+			preparedStatement.setString(7, referee.getCountry());
+			try {
+				preparedStatement.setInt(8, referee.getTeam().getId());
+			} catch (NullPointerException e) {
+				System.out.println("Entrenador sin equipo: " + referee.getName());
+			}
+			
+			preparedStatement.executeUpdate();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT last_insert_rowid() AS id FROM referee");
+			if (resultSet.next()) {
+				int newId = resultSet.getInt("id");
+				referee.setId(newId);
+			} else {
+				throw new UserRepositoryException("Error generando el id en la base de datos.");
+			}
+		} catch (SQLException e) {
+			throw new UserRepositoryException("No se ha podido guardar el arbitro en la base de datos.", e);
 		}
 	}
 	
