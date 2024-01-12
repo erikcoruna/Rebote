@@ -16,7 +16,6 @@ import domain.Game;
 import domain.IUserRepository;
 import domain.League;
 import domain.Player;
-import domain.Referee;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
@@ -188,33 +187,6 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
-	public void storeReferee(Referee referee) throws UserRepositoryException {
-		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO referee (username, name, firstSurname,"
-				+ " secondSurname, password, birthDate, country, team_id) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)");
-				Statement statement = connection.createStatement()) {
-			preparedStatement.setString(1, referee.getUsername());
-			preparedStatement.setString(2, referee.getName());
-			preparedStatement.setString(3, referee.getFirstSurname());
-			preparedStatement.setString(4, referee.getSecondSurname());
-			preparedStatement.setString(5, referee.getPassword());
-			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
-			preparedStatement.setString(7, referee.getCountry());
-			
-			preparedStatement.executeUpdate();
-			
-			ResultSet resultSet = statement.executeQuery("SELECT last_insert_rowid() AS id FROM referee");
-			if (resultSet.next()) {
-				int newId = resultSet.getInt("id");
-				referee.setId(newId);
-			} else {
-				throw new UserRepositoryException("Error generando el id en la base de datos.");
-			}
-		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido guardar el arbitro en la base de datos.", e);
-		}
-	}
-	
-	@Override
 	public void storeTeam(Team team) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO team (name, city,"
 				+ " stadium, description, league) VALUES (?, ?, ?, ?, ?)");
@@ -328,34 +300,6 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
-	public Referee getReferee(int id) throws UserRepositoryException {
-		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
-				+ " password, birthDate, country FROM referee WHERE id = ?")) {
-			preparedStatement.setInt(1, id);
-			
-			ResultSet resultSet = preparedStatement.executeQuery();
-			
-			if (resultSet.next()) {
-				Referee referee = new Referee();
-				referee.setId(resultSet.getInt("id"));
-				referee.setUsername(resultSet.getString("username"));
-				referee.setName(resultSet.getString("name"));
-				referee.setFirstSurname(resultSet.getString("firstSurname"));
-				referee.setSecondSurname(resultSet.getString("secondSurname"));
-				referee.setPassword(resultSet.getString("password"));
-				referee.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
-				referee.setCountry(resultSet.getString("country"));
-				
-				return referee;
-			} else {
-				return null;
-			}
-		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el arbitro con ese id.", e);
-		}
-	}
-	
-	@Override
 	public Team getTeam(int id) throws UserRepositoryException {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, city, stadium,"
 				+ " description, league FROM team WHERE id = ?")) {
@@ -443,22 +387,6 @@ public class SQLiteDBManager implements IUserRepository {
 	}
 	
 	@Override
-	public List<Referee> getAllReferees() throws UserRepositoryException {
-		List<Referee> referee = new ArrayList<>();
-		try (Statement statement = connection.createStatement()) {
-			ResultSet resultSet = statement.executeQuery("SELECT id, username, name, firstSurname, secondSurname,"
-					+ " password, birthDate, country FROM referee");
-			
-			while (resultSet.next()) {
-				referee.add(getReferee(resultSet.getInt("id")));
-			}
-			return referee;
-		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los arbitros de la base de datos.", e);
-		}
-	}
-	
-	@Override
 	public List<Team> getAllTeams() throws UserRepositoryException {
 		List<Team> teams = new ArrayList<>();
 		try (Statement statement = connection.createStatement()) {
@@ -506,16 +434,6 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new UserRepositoryException("No se ha podido eliminar el entrenador " + trainer.getId() + " de la base de datos.", e);
-		}
-	}
-	
-	@Override
-	public void deleteReferee(Referee referee) throws UserRepositoryException {
-		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM referee WHERE id = ?")) {
-			preparedStatement.setInt(1, referee.getId());
-			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el arbitro " + referee.getId() + " de la base de datos.", e);
 		}
 	}
 	
@@ -586,25 +504,6 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new UserRepositoryException("No se ha podido actualizar el entrenador en la base de datos.", e);
-		}
-	}
-	
-	@Override
-	public void updateReferee(Referee referee) throws UserRepositoryException {
-		try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE referee SET username = ?, name = ?, firstSurname = ?, secondSurname = ?,"
-				+ " password = ?, birthDate = ?, country = ? WHERE id = ?")) {
-			preparedStatement.setString(1, referee.getUsername());
-			preparedStatement.setString(2, referee.getName());
-			preparedStatement.setString(3, referee.getFirstSurname());
-			preparedStatement.setString(4, referee.getSecondSurname());
-			preparedStatement.setString(5, referee.getPassword());
-			preparedStatement.setString(6, calendarToString(referee.getBirthDate()));
-			preparedStatement.setString(7, referee.getCountry());
-			preparedStatement.setInt(8, referee.getId());
-			
-			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el arbitro en la base de datos.", e);
 		}
 	}
 	
