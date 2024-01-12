@@ -5,7 +5,6 @@ import java.util.List;
 public interface IUserRepository {
 	public void createPlayerTable() throws UserRepositoryException;
 	public void createTrainerTable() throws UserRepositoryException;
-	public void createRefereeTable() throws UserRepositoryException;
 	public void createTeamTable() throws UserRepositoryException;
 	public void createGameTable() throws UserRepositoryException;
 	public void dropTable(String tableName) throws UserRepositoryException;
