@@ -93,30 +93,35 @@ public class WindowLogin extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!textFieldUsername.getText().isEmpty() && !passwordFieldPassword.getPassword().toString().isEmpty()) {
-					SQLiteDBManager dbManager = new SQLiteDBManager();
-					String inputUsername = textFieldUsername.getText();
-					String inputPassword = String.valueOf(passwordFieldPassword.getPassword());
-					try {
-						System.out.println("Conectando con la base de datos...");
-						dbManager.connect("src/db/rebote.db");
-						
-						for (Player player : dbManager.getAllPlayers()) {
-							if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {
-								dispose();
-								new WindowHomePlayer(player);
+				if (!textFieldUsername.getText().isEmpty() && !String.valueOf(passwordFieldPassword.getPassword()).isEmpty()) {
+					if (textFieldUsername.getText().equals("admin") && String.valueOf(passwordFieldPassword.getPassword()).equals("admin")) {
+						dispose();
+						new WindowGameRegister();
+					} else {
+						SQLiteDBManager dbManager = new SQLiteDBManager();
+						String inputUsername = textFieldUsername.getText();
+						String inputPassword = String.valueOf(passwordFieldPassword.getPassword());
+						try {
+							System.out.println("Conectando con la base de datos...");
+							dbManager.connect("src/db/rebote.db");
+							
+							for (Player player : dbManager.getAllPlayers()) {
+								if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {
+									dispose();
+									new WindowHomePlayer(player);
+								}
 							}
-						}
-						for (Trainer trainer : dbManager.getAllTrainers()) {
-							if (trainer.getUsername().equals(inputUsername) && String.valueOf(trainer.getPassword()).equals(inputPassword)) {
-								new WindowHomeTrainer(trainer);
-								dispose();
+							for (Trainer trainer : dbManager.getAllTrainers()) {
+								if (trainer.getUsername().equals(inputUsername) && String.valueOf(trainer.getPassword()).equals(inputPassword)) {
+									new WindowHomeTrainer(trainer);
+									dispose();
+								}
 							}
+							
+							dbManager.disconnect();
+						} catch (UserRepositoryException e1) {
+							e1.printStackTrace();
 						}
-						
-						dbManager.disconnect();
-					} catch (UserRepositoryException e1) {
-						e1.printStackTrace();
 					}
 				}
 				logger.info("Pulsado el botón confirm.");

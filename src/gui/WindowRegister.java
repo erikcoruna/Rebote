@@ -149,7 +149,7 @@ public class WindowRegister extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!textFieldUsername.getText().isEmpty() && !textFieldName.getText().isEmpty() && !textFieldFirstSurname.getText().isEmpty() && !textFieldSecondSurname.getText().isEmpty()
-						&& !passwordFieldPassword.getPassword().toString().isEmpty()
+						&& !String.valueOf(passwordFieldPassword.getPassword()).isEmpty()
 						&& !(birthDateChooser.getDate() == null) && (coach.isSelected() || player.isSelected())) {
 					if (birthDateChooser.getDate().before(new Date())) {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
