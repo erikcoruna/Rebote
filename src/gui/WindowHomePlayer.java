@@ -373,8 +373,8 @@ public class WindowHomePlayer extends JFrame {
 						panelTeam.remove(leaveButton);
 						panelTeam.add(labelNoTeam);
 						WindowHomePlayer.this.setIconImage(null);
-						panelTeam.revalidate();
-						panelTeam.repaint();
+						tabbedPanel.revalidate();
+						tabbedPanel.repaint();
 					} catch (UserRepositoryException e1) {
 						System.out.println("No se ha podido acceder a la base de datos.");
 						e1.printStackTrace();
@@ -445,69 +445,73 @@ public class WindowHomePlayer extends JFrame {
         
         
         // Partidos
-        panelGames = new JPanel(new BorderLayout());
-        
-        panelNorthGames = new JPanel(new GridLayout(1, 2));
-        
-        textFieldGames = new JTextField();
-        buttonSearchGames = new JButton("Buscar");
-        
-        panelGames.add(panelNorthGames, BorderLayout.NORTH);
-        panelNorthGames.add(textFieldGames);
-        panelNorthGames.add(buttonSearchGames);
-        
-        try {
-        	System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
-			Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
-			Set<Game> games = new TreeSet<>(gameComparator);
-			games.addAll(dbManager.getAllGames());
-        
-	        panelGamesSearch = new JPanel();
-	        panelGamesSearch.setLayout(new BoxLayout(panelGamesSearch, BoxLayout.Y_AXIS));
+        if (playerTeam != null) {
+	        panelGames = new JPanel(new BorderLayout());
 	        
-	        for (Game game : games) {
-	        	addGamePanel(game);
-	        }
+	        panelNorthGames = new JPanel(new GridLayout(1, 2));
 	        
-	        scrollPaneGames = new JScrollPane(panelGamesSearch);
-	        scrollPaneGames.getVerticalScrollBar().setUnitIncrement(16);
-	        panelGames.add(scrollPaneGames, BorderLayout.CENTER);
+	        textFieldGames = new JTextField();
+	        buttonSearchGames = new JButton("Buscar");
 	        
-	        tabbedPanel.addTab("Partidos", panelGames);
+	        panelGames.add(panelNorthGames, BorderLayout.NORTH);
+	        panelNorthGames.add(textFieldGames);
+	        panelNorthGames.add(buttonSearchGames);
 	        
-	        buttonSearchGames.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String textSearch = textFieldGames.getText().toLowerCase();
-					panelGamesSearch.removeAll();
-					for (Game game : games) {
-						try {
-							Team team1 = dbManager.getTeam(game.getTeam1());
-							Team team2 = dbManager.getTeam(game.getTeam2());
-							if (team1.getName().toLowerCase().contains(textSearch) || team2.getName().toLowerCase().contains(textSearch)) {
-								addGamePanel(game);
-							}
-						} catch (UserRepositoryException e1) {
-							System.out.println("No se ha podido acceder a la base de datos");
-							e1.printStackTrace();
-						}
-					}
-					if (panelGamesSearch.getComponentCount() == 0) {
-						JLabel labelNoGame = new JLabel("No hay ningún partido.");
-						panelGamesSearch.add(labelNoGame);
-					}
+	        try {
+	        	System.out.println("Conectando con la base de datos...");
+				dbManager.connect("src/db/rebote.db");
+				Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
+				Set<Game> games = new TreeSet<>(gameComparator);
+				games.addAll(dbManager.getAllGames());
+	        
+		        panelGamesSearch = new JPanel();
+		        panelGamesSearch.setLayout(new BoxLayout(panelGamesSearch, BoxLayout.Y_AXIS));
+		        
+		        for (Game game : games) {
+		        	if (playerTeam.getId() == game.getTeam1() || playerTeam.getId() == game.getTeam2()) {
+		        		addGamePanel(game);
+		        	}
+		        }
+		        
+		        scrollPaneGames = new JScrollPane(panelGamesSearch);
+		        scrollPaneGames.getVerticalScrollBar().setUnitIncrement(16);
+		        panelGames.add(scrollPaneGames, BorderLayout.CENTER);
+		        
+		        tabbedPanel.addTab("Partidos", panelGames);
+		        
+		        buttonSearchGames.addActionListener(new ActionListener() {
 					
-					panelGamesSearch.revalidate();
-					panelGamesSearch.repaint();
-				}
-			});
-        } catch (UserRepositoryException e) {
-        	System.out.println("No se ha podido acceder a la base de datos.");
-        	e.printStackTrace();
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String textSearch = textFieldGames.getText().toLowerCase();
+						panelGamesSearch.removeAll();
+						for (Game game : games) {
+							try {
+								Team team1 = dbManager.getTeam(game.getTeam1());
+								Team team2 = dbManager.getTeam(game.getTeam2());
+								if (team1.getName().toLowerCase().contains(textSearch) || team2.getName().toLowerCase().contains(textSearch)) {
+									addGamePanel(game);
+								}
+							} catch (UserRepositoryException e1) {
+								System.out.println("No se ha podido acceder a la base de datos");
+								e1.printStackTrace();
+							}
+						}
+						if (panelGamesSearch.getComponentCount() == 0) {
+							JLabel labelNoGame = new JLabel("No hay ningún partido.");
+							panelGamesSearch.add(labelNoGame);
+						}
+						
+						panelGamesSearch.revalidate();
+						panelGamesSearch.repaint();
+					}
+				});
+	        } catch (UserRepositoryException e) {
+	        	System.out.println("No se ha podido acceder a la base de datos.");
+	        	e.printStackTrace();
+	        }
         }
-        add(tabbedPanel);
+	    add(tabbedPanel);
 		setVisible(true);
-	}
+    }
 }

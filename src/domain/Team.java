@@ -79,10 +79,4 @@ public class Team {
 	public void setLeague(League league) {
 		this.league = league;
 	}
-
-	@Override
-	public String toString() {
-		return "[" + id + ", " + name + ", " + city + ", " + stadium + ", "
-				+ description + ", " + league + "]";
-	}
 }

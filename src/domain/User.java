@@ -113,12 +113,5 @@ public class User {
 	public void setTeam(Team team) {
 		this.team = team;
 	}
-	
-	@Override
-	public String toString() {
-		return "[" + id + ", " + username + ", " + name + ", " + firstSurname
-				+ ", " + secondSurname + ", " + password + ", " + birthDate
-				+ ", " + country + ", " + team + "]";
-	}
 }
 

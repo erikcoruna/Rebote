@@ -115,11 +115,4 @@ public class Game {
 	public void setTeamFoults2(int teamFoults2) {
 		this.teamFoults2 = teamFoults2;
 	}
-
-	@Override
-	public String toString() {
-		return "Game [id=" + id + ", stadium=" + stadium + ", referee=" + referee + ", team1=" + team1 + ", team2="
-				+ team2 + ", teamScore1=" + teamScore1 + ", teamScore2=" + teamScore2 + ", teamFoults1=" + teamFoults1
-				+ ", teamFoults2=" + teamFoults2 + "]";
-	}
 }

@@ -43,9 +43,4 @@ public class Player extends User {
 	public void setWeight(float weight) {
 		this.weight = weight;
 	}
-
-	@Override
-	public String toString() {
-		return "[" + height + ", " + weight + "]";
-	}
 }
