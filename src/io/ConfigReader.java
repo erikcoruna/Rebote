@@ -11,7 +11,7 @@ public class ConfigReader {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("config.properties");
+            input = new FileInputStream("conf/config.properties");
 
             prop.load(input);
 

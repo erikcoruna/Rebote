@@ -16,7 +16,7 @@ public class GameTableHeaderRenderer implements TableCellRenderer {
 
 		// Erik Coruña Rodríguez_2023-11-26_23-15.txt
 		// Se han modificado algunas cosas en el código.
-        ImageIcon icon = new ImageIcon("src/img/" + value + ".png");
+        ImageIcon icon = new ImageIcon("resources/images/" + value + ".png");
         Image scaledImage = icon.getImage().getScaledInstance(90, 30, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 

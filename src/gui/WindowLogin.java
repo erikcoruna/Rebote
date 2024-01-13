@@ -103,7 +103,7 @@ public class WindowLogin extends JFrame {
 						String inputPassword = String.valueOf(passwordFieldPassword.getPassword());
 						try {
 							System.out.println("Conectando con la base de datos...");
-							dbManager.connect("src/db/rebote.db");
+							dbManager.connect("resources/db/rebote.db");
 							
 							for (Player player : dbManager.getAllPlayers()) {
 								if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {

@@ -31,7 +31,7 @@ public class WindowStart extends JFrame {
         // https://stackoverflow.com/questions/42964669/placing-button-panel-in-center-java-swing
         // Se ha modificado parte del código para adecuarlo a nuestro proyecto con los botones y textos necesarios.
         JPanel panel = new JPanel();
-        ImageIcon image = new ImageIcon("src/img/basket.jpg");
+        ImageIcon image = new ImageIcon("resources/images/basket.jpg");
         JLabel labelBasket = new JLabel(image);
         panel.add(labelBasket);
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));

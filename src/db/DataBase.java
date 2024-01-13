@@ -17,7 +17,7 @@ public class DataBase {
 		
 		try {
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
 			
 			Team team1 = new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A);
 			Team team2 = new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B);

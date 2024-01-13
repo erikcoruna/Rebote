@@ -69,7 +69,7 @@ public class WindowHomePlayer extends JFrame {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
 			dbManager.updatePlayer(player);
 		} catch (UserRepositoryException e) {
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class WindowHomePlayer extends JFrame {
 		panelCenterTeams.setPreferredSize(new Dimension(this.getWidth() - 50, 100));
     	panelCenterTeams.setBackground(Color.WHITE);
     	JLabel labelIcon = new JLabel();
-    	ImageIcon icon = new ImageIcon("src/img/" + team.getLeague() + ".png");
+    	ImageIcon icon = new ImageIcon("resources/images/" + team.getLeague() + ".png");
     	labelIcon.setIcon(icon);
     	JLabel labelNameSearch = new JLabel(team.getName());
     	JLabel labelCitySearch = new JLabel(team.getCity());
@@ -112,14 +112,14 @@ public class WindowHomePlayer extends JFrame {
     	SQLiteDBManager dbManager = new SQLiteDBManager();
     	try {
     		System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
 			
 			Team team1 = dbManager.getTeam(game.getTeam1());
 			JPanel team1Panel = new JPanel(new GridLayout(2, 2));
 			team1Panel.setBackground(Color.WHITE);
 			JLabel team1NameLabel = new JLabel(team1.getName().toUpperCase());
 			JLabel team1LeagueLabel = new JLabel();
-			ImageIcon team1Icon = new ImageIcon("src/img/" + team1.getLeague() + ".png");
+			ImageIcon team1Icon = new ImageIcon("resources/images/" + team1.getLeague() + ".png");
 			team1LeagueLabel.setIcon(team1Icon);
 			JLabel team1PointsLabel = new JLabel("P: " + game.getTeamScore1());
 			JLabel team1FoultsLabel = new JLabel("F: " + game.getTeamFoults1());
@@ -139,7 +139,7 @@ public class WindowHomePlayer extends JFrame {
 			team2Panel.setBackground(Color.WHITE);
 			JLabel team2NameLabel = new JLabel(team2.getName().toUpperCase());
 			JLabel team2LeagueLabel = new JLabel();
-			ImageIcon team2Icon = new ImageIcon("src/img/" + team2.getLeague() + ".png");
+			ImageIcon team2Icon = new ImageIcon("resources/images/" + team2.getLeague() + ".png");
 			team2LeagueLabel.setIcon(team2Icon);
 			JLabel team2PointsLabel = new JLabel("P: " + game.getTeamScore2());
 			JLabel team2FoultsLabel = new JLabel("F: " + game.getTeamFoults2());
@@ -163,7 +163,7 @@ public class WindowHomePlayer extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Home");
 		if (player.getTeam() != null) {
-			setIconImage(new ImageIcon("src/img/" + player.getTeam().getLeague() + ".png").getImage());
+			setIconImage(new ImageIcon("resources/images/" + player.getTeam().getLeague() + ".png").getImage());
 		}
 		
 		
@@ -365,7 +365,7 @@ public class WindowHomePlayer extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					try {
 						System.out.println("Conectando con la base de datos...");
-						dbManager.connect("src/db/rebote.db");
+						dbManager.connect("resources/db/rebote.db");
 						System.out.println("Has salido del equipo " + player.getTeam().getName());
 						player.setTeam(null);
 						dbManager.updatePlayer(player);
@@ -402,7 +402,7 @@ public class WindowHomePlayer extends JFrame {
         
         try {
         	System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
 			List<Team> teams = new ArrayList<>(dbManager.getAllTeams());
         
 	        panelTeamsSearch = new JPanel();
@@ -459,7 +459,7 @@ public class WindowHomePlayer extends JFrame {
 	        
 	        try {
 	        	System.out.println("Conectando con la base de datos...");
-				dbManager.connect("src/db/rebote.db");
+				dbManager.connect("resources/db/rebote.db");
 				Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
 				Set<Game> games = new TreeSet<>(gameComparator);
 				games.addAll(dbManager.getAllGames());

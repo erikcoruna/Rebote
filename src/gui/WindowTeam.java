@@ -58,16 +58,16 @@ public class WindowTeam extends JFrame {
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			try {
 				System.out.println("Conectando con la base de datos...");
-				dbManager.connect("src/db/rebote.db");
+				dbManager.connect("resources/db/rebote.db");
 				Game currentGame = gamesPlayedList.get(gameIndex);
 				team1 = dbManager.getTeam(currentGame.getTeam1());
 				team1NameLabel.setText(team1.getName().toUpperCase());
-				team1LeagueLabel.setIcon(new ImageIcon("src/img/" + team1.getLeague() + ".png"));
+				team1LeagueLabel.setIcon(new ImageIcon("resources/images/" + team1.getLeague() + ".png"));
 				team1PointsLabel.setText("P: " + currentGame.getTeamScore1());
 				team1FoultsLabel.setText("F: " + currentGame.getTeamFoults1());
 				team2 = dbManager.getTeam(currentGame.getTeam2());
 				team2NameLabel.setText(team2.getName().toUpperCase());
-				team2LeagueLabel.setIcon(new ImageIcon("src/img/" + team2.getLeague() + ".png"));
+				team2LeagueLabel.setIcon(new ImageIcon("resources/images/" + team2.getLeague() + ".png"));
 				team2PointsLabel.setText("P: " + currentGame.getTeamScore2());
 				team2FoultsLabel.setText("F: " + currentGame.getTeamFoults2());
 			} catch (UserRepositoryException e) {
@@ -103,7 +103,7 @@ public class WindowTeam extends JFrame {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setTitle(team.getName());
-		setIconImage(new ImageIcon("src/img/" + team.getLeague() + ".png").getImage());
+		setIconImage(new ImageIcon("resources/images/" + team.getLeague() + ".png").getImage());
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		
@@ -140,7 +140,7 @@ public class WindowTeam extends JFrame {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
 			
 			if (!dbManager.getAllGames().isEmpty()) {
 				for (Game game : dbManager.getAllGames()) {
@@ -167,7 +167,7 @@ public class WindowTeam extends JFrame {
 					team1NameLabel = new JLabel(team1.getName().toUpperCase());
 					team1NameLabel.setHorizontalAlignment(JLabel.CENTER);
 					team1LeagueLabel = new JLabel();
-					ImageIcon team1Icon = new ImageIcon("src/img/" + team1.getLeague() + ".png");
+					ImageIcon team1Icon = new ImageIcon("resources/images/" + team1.getLeague() + ".png");
 					team1LeagueLabel.setIcon(team1Icon);
 					team1PointsLabel = new JLabel("P: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamScore1());
 					team1PointsLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -182,7 +182,7 @@ public class WindowTeam extends JFrame {
 					team2 = dbManager.getTeam(gamesPlayedList.get(gamesPlayedList.size() - 1).getTeam2());
 					team2NameLabel = new JLabel(team2.getName().toUpperCase());
 					team2LeagueLabel = new JLabel();
-					ImageIcon team2Icon = new ImageIcon("src/img/" + team2.getLeague() + ".png");
+					ImageIcon team2Icon = new ImageIcon("resources/images/" + team2.getLeague() + ".png");
 					team2LeagueLabel.setIcon(team2Icon);
 					team2PointsLabel = new JLabel("P: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamScore2());
 					team2FoultsLabel = new JLabel("F: " + gamesPlayedList.get(gamesPlayedList.size() - 1).getTeamFoults2());

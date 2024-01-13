@@ -42,7 +42,7 @@ public class WindowGameRegister extends JFrame {
 		
 		//Panel en el que se visualiza un campo de baloncesto y que al clicar registra una accón
 		JPanel panelGame = new JPanel();
-		ImageIcon field = new ImageIcon("src/img/paneGame.png");
+		ImageIcon field = new ImageIcon("resources/images/paneGame.png");
 		JLabel labelGame = new JLabel(field);
 		panelGame.add(labelGame);
 		
@@ -71,7 +71,7 @@ public class WindowGameRegister extends JFrame {
 		//https://chuidiang.org/index.php?title=Botones_con_icono_y_texto
 		//De esta página hemos obtenido el código para insertar la imagen de icono en un botón
 		JButton buttonHelp = new JButton();
-		buttonHelp.setIcon(new ImageIcon("img/buttonHelp.png")); 
+		buttonHelp.setIcon(new ImageIcon("resources/images/buttonHelp.png")); 
 		buttonHelp.addActionListener(new ActionListener() {
 			
 			@Override

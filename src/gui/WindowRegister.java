@@ -155,7 +155,7 @@ public class WindowRegister extends JFrame {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
 						try {
 							System.out.println("Conectando con la base de datos...");
-							dbManager.connect("src/db/rebote.db");
+							dbManager.connect("resources/db/rebote.db");
 							
 							int exists = 0;
 							for (Trainer trainer : dbManager.getAllTrainers()) {
