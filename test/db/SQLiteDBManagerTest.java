@@ -37,12 +37,12 @@ public class SQLiteDBManagerTest {
 		dbManager = new SQLiteDBManager();
 		String tempDir = System.getProperty("java.io.tmpdir");
 		tempDB = Paths.get(tempDir, "test.db").toString();
-		testTeam = new Team(0, "Test", "Test", "Test", "Test", League.A);
-		testPlayer = new Player(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null, 0, 0.0f);
-		testTrainer = new Trainer(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null);
-		testPlayerWithTeam = new Player(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam, 0, 0.0f);
-		testTrainerWithTeam = new Trainer(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam);
-		testGame = new Game(0, "Test", "Test", 0, 0, 0, 0, 0, 0);
+		testTeam = new Team("Test", "Test", "Test", "Test", League.A);
+		testPlayer = new Player("Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null, 0, 0.0f);
+		testTrainer = new Trainer("Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null);
+		testPlayerWithTeam = new Player("Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam, 0, 0.0f);
+		testTrainerWithTeam = new Trainer("Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam);
+		testGame = new Game("Test", "Test", 0, 0, 0, 0, 0, 0);
 	}
 	
 	@Before
