@@ -3,9 +3,13 @@ package db;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.GregorianCalendar;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,6 +23,7 @@ import domain.UserRepositoryException;
 public class SQLiteDBManagerTest {
 	
 	private static SQLiteDBManager dbManager;
+	private static String tempDB;
 	private static Team testTeam;
 	private static Player testPlayer;
 	private static Trainer testTrainer;
@@ -29,13 +34,19 @@ public class SQLiteDBManagerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		dbManager = new SQLiteDBManager();
-		dbManager.connect("src/db/rebote.db");
+		String tempDir = System.getProperty("java.io.tmpdir");
+		tempDB = Paths.get(tempDir, "test.db").toString();
 		testTeam = new Team(0, "Test", "Test", "Test", "Test", League.A);
 		testPlayer = new Player(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null, 0, 0.0f);
 		testTrainer = new Trainer(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", null);
 		testPlayerWithTeam = new Player(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam, 0, 0.0f);
 		testTrainerWithTeam = new Trainer(0, "Test", "Test", "Test", "Test", "Test", new GregorianCalendar(2004, 4 - 1, 22), "Test", testTeam);
 		testGame = new Game(0, "Test", "Test", 0, 0, 0, 0, 0, 0);
+	}
+	
+	@Before
+	public void setUpBefore() throws Exception {
+		dbManager.connect(tempDB);
 	}
 	
 	@Test
@@ -62,6 +73,7 @@ public class SQLiteDBManagerTest {
 		dbManager.storeTeam(testTeam);
 		int teamsAfter = dbManager.getAllTeams().size();
 		assertTrue(teamsBefore < teamsAfter);
+		
 	}
 	
 	@Test
@@ -74,6 +86,8 @@ public class SQLiteDBManagerTest {
 	
 	@Test
 	public void testDeletePlayer() throws UserRepositoryException {
+		dbManager.storePlayer(testPlayer);
+		dbManager.storePlayer(testPlayerWithTeam);
 		int playersBefore = dbManager.getAllPlayers().size();
 		dbManager.deletePlayer(testPlayer);
 		dbManager.deletePlayer(testPlayerWithTeam);
@@ -83,31 +97,44 @@ public class SQLiteDBManagerTest {
 	
 	@Test
 	public void testDeleteTrainer() throws UserRepositoryException {
+		dbManager.storeTrainer(testTrainer);
+		dbManager.storeTrainer(testTrainerWithTeam);
 		int trainersBefore = dbManager.getAllTrainers().size();
 		dbManager.deleteTrainer(testTrainer);
 		dbManager.deleteTrainer(testTrainerWithTeam);
 		int trainersAfter = dbManager.getAllTrainers().size();
-		assertTrue(trainersBefore < trainersAfter);
+		assertTrue(trainersAfter < trainersBefore);
 	}
 	
 	@Test
 	public void testDeleteTeam() throws UserRepositoryException {
+		dbManager.storeTeam(testTeam);
 		int teamsBefore = dbManager.getAllTeams().size();
 		dbManager.deleteTeam(testTeam);
 		int teamsAfter = dbManager.getAllTeams().size();
-		assertTrue(teamsBefore < teamsAfter);
+		assertTrue(teamsAfter < teamsBefore);
 	}
 	
 	@Test
 	public void testDeleteGame() throws UserRepositoryException {
+		dbManager.storeGame(testGame);
 		int gamesBefore = dbManager.getAllGames().size();
 		dbManager.deleteGame(testGame);
 		int gamesAfter = dbManager.getAllGames().size();
-		assertTrue(gamesBefore < gamesAfter);
+		assertTrue(gamesAfter < gamesBefore);
+	}
+	
+	@After
+	public void tearDownAfter() throws Exception {
+		dbManager.dropTable("player");
+		dbManager.dropTable("trainer");
+		dbManager.dropTable("team");
+		dbManager.dropTable("game");
 	}
 	
 	@AfterClass
-	public static void logOut() throws Exception {
+	public static void tearDownAfterClass() throws Exception {
 		dbManager.disconnect();
+		new File(tempDB).delete();
 	}
 }
