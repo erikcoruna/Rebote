@@ -37,21 +37,6 @@ public class CSVFileManager implements IFileManager {
 	public String[] teamHeaders = getAttributeNames(Team.class);
 	public String[] gameHeaders = getAttributeNames(Game.class);
 	private SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	public static void main(String[] args) {
-		CSVFileManager fileManager = new CSVFileManager();
-		try {
-			fileManager.exportTrainersToFile(Paths.get("src/io/trainers.csv"));
-			fileManager.importTrainersFromFile(Paths.get("src/io/trainers.csv"));
-			fileManager.exportPlayersToFile(Paths.get("src/io/players.csv"));
-			fileManager.importPlayersFromFile(Paths.get("src/io/players.csv"));
-			fileManager.exportTeamsToFile(Paths.get("src/io/teams.csv"));
-			fileManager.importTeamsFromFile(Paths.get("src/io/teams.csv"));
-			fileManager.exportGamesToFile(Paths.get("src/io/games.csv"));
-			fileManager.importGamesFromFile(Paths.get("src/io/games.csv"));
-		} catch (UserRepositoryException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private static String[] getAttributeNames(Class<?> clazz) {
         List<String> attributeNames = new ArrayList<>();
@@ -85,13 +70,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public void importPlayersFromFile(Path path) throws UserRepositoryException {
+	public void importPlayersFromFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
 			while ((row = csvReader.read(playerHeaders)) != null) {
@@ -130,13 +115,13 @@ public class CSVFileManager implements IFileManager {
 	}
 
 	@Override
-	public void importTrainersFromFile(Path path) throws UserRepositoryException {
+	public void importTrainersFromFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(trainerHeaders)) != null) {
@@ -174,13 +159,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public void importTeamsFromFile(Path path) throws UserRepositoryException {
+	public void importTeamsFromFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(teamHeaders)) != null) {
@@ -210,13 +195,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public void importGamesFromFile(Path path) throws UserRepositoryException {
+	public void importGamesFromFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapReader csvReader = new CsvMapReader(new FileReader(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
 			while((row = csvReader.read(gameHeaders)) != null) {
@@ -249,13 +234,13 @@ public class CSVFileManager implements IFileManager {
 	}
 
 	@Override
-	public void exportPlayersToFile(Path path) throws UserRepositoryException {
+	public void exportPlayersToFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(playerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			for (Player player : dbManager.getAllPlayers()) {
 				Map<String, String> row = new HashMap<>();
@@ -288,13 +273,13 @@ public class CSVFileManager implements IFileManager {
 	}
 
 	@Override
-	public void exportTrainersToFile(Path path) throws UserRepositoryException {
+	public void exportTrainersToFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(trainerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			for (Trainer trainer : dbManager.getAllTrainers()) {
 				Map<String, String> row = new HashMap<>();
@@ -325,13 +310,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public void exportTeamsToFile(Path path) throws UserRepositoryException {
+	public void exportTeamsToFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(teamHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			for (Team team : dbManager.getAllTeams()) {
 				Map<String, String> row = new HashMap<>();
@@ -355,13 +340,13 @@ public class CSVFileManager implements IFileManager {
 	}
 	
 	@Override
-	public void exportGamesToFile(Path path) throws UserRepositoryException {
+	public void exportGamesToFile(Path path, Path dbPath) throws UserRepositoryException {
 		try (ICsvMapWriter csvWriter = new CsvMapWriter(new FileWriter(path.toFile()), CsvPreference.STANDARD_PREFERENCE)) {
 			csvWriter.writeHeader(gameHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			System.out.println("Conectando con la base de datos...");
-			dbManager.connect("src/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			for (Game game : dbManager.getAllGames()) {
 				Map<String, String> row = new HashMap<>();
