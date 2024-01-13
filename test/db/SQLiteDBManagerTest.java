@@ -1,6 +1,7 @@
 package db;
 
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -122,6 +123,50 @@ public class SQLiteDBManagerTest {
 		dbManager.deleteGame(testGame);
 		int gamesAfter = dbManager.getAllGames().size();
 		assertTrue(gamesAfter < gamesBefore);
+	}
+	
+	@Test
+	public void testUpdatePlayer() throws UserRepositoryException {
+		dbManager.storePlayer(testPlayerWithTeam);
+		Player playerBefore = dbManager.getPlayer(1);
+		Player player = dbManager.getPlayer(1);
+		player.setName("Update");
+		dbManager.updatePlayer(player);
+		Player playerAfter = dbManager.getPlayer(1);
+		assertNotEquals(playerBefore, playerAfter);
+	}
+	
+	@Test
+	public void testUpdateTrainer() throws UserRepositoryException {
+		dbManager.storeTrainer(testTrainerWithTeam);
+		Trainer trainerBefore = dbManager.getTrainer(1);
+		Trainer trainer = dbManager.getTrainer(1);
+		trainer.setName("Update");
+		dbManager.updateTrainer(trainer);
+		Trainer trainerAfter = dbManager.getTrainer(1);
+		assertNotEquals(trainerBefore, trainerAfter);
+	}
+	
+	@Test
+	public void testUpdateTeam() throws UserRepositoryException {
+		dbManager.storeTeam(testTeam);
+		Team teamBefore = dbManager.getTeam(1);
+		Team team = dbManager.getTeam(1);
+		team.setName("Update");
+		dbManager.updateTeam(team);
+		Team teamAfter = dbManager.getTeam(1);
+		assertNotEquals(teamBefore, teamAfter);
+	}
+	
+	@Test
+	public void testUpdateGame() throws UserRepositoryException {
+		dbManager.storeGame(testGame);
+		Game gameBefore = dbManager.getGame(1);
+		Game game = dbManager.getGame(1);
+		game.setStadium("Update");
+		dbManager.updateGame(game);
+		Game gameAfter = dbManager.getGame(1);
+		assertNotEquals(gameBefore, gameAfter);
 	}
 	
 	@After

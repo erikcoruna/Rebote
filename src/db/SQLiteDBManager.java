@@ -523,12 +523,11 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setString(2, game.getReferee());
 			preparedStatement.setInt(3, game.getTeam1());
 			preparedStatement.setInt(4, game.getTeam2());
-			preparedStatement.setInt(5, game.getTeam2());
-			preparedStatement.setInt(6, game.getTeamScore1());
-			preparedStatement.setInt(7, game.getTeamScore2());
-			preparedStatement.setInt(8, game.getTeamFoults1());
-			preparedStatement.setInt(9, game.getTeamFoults2());
-			preparedStatement.setInt(10, game.getId());
+			preparedStatement.setInt(5, game.getTeamScore1());
+			preparedStatement.setInt(6, game.getTeamScore2());
+			preparedStatement.setInt(7, game.getTeamFoults1());
+			preparedStatement.setInt(8, game.getTeamFoults2());
+			preparedStatement.setInt(9, game.getId());
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
