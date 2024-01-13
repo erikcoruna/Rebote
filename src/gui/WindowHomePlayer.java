@@ -51,6 +51,7 @@ public class WindowHomePlayer extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
+	private JButton buttonLogout;
 	private JPanel panelTeam;
 	private JPanel panelTeams;
 	private JPanel panelGames;
@@ -162,6 +163,7 @@ public class WindowHomePlayer extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Home");
+		setLayout(new BorderLayout());
 		if (player.getTeam() != null) {
 			setIconImage(new ImageIcon("resources/images/" + player.getTeam().getLeague() + ".png").getImage());
 		}
@@ -511,7 +513,20 @@ public class WindowHomePlayer extends JFrame {
 	        	e.printStackTrace();
 	        }
         }
-	    add(tabbedPanel);
+	    add(tabbedPanel, BorderLayout.CENTER);
+	    
+	    buttonLogout = new JButton("Cerrar sesión");
+	    
+	    buttonLogout.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new WindowStart();
+			}
+		});
+	    
+	    add(buttonLogout, BorderLayout.SOUTH);
 		setVisible(true);
     }
 }
