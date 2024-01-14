@@ -44,7 +44,7 @@ public class ReboteCollectionsTest {
 		testGame1 = new Game("Test", "Test", 1, 2, 0, 0, 0, 0);
 		testGame2 = new Game("Test", "Test", 1, 2, 50, 60, 1, 2);
 		testGame3 = new Game("Test", "Test", 1, 2, 60, 50, 2, 1);
-		testGame4 = new Game("Test", "Test", 2, 1, 50, 50, 2, 2);
+		testGame4 = new Game("Test", "Test", 2, 1, 50, 50, 1, 2);
 		dbManager.storeTeam(testTeam1);
 		dbManager.storeTeam(testTeam2);
 		dbManager.storeTeam(testTeam3);
@@ -76,6 +76,20 @@ public class ReboteCollectionsTest {
 		List<Game> result = ReboteCollections.gamesLoseOrTie(testTeam1, tempDB);
 		assertNotNull(result);
 		assertEquals(3, result.size());
+	}
+	
+	@Test
+	public void testTeamDoneFoults() throws Exception {
+		int result = ReboteCollections.teamDoneFoults(testTeam1, tempDB);
+		assertNotNull(result);
+		assertEquals(5, result);
+	}
+	
+	@Test
+	public void testTeamBeenFoults() throws Exception {
+		int result = ReboteCollections.teamBeenFoults(testTeam1, tempDB);
+		assertNotNull(result);
+		assertEquals(4, result);
 	}
 	
 	@AfterClass

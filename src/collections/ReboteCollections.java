@@ -3,7 +3,6 @@ package collections;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +87,38 @@ public class ReboteCollections {
 				}
 			}
 		});
+		
+		return result;
+	}
+	
+	public static int teamDoneFoults(Team team, Path dbPath) throws Exception {
+		int result = 0;
+		dbManager.connect(dbPath.toString());
+		List<Game> games = dbManager.getAllGames();
+		
+		for (Game game : games) {
+			if (game.getTeam1() == team.getId()) {
+				result += game.getTeamFoults1();
+			} else if (game.getTeam2() == team.getId()) {
+				result += game.getTeamFoults2();
+			}
+		}
+		
+		return result;
+	}
+	
+	public static int teamBeenFoults(Team team, Path dbPath) throws Exception {
+		int result = 0;
+		dbManager.connect(dbPath.toString());
+		List<Game> games = dbManager.getAllGames();
+		
+		for (Game game : games) {
+			if (game.getTeam1() == team.getId()) {
+				result += game.getTeamFoults2();
+			} else if (game.getTeam2() == team.getId()) {
+				result += game.getTeamFoults1();
+			}
+		}
 		
 		return result;
 	}
