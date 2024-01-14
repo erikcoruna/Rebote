@@ -10,13 +10,14 @@ import java.util.TreeMap;
 
 import db.SQLiteDBManager;
 import domain.Game;
+import domain.IReboteCollections;
 import domain.Team;
 
-public class ReboteCollections {
+public class ReboteCollections implements IReboteCollections {
 
 	private static SQLiteDBManager dbManager = new SQLiteDBManager();
 	
-	public static Map<Integer, Integer> gamesPlayedPerTeam(Path dbPath) throws Exception {
+	public Map<Integer, Integer> gamesPlayedPerTeam(Path dbPath) throws Exception {
 		dbManager.connect(dbPath.toString());
 		Map<Integer, Integer> result = new LinkedHashMap<>();
 		List<Team> teams = dbManager.getAllTeams();
@@ -51,7 +52,7 @@ public class ReboteCollections {
 		return resultOrdered;
 	}
 	
-	public static List<Game> gamesWin(Team team, Path dbPath) throws Exception {
+	public List<Game> gamesWin(Team team, Path dbPath) throws Exception {
 		dbManager.connect(dbPath.toString());
 		List<Game> result = new ArrayList<>();
 		List<Game> games = dbManager.getAllGames();
@@ -71,7 +72,7 @@ public class ReboteCollections {
 		return result;
 	}
 	
-	public static List<Game> gamesLoseOrTie(Team team, Path dbPath) throws Exception {
+	public List<Game> gamesLoseOrTie(Team team, Path dbPath) throws Exception {
 		dbManager.connect(dbPath.toString());
 		List<Game> result = new ArrayList<>();
 		List<Game> games = dbManager.getAllGames();
@@ -91,7 +92,7 @@ public class ReboteCollections {
 		return result;
 	}
 	
-	public static int teamDoneFoults(Team team, Path dbPath) throws Exception {
+	public int teamDoneFoults(Team team, Path dbPath) throws Exception {
 		int result = 0;
 		dbManager.connect(dbPath.toString());
 		List<Game> games = dbManager.getAllGames();
@@ -107,7 +108,7 @@ public class ReboteCollections {
 		return result;
 	}
 	
-	public static int teamBeenFoults(Team team, Path dbPath) throws Exception {
+	public int teamBeenFoults(Team team, Path dbPath) throws Exception {
 		int result = 0;
 		dbManager.connect(dbPath.toString());
 		List<Game> games = dbManager.getAllGames();
