@@ -5,9 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface IReboteCollections {
-	public Map<Integer, Integer> gamesPlayedPerTeam(Path dbPath) throws Exception;
-	public List<Game> gamesWin(Team team, Path dbPath) throws Exception;
-	public List<Game> gamesLoseOrTie(Team team, Path dbPath) throws Exception;
-	public int teamDoneFoults(Team team, Path dbPath) throws Exception;
-	public int teamBeenFoults(Team team, Path dbPath) throws Exception;
+	public static Map<Integer, Integer> gamesPlayedPerTeam(Path dbPath) throws Exception {
+		return null;
+	}
+	public static List<Game> gamesWin(Team team, Path dbPath) throws Exception {
+		return null;
+	}
+	public static List<Game> gamesLoseOrTie(Team team, Path dbPath) throws Exception {
+		return null;
+	}
+	public static int teamDoneFoults(Team team, Path dbPath) throws Exception {
+		return 0;
+	}
+	public static int teamBeenFoults(Team team, Path dbPath) throws Exception {
+		return 0;
+	}
 }
