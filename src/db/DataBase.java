@@ -73,11 +73,11 @@ public class DataBase {
 			
 			
 			
-			Game game1 = new Game("Bilbao Basket", "Referee1", 1, 2, 50, 49, 6, 7);
-			Game game2 = new Game("Bilbao Basket", "Referee1", 1, 3, 55, 40, 4, 8);
+			Game game1 = new Game("Bilbao Basket", "Referee1", 4, 2, 50, 49, 6, 7);
+			Game game2 = new Game("Bilbao Basket", "Referee1", 4, 3, 55, 40, 4, 8);
 			Game game3 = new Game("Bilbao Basket", "Referee1", 2, 3, 51, 60, 7, 9);
-			Game game4 = new Game("Bilbao Basket", "Referee1", 1, 3, 70, 40, 2, 1);
-			Game game5 = new Game("Bilbao Basket", "Referee1", 1, 2, 71, 41, 2, 1);
+			Game game4 = new Game("Bilbao Basket", "Referee1", 4, 3, 70, 40, 2, 1);
+			Game game5 = new Game("Bilbao Basket", "Referee1", 4, 3, 71, 41, 2, 1);
 			Game game6 = new Game("Bilbao Basket", "Referee1", 1, 3, 72, 42, 2, 1);
 			Game game7 = new Game("Bilbao Basket", "Referee1", 1, 2, 73, 43, 2, 1);
 			
