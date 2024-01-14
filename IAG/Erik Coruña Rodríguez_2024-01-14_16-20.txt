@@ -1,0 +1,31 @@
+Eres un programador de java. Tienes el siguiente codigo:
+Comparator<Integer> comparator = (teamId1, teamId2) -> {return Integer.compare(result.get(teamId1), result.get(teamId2)) * -1;};
+		Map<Integer, Integer> resultOrdered = new TreeMap<>(comparator);
+		resultOrdered.putAll(result);
+
+result -> HashMap<Integer, Integer>
+El comparator cuando le paso un mapa que tiene distintas claves asociadas con el mismo valor solo añade la primera clave con el valor a resultOrdered.
+4 / 4
+ChatGPT
+
+El código que proporcionaste utiliza un Comparator para ordenar un Map<Integer, Integer> llamado result en un nuevo TreeMap llamado resultOrdered. El Comparator se basa en los valores asociados con las claves en el mapa original.
+
+Si estás experimentando un problema en el que solo se añade la primera clave con el valor a resultOrdered cuando hay claves distintas asociadas con el mismo valor, es posible que el problema esté en el comparador o en el contenido del mapa original result.
+
+El comparador proporcionado está utilizando result.get(teamId1) y result.get(teamId2) para obtener los valores asociados con las claves teamId1 y teamId2 respectivamente. Si dos claves diferentes (teamId1 y teamId2) tienen el mismo valor asociado, el comparador devolverá 0, y esto podría afectar el comportamiento de TreeMap, ya que este no permite claves duplicadas.
+
+Si deseas que las claves con el mismo valor se manejen correctamente, podrías modificar el comparador para tener un comportamiento más predecible en caso de igualdad. Por ejemplo, podrías comparar las claves directamente si los valores son iguales:
+
+java
+
+Comparator<Integer> comparator = (teamId1, teamId2) -> {
+    int compareResult = Integer.compare(result.get(teamId1), result.get(teamId2));
+    if (compareResult == 0) {
+        // Si los valores son iguales, compara las claves directamente
+        return Integer.compare(teamId1, teamId2);
+    }
+    // Devuelve el resultado de la comparación basada en los valores
+    return compareResult * -1;
+};
+
+Esta modificación asegura que, en caso de que dos claves tengan el mismo valor, se compararán directamente para evitar problemas con claves duplicadas en el TreeMap.
