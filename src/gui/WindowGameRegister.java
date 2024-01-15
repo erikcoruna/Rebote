@@ -88,7 +88,7 @@ public class WindowGameRegister extends JFrame {
 		
 		//Panel en el que se visualiza un campo de baloncesto y un label con el nombre de cada equipo
 		JPanel panelGame = new JPanel();
-		ImageIcon field = new ImageIcon("src/img/paneGame.png");
+		ImageIcon field = new ImageIcon("resources/img/paneGame.png");
 		JLabel labelGame = new JLabel(field);
 		panelGame.add(labelGame);
 		panelGame.addMouseListener(new MouseAdapter() {
@@ -138,7 +138,7 @@ public class WindowGameRegister extends JFrame {
 		//https://chuidiang.org/index.php?title=Botones_con_icono_y_texto
 		//De esta página hemos obtenido el código para insertar la imagen de icono en un botón
 		JButton buttonHelp = new JButton();
-		buttonHelp.setIcon(new ImageIcon("src/img/buttonHelp.png")); 
+		buttonHelp.setIcon(new ImageIcon("resources/img/buttonHelp.png")); 
 		buttonHelp.addActionListener(new ActionListener() {
 			
 			@Override
@@ -162,8 +162,8 @@ public class WindowGameRegister extends JFrame {
 		ArrayList<Player> l = new ArrayList<Player>();
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			dbManager.connect("src/db/rebote.db");
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:" + "src/db/rebote.db");
+			dbManager.connect("resources/db/rebote.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:" + "resources/db/rebote.db");
 			PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
 					+ " password, birthDate, country, team_id, height, weight FROM player WHERE team_id = ?");
 				preparedStatement.setInt(1, team.getId());
