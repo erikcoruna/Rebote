@@ -50,8 +50,10 @@ public class WindowGameRegister extends JFrame {
 	
 	private static JComboBox<String> comboType;
 	private static JComboBox<String> comboName;
+	private static JComboBox<String> comboName2;
 	private static JPanel panelScore;
 	private static JPanel panelName;
+	private static JPanel panelName2;
 	private static List<Player> homeTeam;
 	private static List<String> homeNames;
 	private static Map<String, Player> homeNamePlayer;
@@ -65,7 +67,7 @@ public class WindowGameRegister extends JFrame {
 		// Antes de comenzar el partido habrá que establecerlos manualmente desde la app
 		// Team home = new Team("HOME");
 		// Team guest = new Team("GUEST");
-		Team team1 = new Team(1, "team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A);
+		Team team1 = new Team(4, "team4", "Bilbao 2", "Bilbao Basket 2", "Este es el equipo de Bilbao 2.", League.C);
 		Team team2 = new Team(2, "team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B);
 		new WindowGameRegister(team1, team2);
 	}
@@ -193,9 +195,22 @@ public class WindowGameRegister extends JFrame {
 	public static void changeComboBoxContent(List<String> nameList) {
 		 comboName.removeAllItems();
 
+		 System.out.println(nameList);
+		 
 	     // Agregar nuevos elementos al JComboBox
 	     for (String name : nameList) {
 	    	 comboName.addItem(name);
+	     }
+	}
+	
+	public static void changeComboBoxContent2(List<String> nameList) {
+		 comboName2.removeAllItems();
+
+		 System.out.println(nameList);
+		 
+	     // Agregar nuevos elementos al JComboBox
+	     for (String name : nameList) {
+	    	 comboName2.addItem(name);
 	     }
 	}
 	
@@ -376,10 +391,10 @@ public class WindowGameRegister extends JFrame {
 				@Override
 		        public void actionPerformed(ActionEvent e) {
 					if (radioButtonHome.isSelected()) {
-		              	if (!panelName.isVisible()) {
-		               		panelName.setVisible(true);
+		              	if (!panelName2.isVisible()) {
+		               		panelName2.setVisible(true);
 		               	}
-		               	changeComboBoxContent(homeNames);
+		               	changeComboBoxContent2(homeNames);
 		            }
 		        }
 		    });
@@ -389,10 +404,10 @@ public class WindowGameRegister extends JFrame {
 				@Override
 		        public void actionPerformed(ActionEvent e) {
 					if (radioButtonGuest.isSelected()) {
-		               	if (!panelName.isVisible()) {
-		               		panelName.setVisible(true);
+		               	if (!panelName2.isVisible()) {
+		               		panelName2.setVisible(true);
 		               	}
-		                changeComboBoxContent(guestNames);
+		                changeComboBoxContent2(guestNames);
 		            }
 		        }
 		    });
@@ -405,12 +420,12 @@ public class WindowGameRegister extends JFrame {
 	        panelTeam.add(radioButtonGuest);
 	        
 	        // Cuadrante superior derecha para seleccionar jugador
-	        panelName = new JPanel(new GridLayout(2, 1));
-	        panelName.setVisible(false);
+	        panelName2 = new JPanel(new GridLayout(2, 1));
+	        panelName2.setVisible(false);
 	        JLabel labelName = new JLabel("Elija autor:");
-	        comboName = new JComboBox<>(homeNames.toArray(new String[0]));
+	        comboName2 = new JComboBox<>(homeNames.toArray(new String[0]));
 	        
-	        comboName.addActionListener(new ActionListener() {
+	        comboName2.addActionListener(new ActionListener() {
 	        	
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -418,12 +433,11 @@ public class WindowGameRegister extends JFrame {
                 		panelMissed.setVisible(true);
                 		panelScored.setVisible(true);
                 	}
-                	changeComboBoxContent(homeNames);
 	            }
 	        });
 	        
-	        panelName.add(labelName);
-	        panelName.add(comboName);
+	        panelName2.add(labelName);
+	        panelName2.add(comboName2);
 			
 			panelScored = new JPanel();
 			panelScored.setVisible(false);
@@ -436,9 +450,9 @@ public class WindowGameRegister extends JFrame {
 					Player player;
 					
 					if (radioButtonHome.isSelected()) {
-						player = homeNamePlayer.get(comboName.getSelectedItem());
+						player = homeNamePlayer.get(comboName2.getSelectedItem());
 					} else {
-						player = guestNamePlayer.get(comboName.getSelectedItem());
+						player = guestNamePlayer.get(comboName2.getSelectedItem());
 					}
 					
 					FreeThrow freeThrow = new FreeThrow(player, true);
@@ -460,9 +474,9 @@ public class WindowGameRegister extends JFrame {
 					Player player;
 					
 					if (radioButtonHome.isSelected()) {
-						player = homeNamePlayer.get(comboName.getSelectedItem());
+						player = homeNamePlayer.get(comboName2.getSelectedItem());
 					} else {
-						player = guestNamePlayer.get(comboName.getSelectedItem());
+						player = guestNamePlayer.get(comboName2.getSelectedItem());
 					}
 					
 					FreeThrow freeThrow = new FreeThrow(player, false);
@@ -474,7 +488,7 @@ public class WindowGameRegister extends JFrame {
 			panelMissed.add(buttonMissed);
 			
 			panelData.add(panelTeam);
-			panelData.add(panelName);
+			panelData.add(panelName2);
 			panelData.add(panelScored);
 			panelData.add(panelMissed);
 			add(panelData, BorderLayout.NORTH);
