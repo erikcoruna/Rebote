@@ -128,9 +128,10 @@ public class ReboteCollections implements IReboteCollections {
 		return result;
 	}
 	
-//	public static void main(String[] args) throws Exception {
-//		System.out.println(createLeague(Paths.get("resources/db/rebote.db")));
-//	}
+	public static void main(String[] args) throws Exception {
+		System.out.println(createLeague(Paths.get("resources/db/rebote.db")));
+		
+	}
 	
 	public static List<List<List<Team>>> createLeague(Path dbPath) throws Exception {
 		dbManager.connect(dbPath.toString());
@@ -138,9 +139,9 @@ public class ReboteCollections implements IReboteCollections {
 		
 		if (teams.size() % 2 == 0) {
 			List<List<List<Team>>> result = new ArrayList<>();
-			List<Team> remainingTeams = new ArrayList<>();
-			remainingTeams.addAll(teams);
+			List<Team> remainingTeams = new ArrayList<>(teams);
 			createLeagueAux(result, new ArrayList<>(), teams, remainingTeams);
+			addReturnGames(result);
 			return result;
 		} else {
 			System.out.println("El número de equipos no es par.");
@@ -157,8 +158,8 @@ public class ReboteCollections implements IReboteCollections {
 					List<Team> game = new ArrayList<>(Arrays.asList(team1, team2));
 					List<Team> gameSwap = new ArrayList<>(Arrays.asList(team2, team1));
 					boolean containsGame = false;
-					for (List<List<Team>> wg : games) {
-						if (wg.contains(game) || wg.contains(gameSwap)) {
+					for (List<List<Team>> weekGames : games) {
+						if (weekGames.contains(game) || weekGames.contains(gameSwap)) {
 							containsGame = true;
 							remainingTeams.addAll(game);
 							break;
@@ -172,10 +173,23 @@ public class ReboteCollections implements IReboteCollections {
 				createLeagueAux(games, weekListGames, teams, remainingTeams);
 			} else {
 				games.add(weekListGames);
-				remainingTeams = new ArrayList<>();
-				remainingTeams.addAll(teams);
+				remainingTeams = new ArrayList<>(teams);
 				createLeagueAux(games, new ArrayList<>(), teams, remainingTeams);
 			}
 		}
+	}
+	
+	public static void addReturnGames(List<List<List<Team>>> games) {
+		List<List<List<Team>>> resultAux = new ArrayList<>();
+		for (List<List<Team>> weekGames : games) {
+			List<List<Team>> weekGamesResult = new ArrayList<>();
+			for (List<Team> game : weekGames) {
+				List<Team> swappedGame = new ArrayList<>(game);
+				Collections.swap(swappedGame, 0, 1);
+				weekGamesResult.add(swappedGame);
+			}
+			resultAux.add(weekGamesResult);
+		}
+		games.addAll(resultAux);
 	}
 }
