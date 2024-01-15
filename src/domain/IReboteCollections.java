@@ -20,4 +20,9 @@ public interface IReboteCollections {
 	public static int teamBeenFoults(Team team, Path dbPath) throws Exception {
 		return 0;
 	}
+	public static List<List<Team>> createLeague(Path dbPath) throws Exception {
+		return null;
+	}
+	public static void createLeagueAux(List<List<List<Team>>> games, List<List<Team>> weekListGames, List<Team> teams, List<Team> remainingTeams) throws Exception {
+	}
 }

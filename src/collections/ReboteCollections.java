@@ -1,11 +1,15 @@
 package collections;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 import db.SQLiteDBManager;
@@ -122,5 +126,56 @@ public class ReboteCollections implements IReboteCollections {
 		}
 		
 		return result;
+	}
+	
+//	public static void main(String[] args) throws Exception {
+//		System.out.println(createLeague(Paths.get("resources/db/rebote.db")));
+//	}
+	
+	public static List<List<List<Team>>> createLeague(Path dbPath) throws Exception {
+		dbManager.connect(dbPath.toString());
+		List<Team> teams = dbManager.getAllTeams();
+		
+		if (teams.size() % 2 == 0) {
+			List<List<List<Team>>> result = new ArrayList<>();
+			List<Team> remainingTeams = new ArrayList<>();
+			remainingTeams.addAll(teams);
+			createLeagueAux(result, new ArrayList<>(), teams, remainingTeams);
+			return result;
+		} else {
+			System.out.println("El número de equipos no es par.");
+		}
+		return null;
+	}
+	
+	public static void createLeagueAux(List<List<List<Team>>> games, List<List<Team>> weekListGames, List<Team> teams, List<Team> remainingTeams) throws Exception {
+		if (games.size() < teams.size() - 1) {
+			if (weekListGames.size() < (teams.size() / 2)) {
+				while (true) {
+					Team team1 = remainingTeams.remove(new Random().nextInt(remainingTeams.size()));
+					Team team2 = remainingTeams.remove(new Random().nextInt(remainingTeams.size()));
+					List<Team> game = new ArrayList<>(Arrays.asList(team1, team2));
+					List<Team> gameSwap = new ArrayList<>(Arrays.asList(team2, team1));
+					boolean containsGame = false;
+					for (List<List<Team>> wg : games) {
+						if (wg.contains(game) || wg.contains(gameSwap)) {
+							containsGame = true;
+							remainingTeams.addAll(game);
+							break;
+						}
+					}
+					if (!containsGame) {
+						weekListGames.add(game);
+						break;
+					}
+				}
+				createLeagueAux(games, weekListGames, teams, remainingTeams);
+			} else {
+				games.add(weekListGames);
+				remainingTeams = new ArrayList<>();
+				remainingTeams.addAll(teams);
+				createLeagueAux(games, new ArrayList<>(), teams, remainingTeams);
+			}
+		}
 	}
 }
