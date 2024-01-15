@@ -128,11 +128,6 @@ public class ReboteCollections implements IReboteCollections {
 		return result;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		System.out.println(createLeague(Paths.get("resources/db/rebote.db")));
-		
-	}
-	
 	public static List<List<List<Team>>> createLeague(Path dbPath) throws Exception {
 		dbManager.connect(dbPath.toString());
 		List<Team> teams = dbManager.getAllTeams();

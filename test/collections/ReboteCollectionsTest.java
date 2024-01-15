@@ -27,6 +27,7 @@ public class ReboteCollectionsTest {
 	private static Team testTeam1;
 	private static Team testTeam2;
 	private static Team testTeam3;
+	private static Team testTeam4;
 	private static Game testGame1;
 	private static Game testGame2;
 	private static Game testGame3;
@@ -41,6 +42,7 @@ public class ReboteCollectionsTest {
 		testTeam1 = new Team("Test1", "Test1", "Test1", "Test1", League.A);
 		testTeam2 = new Team("Test2", "Test2", "Test2", "Test2", League.A);
 		testTeam3 = new Team("Test3", "Test3", "Test3", "Test3", League.A);
+		testTeam4 = new Team("Test4", "Test4", "Test4", "Test4", League.A);
 		testGame1 = new Game("Test", "Test", 1, 2, 0, 0, 0, 0);
 		testGame2 = new Game("Test", "Test", 1, 2, 50, 60, 1, 2);
 		testGame3 = new Game("Test", "Test", 1, 2, 60, 50, 2, 1);
@@ -48,6 +50,7 @@ public class ReboteCollectionsTest {
 		dbManager.storeTeam(testTeam1);
 		dbManager.storeTeam(testTeam2);
 		dbManager.storeTeam(testTeam3);
+		dbManager.storeTeam(testTeam4);
 		dbManager.storeGame(testGame1);
 		dbManager.storeGame(testGame2);
 		dbManager.storeGame(testGame3);
@@ -58,7 +61,7 @@ public class ReboteCollectionsTest {
 	public void testGamesPlayedPerTeam() throws Exception {
 		Map<Integer, Integer> result = ReboteCollections.gamesPlayedPerTeam(tempDB);
 		assertNotNull(result);
-		assertEquals(3, result.keySet().size());
+		assertEquals(4, result.keySet().size());
 		result.values().forEach(value -> {
 			assertNotNull(value);
 		});
@@ -90,6 +93,14 @@ public class ReboteCollectionsTest {
 		int result = ReboteCollections.teamBeenFoults(testTeam1, tempDB);
 		assertNotNull(result);
 		assertEquals(4, result);
+	}
+	
+	@Test
+	public void testCreateLeague() throws Exception {
+		List<List<List<Team>>> league = ReboteCollections.createLeague(tempDB);
+		System.out.println(league);
+		assertNotNull(league);
+		assertEquals(6, league.size());
 	}
 	
 	@AfterClass
