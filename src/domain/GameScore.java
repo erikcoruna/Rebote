@@ -1,58 +1,43 @@
 package domain;
-import java.awt.Point;;
+
 
 public class GameScore {
-	public String id;
-	public String category;
-	public String name;
-	public int score;
-	public Point coordinates;
+	private static int contadorID = 0;
 	
-	public GameScore(String id, String category, String name, int score, Point coordinates) {
-		this.id = id;
-		this.category = category;
-		this.name = name;
-		this.score = score;
-		this.coordinates = coordinates;
+	public int id;
+	public Team team;
+	public Player author;
+	
+	public GameScore(Player author) {
+		this.id = ++contadorID;
+		this.author = author;
+		this.team = author.getTeam();
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getCategory() {
-		return category;
+	public Team getTeam() {
+		return team;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 
-	public String getName() {
-		return name;
+	public Player getAuthor() {
+		return author;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setAuthor(Player author) {
+		this.author = author;
 	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public Point getCoordinates() {
-		return coordinates;
-	}
-
-	public void setCoordinates(Point coordinates) {
-		this.coordinates = coordinates;
-	}
+	
+	
+	
 }
