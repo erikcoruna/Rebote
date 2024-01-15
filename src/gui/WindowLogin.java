@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import collections.ReboteCollections;
 import db.SQLiteDBManager;
 import domain.League;
 import domain.Player;
@@ -98,7 +100,11 @@ public class WindowLogin extends JFrame {
 				if (!textFieldUsername.getText().isEmpty() && !String.valueOf(passwordFieldPassword.getPassword()).isEmpty()) {
 					if (textFieldUsername.getText().equals("admin") && String.valueOf(passwordFieldPassword.getPassword()).equals("admin")) {
 						dispose();
-						new WindowGameRegister(new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A), new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B));
+						try {
+							new WindowLeague(ReboteCollections.createLeague(Paths.get("resources/db/rebote.db")));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					} else {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
 						String inputUsername = textFieldUsername.getText();

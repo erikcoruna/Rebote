@@ -132,6 +132,14 @@ public class WindowGameRegister extends JFrame {
 	
 		JButton buttonFinish = new JButton("Finalizar");
 		
+		buttonFinish.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		
 		//https://chuidiang.org/index.php?title=Botones_con_icono_y_texto
 		//De esta página hemos obtenido el código para insertar la imagen de icono en un botón
 		JButton buttonHelp = new JButton();

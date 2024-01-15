@@ -116,7 +116,7 @@ public class WindowTeam extends JFrame {
 		
 		// https://stackoverflow.com/questions/9660987/how-to-get-a-tab-character
 		// Para coger el caracter tab en html.
-		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s",
+		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s</html>",
 				team.getCity(),
 				team.getStadium(),
 				team.getDescription()));
