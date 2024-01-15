@@ -28,4 +28,5 @@ public interface IUserRepository {
 	public List<Trainer> getAllTrainers() throws UserRepositoryException;
 	public List<Team> getAllTeams() throws UserRepositoryException;
 	public List<Game> getAllGames() throws UserRepositoryException;
+	public List<Player> getPlayersFromTeam(Team team) throws UserRepositoryException;
 }

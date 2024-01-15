@@ -534,4 +534,37 @@ public class SQLiteDBManager implements IUserRepository {
 			throw new UserRepositoryException("No se ha podido actualizar el partido en la base de datos.", e);
 		}
 	}
+	
+	@Override
+	public List<Player> getPlayersFromTeam(Team team) throws UserRepositoryException {
+		List<Player> result = new ArrayList<>();
+		try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, name, firstSurname, secondSurname,"
+				+ " password, birthDate, country, team_id, height, weight FROM player WHERE team_id = ?")) {
+			preparedStatement.setInt(1, team.getId());
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				Player player = new Player();
+				player.setId(resultSet.getInt("id"));
+				player.setUsername(resultSet.getString("username"));
+				player.setName(resultSet.getString("name"));
+				player.setFirstSurname(resultSet.getString("firstSurname"));
+				player.setSecondSurname(resultSet.getString("secondSurname"));
+				player.setPassword(resultSet.getString("password"));
+				player.setBirthDate(stringToCalendar(resultSet.getString("birthDate")));
+				player.setCountry(resultSet.getString("country"));
+				player.setTeam(getTeam(resultSet.getInt("team_id")));
+				player.setHeight(resultSet.getInt("height"));
+				player.setWeight(resultSet.getFloat("weight"));
+				result.add(player);
+			}
+		} catch (UserRepositoryException e) {
+			System.out.println("Error intentando acceder a la base de datos.");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

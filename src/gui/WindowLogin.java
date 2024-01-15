@@ -26,7 +26,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.SQLiteDBManager;
+import domain.League;
 import domain.Player;
+import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
 
@@ -96,7 +98,7 @@ public class WindowLogin extends JFrame {
 				if (!textFieldUsername.getText().isEmpty() && !String.valueOf(passwordFieldPassword.getPassword()).isEmpty()) {
 					if (textFieldUsername.getText().equals("admin") && String.valueOf(passwordFieldPassword.getPassword()).equals("admin")) {
 						dispose();
-						new WindowGameRegister();
+						new WindowGameRegister(new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A), new Team("team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B));
 					} else {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
 						String inputUsername = textFieldUsername.getText();
