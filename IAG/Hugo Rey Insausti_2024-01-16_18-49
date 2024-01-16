@@ -1,0 +1,112 @@
+dado este codigo, haz los JUnitTest necesarios: package domain;
+
+import java.awt.Point;
+
+public class Basket  extends GameScore{
+	public Point coordinates;
+	public int value;
+
+	public Basket(Player author, int value) {
+		super(author);
+		this.value = value;
+	}
+	
+	public Basket(Player author, int value, Point coordinates) {
+		super(author);
+		this.value = value;
+		this.coordinates = coordinates;
+	}
+
+	public Point getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(Point coordinates) {
+		this.coordinates = coordinates;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	
+}
+
+ChatGPT
+Para realizar pruebas unitarias (JUnit tests) para la clase Basket, puedes utilizar la librería JUnit. A continuación, se proporciona un ejemplo básico de pruebas unitarias para esta clase:
+
+java
+Copy code
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.awt.Point;
+
+import org.junit.jupiter.api.Test;
+
+class BasketTest {
+
+    @Test
+    void testConstructorWithValue() {
+        Player player = new Player("John");
+        int value = 2;
+
+        Basket basket = new Basket(player, value);
+
+        assertNotNull(basket);
+        assertEquals(player, basket.getAuthor());
+        assertEquals(value, basket.getValue());
+        assertNull(basket.getCoordinates());
+    }
+
+    @Test
+    void testConstructorWithValueAndCoordinates() {
+        Player player = new Player("Jane");
+        int value = 3;
+        Point coordinates = new Point(1, 2);
+
+        Basket basket = new Basket(player, value, coordinates);
+
+        assertNotNull(basket);
+        assertEquals(player, basket.getAuthor());
+        assertEquals(value, basket.getValue());
+        assertEquals(coordinates, basket.getCoordinates());
+    }
+
+    @Test
+    void testGetSetCoordinates() {
+        Player player = new Player("Alice");
+        int value = 1;
+        Point coordinates = new Point(3, 4);
+
+        Basket basket = new Basket(player, value);
+
+        assertNotNull(basket);
+
+        basket.setCoordinates(coordinates);
+
+        assertEquals(coordinates, basket.getCoordinates());
+    }
+
+    @Test
+    void testGetSetValue() {
+        Player player = new Player("Bob");
+        int value = 5;
+
+        Basket basket = new Basket(player, value);
+
+        assertNotNull(basket);
+
+        int newValue = 10;
+        basket.setValue(newValue);
+
+        assertEquals(newValue, basket.getValue());
+    }
+}
+Este conjunto de pruebas unitarias utiliza JUnit 5 y asume que la clase Player está correctamente implementada (la cual no fue proporcionada en el código que compartiste). Asegúrate de ajustar las importaciones y adaptar las pruebas según las necesidades específicas de tu aplicación.
+
+Recuerda incluir la librería JUnit en tu proyecto para que puedas ejecutar estas pruebas. Estas pruebas verifican la creación de instancias, la asignación y obtención de valores, y el manejo de las coordenadas en la clase Basket.
