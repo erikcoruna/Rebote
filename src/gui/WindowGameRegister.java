@@ -69,6 +69,8 @@ public class WindowGameRegister extends JFrame {
 	private static List<GameScore> incidents = new ArrayList<>();
 	private static Map<Player, Integer> mapHomeFouls;
 	private static Map<Player, Integer> mapGuestFouls;
+	private static List<Player> homeExpelled = new ArrayList<>();
+	private static List<Player> guestExpelled = new ArrayList<>();
 	
 	
 	public static void main(String[] args) {
@@ -141,6 +143,10 @@ public class WindowGameRegister extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
+					 if (incidents.get(0) instanceof Expulsion) {
+						 Player toReInsertPlayer = incidents.get(0).getAuthor();
+						 reInsert(toReInsertPlayer);
+					 }
 					 incidents.remove(0);
 					 gameTableModel.fireTableDataChanged();
 				 }
@@ -236,23 +242,44 @@ public class WindowGameRegister extends JFrame {
 				Expulsion expulsion = new Expulsion(player);
             	incidents.add(0, expulsion);
             	gameTableModel.fireTableDataChanged();
-            	expulse(player);
+            	expell(player);
 			}
 		}
 	}
 	
-	public static void expulse(Player player) {
+	// Expulsar a un jugador eliminándolo de todos los colections
+	public static void expell(Player player) {
 		Team hisTeam = player.getTeam();
 		if (hisTeam.getId() == homeObject.getId()) {
 			homeTeam.remove(player);
 			homeNames.remove(player.getName());
 			homeNamePlayer.remove(player.getName());
 			mapHomeFouls.remove(player);
+			homeExpelled.add(0, player);
 		} else if (hisTeam.getId() == guestObject.getId()) {
 			guestTeam.remove(player);
 			guestNames.remove(player.getName());
 			guestNamePlayer.remove(player.getName());
 			mapGuestFouls.remove(player);
+			guestExpelled.add(0, player);
+		}
+	}
+	
+	// Volver a añadir un jugador eliminado
+	public static void reInsert(Player player) {
+		Team hisTeam = player.getTeam();
+		if (hisTeam.getId() == homeObject.getId()) {
+			homeTeam.add(player);
+			homeNames.add(player.getName());
+			homeNamePlayer.put(player.getName(), player);
+			mapHomeFouls.put(player, 4);
+			homeExpelled.remove(0);
+		} else if (hisTeam.getId() == guestObject.getId()) {
+			guestTeam.add(player);
+			guestNames.add(player.getName());
+			guestNamePlayer.put(player.getName(), player);
+			mapGuestFouls.put(player, 4);
+			guestExpelled.remove(0);
 		}
 	}
 	
@@ -429,7 +456,7 @@ public class WindowGameRegister extends JFrame {
 		                    	incidents.add(0, expulsion);
 		                    	gameTableModel.fireTableDataChanged();
 		                    	dispose();
-		                    	expulse(player);
+		                    	expell(player);
 		                        break;
 						}
 					}
