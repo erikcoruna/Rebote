@@ -2,6 +2,7 @@ package gui;
 
 import io.CSVFileManager;
 import io.ConfigReader;
+import io.FileManager;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -97,7 +99,11 @@ public class WindowLogin extends JFrame {
 					if (textFieldUsername.getText().equals("admin") && String.valueOf(passwordFieldPassword.getPassword()).equals("admin")) {
 						dispose();
 						try {
-							new WindowLeague(ReboteCollections.createLeague(Paths.get("resources/db/rebote.db")));
+							if (FileManager.readLeagueFromFile() == null) {
+								List<List<List<Team>>> league = ReboteCollections.createLeague(Paths.get("resources/db/rebote.db"));
+								FileManager.writeLeagueToFile(league);
+							}
+							new WindowLeague(FileManager.readLeagueFromFile());
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}

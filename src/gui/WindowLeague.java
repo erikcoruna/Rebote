@@ -23,13 +23,14 @@ import javax.swing.JScrollPane;
 import collections.ReboteCollections;
 import domain.Team;
 import io.ConfigReader;
+import io.FileManager;
 
 public class WindowLeague extends JFrame {
 	
 	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
-	public WindowLeague(List<List<List<Team>>> league) {
+	public WindowLeague(List<List<List<Team>>> league) throws Exception {
 		setSize(480, 560);
     	setLocationRelativeTo(null);
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,7 +74,9 @@ public class WindowLeague extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new WindowLeague(ReboteCollections.createLeague(Paths.get("resources/db/rebote.db")));
+					List<List<List<Team>>> league = ReboteCollections.createLeague(Paths.get("resources/db/rebote.db"));
+					FileManager.writeLeagueToFile(league);
+					new WindowLeague(league);
 					dispose();
 				} catch (Exception e1) {
 					logger.warning(ConfigReader.dbConnectError);
