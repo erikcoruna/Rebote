@@ -48,6 +48,7 @@ public class WindowGameRegister extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
+	private static GameTableModel gameTableModel;
 	private static JComboBox<String> comboType;
 	private static JComboBox<String> comboName;
 	private static JComboBox<String> comboName2;
@@ -115,16 +116,14 @@ public class WindowGameRegister extends JFrame {
 		// Crear una tabla con scroll en la que se regisgraran las acciones
 		JPanel panelTable = new JPanel();
 		Object[] columnNames = {"id", "category", "autor", "score", "coordinates"};
-		GameScore[] data = {
-				//new GameScore("11112222A", "1A", "Erik", 2, new Point(0, 0)),
-				//new GameScore("33334444B", "2B", "Ander", 3, new Point(1, 0))
-		};
 		
 		JTable tableActions = new JTable();
-		tableActions.setModel(new GameTableModel(columnNames, data));
+		gameTableModel = new GameTableModel(columnNames, incidents);
+		tableActions.setModel(gameTableModel);
 		tableActions.setDefaultRenderer(Object.class, new GameTableRenderer());
 		tableActions.getTableHeader().setDefaultRenderer(new GameTableHeaderRenderer());
 		JScrollPane scrollPane = new JScrollPane(tableActions);
+		tableActions.setRowHeight(30);
 		panelTable.add(scrollPane);
 		
 		// Botonera con opciones en la parte de abajo a la derecha
@@ -347,17 +346,20 @@ public class WindowGameRegister extends JFrame {
 								Basket basket = new Basket(player, (int) comboScore.getSelectedItem());
 								basket.setCoordinates(point);
 								incidents.add(0, basket);
+								gameTableModel.fireTableDataChanged();
 								dispose();
 		                        break;
 		                    case "Falta":
 		                    	Foul foul = new Foul(player);
 		                    	incidents.add(0, foul);
+		                    	gameTableModel.fireTableDataChanged();
 		                    	dispose();
 		                    	new WindowFreeThrowCheck(home, guest);
 		                        break;
 		                    case "Expulsión":
 		                    	Expulsion expulsion = new Expulsion(player);
 		                    	incidents.add(0, expulsion);
+		                    	gameTableModel.fireTableDataChanged();
 		                    	dispose();
 		                        break;
 						}
@@ -464,7 +466,8 @@ public class WindowGameRegister extends JFrame {
 					}
 					
 					FreeThrow freeThrow = new FreeThrow(player, true);
-					incidents.add(freeThrow);
+					incidents.add(0,freeThrow);
+					gameTableModel.fireTableDataChanged();
 					dispose();
 				}
 			});
@@ -488,7 +491,8 @@ public class WindowGameRegister extends JFrame {
 					}
 					
 					FreeThrow freeThrow = new FreeThrow(player, false);
-					incidents.add(freeThrow);
+					incidents.add(0, freeThrow);
+					gameTableModel.fireTableDataChanged();
 					dispose();
 				}
 			});
