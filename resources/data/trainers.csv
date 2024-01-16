@@ -1,4 +1,9 @@
 id,username,name,firstSurname,secondSurname,password,birthDate,country,team
 1,erik.trainer,Erik,Coruña,Rodríguez,prueba1,2004-04-22,España,
 2,ander.trainer,Ander,Herrero,Pascual,prueba2,2004-01-20,España,2
-4,hugo.trainer,Hugo,Rey,García,prueba4,2004-03-16,Francia,4
+3,iker.trainer,Iker,Larrinaga,Fortuna,prueba3,2004-02-18,España,3
+4,hugo.trainer,Hugo,Rey,Insausti,prueba4,2004-03-16,España,4
+5,unai.trainer,Unai,Aguilera,Irazabal,prueba5,1987-07-28,España,
+6,alex.trainer,Alex,Arandilla,Rochas,prueba6,2002-05-18,España,1
+7,guillermo.trainer,Guillermo,Peralta,Martín,prueba7,2003-02-26,España,
+8,jon.trainer,Jon,Calleja,Castaños,prueba8,2000-09-23,España,

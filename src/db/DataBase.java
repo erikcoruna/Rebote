@@ -133,8 +133,6 @@ public class DataBase {
 			
 			logger.info("Almacenados todos los partidos.");
 			
-			System.out.println(dbManager.getAllTeams().size());
-			
 			dbManager.disconnect();
 		} catch (UserRepositoryException e) {
 			logger.warning(ConfigReader.dbConnectError);

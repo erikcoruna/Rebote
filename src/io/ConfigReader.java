@@ -13,6 +13,7 @@ public class ConfigReader {
 	
 	public static String projectName;
 	public static boolean projectTestData;
+	public static boolean projectCsvEdit;
 	public static String dbConnectError;
 	public static String dbDisconnectError;
 	public static String dbCreateTableError;
@@ -37,6 +38,8 @@ public class ConfigReader {
             logger.info("Nombre del proyecto: " + projectName);
             projectTestData = Boolean.valueOf(prop.getProperty("testData"));
             logger.info("Datos de prueba: " + projectTestData);
+            projectCsvEdit = Boolean.valueOf(prop.getProperty("csvEdit"));
+            logger.info("Editar datos desde fichero CSV: " + projectCsvEdit);
             dbConnectError = prop.getProperty("dbConnectError");
             logger.info("Mensaje de error conectando a la base de datos: " + dbConnectError);
             dbDisconnectError = prop.getProperty("dbDisconnectError");
