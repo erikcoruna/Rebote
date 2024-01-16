@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -54,7 +55,7 @@ public class WindowGameRegister extends JFrame {
 	private static GameTableModel gameTableModel;
 	private static JComboBox<String> comboType;
 	private static JComboBox<String> comboName;
-	private static JComboBox<String> comboName2;
+	//private static JComboBox<String> comboName2;
 	private static JPanel panelScore;
 	private static JPanel panelName;
 	private static JPanel panelName2;
@@ -223,14 +224,14 @@ public class WindowGameRegister extends JFrame {
 	     }
 	}
 	
-	public static void changeComboBoxContent2(List<String> nameList) {
-		 comboName2.removeAllItems();
+	public static void changeComboBoxContent(JComboBox<String> comboBox, List<String> nameList) {
+		comboBox.removeAllItems();
 
 		 System.out.println(nameList);
 		 
 	     // Agregar nuevos elementos al JComboBox
 	     for (String name : nameList) {
-	    	 comboName2.addItem(name);
+	    	 comboBox.addItem(name);
 	     }
 	}
 	
@@ -367,7 +368,7 @@ public class WindowGameRegister extends JFrame {
 		                    	incidents.add(0, foul);
 		                    	gameTableModel.fireTableDataChanged();
 		                    	dispose();
-		                    	new WindowFreeThrowCheck(home, guest);
+		                    	new WindowFreeThrowCheck(home, guest, foul);
 		                        break;
 		                    case "Expulsión":
 		                    	Expulsion expulsion = new Expulsion(player);
@@ -395,58 +396,30 @@ public class WindowGameRegister extends JFrame {
 		
 		public JPanel panelScored;
 		public JPanel panelMissed;
+		private JComboBox<String> comboName2;
 		
 		private static final long serialVersionUID = 1L;
 		
-		public WindowFreeThrow(Team home, Team guest) {
+		public WindowFreeThrow(Team home, Team guest, Foul foul) {
 			setTitle("Tiro libre");
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setSize(300, 300);
+			Player foulerPlayer = foul.getAuthor();
+			Team foulerTeam = foulerPlayer.getTeam();
 			
-			JPanel panelData = new JPanel(new GridLayout(2, 2));
-			JPanel panelTeam = new JPanel(new GridLayout(3, 1));
-			JLabel labelTeam = new JLabel("Seleccione equipo:");
-			JRadioButton radioButtonHome = new JRadioButton(home.getName());
-			JRadioButton radioButtonGuest = new JRadioButton(guest.getName());
-				
-			radioButtonHome.addActionListener(new ActionListener() {
-				
-				@Override
-		        public void actionPerformed(ActionEvent e) {
-					if (radioButtonHome.isSelected()) {
-		              	if (!panelName2.isVisible()) {
-		               		panelName2.setVisible(true);
-		               	}
-		               	changeComboBoxContent2(homeNames);
-		            }
-		        }
-		    });
-				
-			radioButtonGuest.addActionListener(new ActionListener() {
-		    
-				@Override
-		        public void actionPerformed(ActionEvent e) {
-					if (radioButtonGuest.isSelected()) {
-		               	if (!panelName2.isVisible()) {
-		               		panelName2.setVisible(true);
-		               	}
-		                changeComboBoxContent2(guestNames);
-		            }
-		        }
-		    });
+			JPanel panelData = new JPanel(new GridLayout(2, 1));
 			
-	        ButtonGroup BGTeam = new ButtonGroup();
-	        BGTeam.add(radioButtonHome);
-	        BGTeam.add(radioButtonGuest);
-	        panelTeam.add(labelTeam);
-	        panelTeam.add(radioButtonHome);
-	        panelTeam.add(radioButtonGuest);
-	        
-	        // Cuadrante superior derecha para seleccionar jugador
+	        // Parte superior para seleccionar jugador
 	        panelName2 = new JPanel(new GridLayout(2, 1));
-	        panelName2.setVisible(false);
+	        panelName2.setVisible(true);
 	        JLabel labelName = new JLabel("Elija autor:");
-	        comboName2 = new JComboBox<>(homeNames.toArray(new String[0]));
+	        comboName2 = new JComboBox<>(new String[0]);
+	        
+	        if (foulerTeam.getId() == home.getId()) {
+	        	changeComboBoxContent(comboName2, guestNames);
+	        } else if (foulerTeam.getId() == guest.getId()){
+	        	changeComboBoxContent(comboName2, homeNames);
+	        }
 	        
 	        comboName2.addActionListener(new ActionListener() {
 	        	
@@ -461,7 +434,9 @@ public class WindowGameRegister extends JFrame {
 	        
 	        panelName2.add(labelName);
 	        panelName2.add(comboName2);
-			
+	        
+	        
+			JPanel panelButtons = new JPanel(new GridLayout(1,2));
 			panelScored = new JPanel();
 			panelScored.setVisible(false);
 			JButton buttonScored = new JButton("Acierto");
@@ -470,11 +445,11 @@ public class WindowGameRegister extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Player player;
+					Player player = new Player();
 					
-					if (radioButtonHome.isSelected()) {
+					if (foulerTeam.getId() == guest.getId()) {
 						player = homeNamePlayer.get(comboName2.getSelectedItem());
-					} else {
+					} else if (foulerTeam.getId() == home.getId()){
 						player = guestNamePlayer.get(comboName2.getSelectedItem());
 					}
 					
@@ -495,11 +470,11 @@ public class WindowGameRegister extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Player player;
+					Player player = new Player();
 					
-					if (radioButtonHome.isSelected()) {
+					if (foulerTeam.getId() == guest.getId()) {
 						player = homeNamePlayer.get(comboName2.getSelectedItem());
-					} else {
+					} else if (foulerTeam.getId() == home.getId()){
 						player = guestNamePlayer.get(comboName2.getSelectedItem());
 					}
 					
@@ -512,12 +487,13 @@ public class WindowGameRegister extends JFrame {
 			
 			panelMissed.add(buttonMissed);
 			
-			panelData.add(panelTeam);
+			panelButtons.add(buttonScored);
+			panelButtons.add(buttonMissed);
 			panelData.add(panelName2);
-			panelData.add(panelScored);
-			panelData.add(panelMissed);
-			add(panelData, BorderLayout.NORTH);
+			panelData.add(panelButtons);
 			
+			add(panelData, BorderLayout.NORTH);
+			pack();
 			setLocationRelativeTo(null);
 			setAlwaysOnTop(true);
 			setVisible(true);
@@ -528,7 +504,7 @@ public class WindowGameRegister extends JFrame {
 		
 		private static final long serialVersionUID = 1L;
 
-		public WindowFreeThrowCheck(Team home, Team guest) {
+		public WindowFreeThrowCheck(Team home, Team guest, Foul foul) {
 			setTitle("Comprobación de tiros libres");
 			setSize(300, 100);
 			setLayout(new GridLayout(2, 1));
@@ -561,7 +537,7 @@ public class WindowGameRegister extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
-					displayFreeThrow(1, home, guest);
+					displayFreeThrow(1, home, guest, foul);
 				}
 			});
 			 
@@ -570,7 +546,7 @@ public class WindowGameRegister extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
-					displayFreeThrow(2, home, guest);
+					displayFreeThrow(2, home, guest, foul);
 				}
 			});
 			 
@@ -579,7 +555,7 @@ public class WindowGameRegister extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
-					displayFreeThrow(3, home, guest);
+					displayFreeThrow(3, home, guest, foul);
 				}
 			});
 			
@@ -591,9 +567,9 @@ public class WindowGameRegister extends JFrame {
 			setVisible(true);
 		}
 		
-		public static void displayFreeThrow(int reps, Team home, Team guest) {
+		public static void displayFreeThrow(int reps, Team home, Team guest, Foul foul) {
 			for (int i = 0; i < reps; i++) {
-				new WindowFreeThrow(home, guest);
+				new WindowFreeThrow(home, guest, foul);
 			}
 		}
 	}
