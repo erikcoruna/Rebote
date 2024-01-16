@@ -55,7 +55,8 @@ public class WindowGameRegister extends JFrame {
 	private static GameTableModel gameTableModel;
 	private static JComboBox<String> comboType;
 	private static JComboBox<String> comboName;
-	//private static JComboBox<String> comboName2;
+	private static Team homeObject;
+	private static Team guestObject;
 	private static JPanel panelScore;
 	private static JPanel panelName;
 	private static JPanel panelName2;
@@ -66,6 +67,8 @@ public class WindowGameRegister extends JFrame {
 	private static List<String> guestNames;
 	private static Map<String, Player> guestNamePlayer;
 	private static List<GameScore> incidents = new ArrayList<>();
+	private static Map<Player, Integer> mapHomeFouls;
+	private static Map<Player, Integer> mapGuestFouls;
 	
 	
 	public static void main(String[] args) {
@@ -84,12 +87,17 @@ public class WindowGameRegister extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Registro de partido");
 		
+		homeObject = home;
+		guestObject = guest;
+		
 		homeTeam = getPlayerList(home);
 		homeNames = getNamesList(homeTeam);
 		homeNamePlayer = getNamesWithPlayers(homeTeam);
+		mapHomeFouls = startPlayerWithFouls(homeTeam);
 		guestTeam = getPlayerList(guest);
 		guestNames = getNamesList(guestTeam);
 		guestNamePlayer = getNamesWithPlayers(guestTeam);
+		mapGuestFouls = startPlayerWithFouls(guestTeam);
 		
 		JPanel panelWest = new JPanel(new BorderLayout());
 		
@@ -211,6 +219,41 @@ public class WindowGameRegister extends JFrame {
 			namesWithPlayers.put(player.getName(), player);
 		}
 		return namesWithPlayers;
+	}
+	
+	// Devuelve un mapa que indica cada jugador con el número de faltas que lleva
+	public static Map<Player, Integer> startPlayerWithFouls(List<Player> playerList) {
+		Map<Player, Integer> result = new HashMap<>();
+		for (Player player : playerList) {
+			result.put(player, 0);
+		}
+		return result;
+	}
+	
+	public static void checkExpulsion(Map<Player, Integer> playerFouls) {
+		for (Player player : playerFouls.keySet()) {
+			if (playerFouls.get(player) >= 5) {
+				Expulsion expulsion = new Expulsion(player);
+            	incidents.add(0, expulsion);
+            	gameTableModel.fireTableDataChanged();
+            	expulse(player);
+			}
+		}
+	}
+	
+	public static void expulse(Player player) {
+		Team hisTeam = player.getTeam();
+		if (hisTeam.getId() == homeObject.getId()) {
+			homeTeam.remove(player);
+			homeNames.remove(player.getName());
+			homeNamePlayer.remove(player.getName());
+			mapHomeFouls.remove(player);
+		} else if (hisTeam.getId() == guestObject.getId()) {
+			guestTeam.remove(player);
+			guestNames.remove(player.getName());
+			guestNamePlayer.remove(player.getName());
+			mapGuestFouls.remove(player);
+		}
 	}
 	
 	public static void changeComboBoxContent(List<String> nameList) {
@@ -363,18 +406,30 @@ public class WindowGameRegister extends JFrame {
 								gameTableModel.fireTableDataChanged();
 								dispose();
 		                        break;
+		                        
 		                    case "Falta":
 		                    	Foul foul = new Foul(player);
 		                    	incidents.add(0, foul);
 		                    	gameTableModel.fireTableDataChanged();
+		                    	if (radioButtonHome.isSelected()) {
+		                    		int numeroFaltas = mapHomeFouls.get(player) + 1;
+		                    		mapHomeFouls.put(player, numeroFaltas);
+		                    		checkExpulsion(mapHomeFouls);
+		                    	} else {
+		                    		int numeroFaltas = mapGuestFouls.get(player) + 1;
+		                    		mapGuestFouls.put(player, numeroFaltas);
+		                    		checkExpulsion(mapGuestFouls);
+		                    	}
 		                    	dispose();
 		                    	new WindowFreeThrowCheck(home, guest, foul);
 		                        break;
+		                        
 		                    case "Expulsión":
 		                    	Expulsion expulsion = new Expulsion(player);
 		                    	incidents.add(0, expulsion);
 		                    	gameTableModel.fireTableDataChanged();
 		                    	dispose();
+		                    	expulse(player);
 		                        break;
 						}
 					}
