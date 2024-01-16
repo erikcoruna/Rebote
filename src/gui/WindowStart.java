@@ -54,25 +54,58 @@ public class WindowStart extends JFrame {
         
         JButton login = new JButton("Iniciar Sesión");
         JButton register = new JButton("Registrarse");
-        JButton exportToFile = new JButton("Exportar a fichero");
-        JButton importFromFile = new JButton("Importar desde fichero");
+        
         login.setPreferredSize(new Dimension(200, 50));
         register.setPreferredSize(new Dimension(200, 50));
-        exportToFile.setPreferredSize(new Dimension(200, 50));
-        importFromFile.setPreferredSize(new Dimension(200, 50));
         login.setBackground(new Color(240, 196, 170));
         register.setBackground(new Color(240, 183, 170));
-        exportToFile.setBackground(new Color(236, 242, 201));
-        importFromFile.setBackground(new Color(201, 240, 242));
-        exportToFile.setToolTipText("Exportar los datos de la base de datos a ficheros.");
-        importFromFile.setToolTipText("Importar los datos de los ficheros a la base de datos.");
         panel.add(login, gbc);
         panel.add(new JLabel(" "), gbc);
         panel.add(register, gbc);
-        panel.add(new JLabel(" "), gbc);
-        panel.add(exportToFile, gbc);
-        panel.add(new JLabel(" "), gbc);
-        panel.add(importFromFile, gbc);
+        if (ConfigReader.projectCsvEdit == true) {
+	        JButton exportToFile = new JButton("Exportar a fichero");
+	        JButton importFromFile = new JButton("Importar desde fichero");
+	        exportToFile.setPreferredSize(new Dimension(200, 50));
+	        importFromFile.setPreferredSize(new Dimension(200, 50));
+	        exportToFile.setBackground(new Color(236, 242, 201));
+	        importFromFile.setBackground(new Color(201, 240, 242));
+	        exportToFile.setToolTipText("Exportar los datos de la base de datos a ficheros.");
+	        importFromFile.setToolTipText("Importar los datos de los ficheros a la base de datos.");
+	        panel.add(new JLabel(" "), gbc);
+	        panel.add(exportToFile, gbc);
+	        panel.add(new JLabel(" "), gbc);
+	        panel.add(importFromFile, gbc);
+	        
+	        exportToFile.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						csvManager.exportPlayersToFile(Paths.get("resources/data/players.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.exportTrainersToFile(Paths.get("resources/data/trainers.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.exportTeamsToFile(Paths.get("resources/data/teams.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.exportGamesToFile(Paths.get("resources/data/games.csv"), Paths.get("resources/db/rebote.db"));
+					} catch (UserRepositoryException e1) {
+						logger.warning(ConfigReader.csvWriteError);
+					}
+				}
+			});
+	        
+	        importFromFile.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						csvManager.importPlayersFromFile(Paths.get("resources/data/players.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.importTrainersFromFile(Paths.get("resources/data/trainers.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.importTeamsFromFile(Paths.get("resources/data/teams.csv"), Paths.get("resources/db/rebote.db"));
+						csvManager.importGamesFromFile(Paths.get("resources/data/games.csv"), Paths.get("resources/db/rebote.db"));
+					} catch (UserRepositoryException e1) {
+						logger.warning(ConfigReader.csvReadError);
+					}
+				}
+			});
+        }
         
         add(panel);
         setVisible(true);
@@ -94,36 +127,6 @@ public class WindowStart extends JFrame {
 				new WindowRegister();
         		dispose();
         		logger.info("Pulsado el botón Register.");
-			}
-		});
-        
-        exportToFile.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					csvManager.exportPlayersToFile(Paths.get("resources/data/players.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.exportTrainersToFile(Paths.get("resources/data/trainers.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.exportTeamsToFile(Paths.get("resources/data/teams.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.exportGamesToFile(Paths.get("resources/data/games.csv"), Paths.get("resources/db/rebote.db"));
-				} catch (UserRepositoryException e1) {
-					logger.warning(ConfigReader.csvWriteError);
-				}
-			}
-		});
-        
-        importFromFile.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					csvManager.importPlayersFromFile(Paths.get("resources/data/players.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.importTrainersFromFile(Paths.get("resources/data/trainers.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.importTeamsFromFile(Paths.get("resources/data/teams.csv"), Paths.get("resources/db/rebote.db"));
-					csvManager.importGamesFromFile(Paths.get("resources/data/games.csv"), Paths.get("resources/db/rebote.db"));
-				} catch (UserRepositoryException e1) {
-					logger.warning(ConfigReader.csvReadError);
-				}
 			}
 		});
     }
