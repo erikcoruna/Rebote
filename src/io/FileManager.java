@@ -16,11 +16,6 @@ public class FileManager {
 	
 	private static SQLiteDBManager dbManager = new SQLiteDBManager();
 	
-	public static void main(String[] args) throws Exception {
-//		writeLeagueToFile(ReboteCollections.createLeague(Paths.get("resources/db/rebote.db")));
-		System.out.println(readLeagueFromFile());
-	}
-	
 	public static void writeLeagueToFile(List<List<List<Team>>> league) throws Exception {
 		new File("resources/data/league.txt").delete();
 		try (PrintWriter writer = new PrintWriter(new FileWriter("resources/data/league.txt", true))) {

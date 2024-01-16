@@ -31,7 +31,6 @@ import domain.FreeThrow;
 import domain.Expulsion;
 import domain.Basket;
 import domain.Foul;
-import domain.League;
 import domain.Player;
 import domain.Team;
 import db.SQLiteDBManager;
@@ -63,16 +62,6 @@ public class WindowGameRegister extends JFrame {
 	private static Map<Player, Integer> mapGuestFouls;
 	private static List<Player> homeExpelled = new ArrayList<>();
 	private static List<Player> guestExpelled = new ArrayList<>();
-	
-	
-	public static void main(String[] args) {
-		// Antes de comenzar el partido habrá que establecerlos manualmente desde la app
-		// Team home = new Team("HOME");
-		// Team guest = new Team("GUEST");
-		Team team1 = new Team(4, "team4", "Bilbao 2", "Bilbao Basket 2", "Este es el equipo de Bilbao 2.", League.C);
-		Team team2 = new Team(2, "team2", "Trapaga", "Trapaga Basket", "Este es el equipo de Trapaga.", League.B);
-		new WindowGameRegister(team1, team2);
-	}
 	
 	// Inicializar listas de equipos con los jugadores correspondientes
 	public WindowGameRegister(Team home, Team guest) {
@@ -193,7 +182,6 @@ public class WindowGameRegister extends JFrame {
 		try {
 			dbManager.connect("resources/db/rebote.db");
 			playerList = dbManager.getPlayersFromTeam(team);
-			System.out.println(playerList);
 			dbManager.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -277,8 +265,6 @@ public class WindowGameRegister extends JFrame {
 	
 	public static void changeComboBoxContent(List<String> nameList) {
 		 comboName.removeAllItems();
-
-		 System.out.println(nameList);
 		 
 	     // Agregar nuevos elementos al JComboBox
 	     for (String name : nameList) {
@@ -288,8 +274,6 @@ public class WindowGameRegister extends JFrame {
 	
 	public static void changeComboBoxContent(JComboBox<String> comboBox, List<String> nameList) {
 		comboBox.removeAllItems();
-
-		 System.out.println(nameList);
 		 
 	     // Agregar nuevos elementos al JComboBox
 	     for (String name : nameList) {
