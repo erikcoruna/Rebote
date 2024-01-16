@@ -1,6 +1,8 @@
 package gui;
 
 import io.CSVFileManager;
+import io.ConfigReader;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -123,7 +125,9 @@ public class WindowLogin extends JFrame {
 							
 							dbManager.disconnect();
 						} catch (UserRepositoryException e1) {
-							e1.printStackTrace();
+							logger.warning(ConfigReader.dbConnectError);
+						} catch (Exception e1) {
+							logger.warning("No se ha podido encontrar el entrenador.");
 						}
 					}
 				}

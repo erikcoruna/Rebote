@@ -11,12 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -36,6 +39,7 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+import collections.ReboteCollections;
 import db.SQLiteDBManager;
 import domain.Game;
 import domain.Player;
@@ -51,6 +55,8 @@ public class WindowHomeTrainer extends JFrame {
 
 	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
+	
+	private static Path dbPath = Paths.get("resources/db/rebote.db");
 	
 	private JButton buttonLogout;
 	private JPanel panelTeam;
@@ -71,7 +77,7 @@ public class WindowHomeTrainer extends JFrame {
 	private static void updateTrainer(Trainer trainer) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			dbManager.connect("resources/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			dbManager.updateTrainer(trainer);
 		} catch (UserRepositoryException e) {
 			logger.warning(ConfigReader.dbConnectError);
@@ -81,7 +87,7 @@ public class WindowHomeTrainer extends JFrame {
 	private static void updateTeam(Team team) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			dbManager.connect("resources/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			dbManager.updateTeam(team);
 		} catch (UserRepositoryException e) {
 			logger.warning(ConfigReader.dbConnectError);
@@ -109,7 +115,11 @@ public class WindowHomeTrainer extends JFrame {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new WindowTeam(team, trainer);
+				try {
+					new WindowTeam(team, trainer);
+				} catch (Exception e1) {
+					logger.warning("No se ha podido acceder al equipo.");
+				}
 				dispose();
 				logger.info("Abierto el equipo: " + team.getName());
 			}
@@ -124,7 +134,7 @@ public class WindowHomeTrainer extends JFrame {
     	panelCenterGames.setBackground(Color.WHITE);
     	SQLiteDBManager dbManager = new SQLiteDBManager();
     	try {
-			dbManager.connect("resources/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			Team team1 = dbManager.getTeam(game.getTeam1());
 			JPanel team1Panel = new JPanel(new GridLayout(2, 2));
@@ -168,7 +178,7 @@ public class WindowHomeTrainer extends JFrame {
     	}
 	}
 	
-	public WindowHomeTrainer(Trainer trainer) {
+	public WindowHomeTrainer(Trainer trainer) throws Exception {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -374,6 +384,22 @@ public class WindowHomeTrainer extends JFrame {
 		        	JButton buttonChangeCityTeam = new JButton("Cambiar");
 		        	JButton buttonChangeStadiumTeam = new JButton("Cambiar");
 		        	JButton buttonChangeDescriptionTeam = new JButton("Cambiar");
+		        	
+		        	Map<Integer, Integer> gamesPerTeam = ReboteCollections.gamesPlayedPerTeam(dbPath);
+		    		int gamesPlayed = gamesPerTeam.get(trainerTeam.getId());
+		    		Integer value = gamesPerTeam.values().iterator().next();
+		    		int gamesPlayedTop1 = value;
+		    		String isInTop1;
+		    		if (gamesPlayed >= gamesPlayedTop1) {
+		    			isInTop1 = "Sí";
+		    		} else {
+		    			isInTop1 = "No";
+		    		}
+		    		JLabel labelStuff = new JLabel(String.format("<html>Partidos jugados: %d<br/><br/>Partidos ganados: %d<br/><br/>Partidos perdidos: %d<br/><br/>¿Es el equipo con más partidos jugados? %s</html>",
+		    				ReboteCollections.gamesPlayedPerTeam(dbPath).get(trainerTeam.getId()),
+		    				ReboteCollections.gamesWin(trainerTeam, dbPath).size(),
+		    				ReboteCollections.gamesLoseOrTie(trainerTeam, dbPath).size(),
+		    				isInTop1));
 		        	panelNorthTeam = new JPanel(new GridBagLayout());
 		        	
 		        	gbc.gridy = 0;
@@ -386,6 +412,8 @@ public class WindowHomeTrainer extends JFrame {
 		        	panelNorthTeam.add(labelStadiumTeam, gbc);
 		        	gbc.gridy = 3;
 		        	panelNorthTeam.add(labelDescriptionTeam, gbc);
+		        	gbc.gridy = 4;
+		        	panelNorthTeam.add(labelStuff, gbc);
 		        	gbc.gridx = 1;
 		        	gbc.gridy = 0;
 		        	panelNorthTeam.add(buttonChangeNameTeam, gbc);
@@ -462,7 +490,7 @@ public class WindowHomeTrainer extends JFrame {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								dbManager.connect("resources/db/rebote.db");
+								dbManager.connect(dbPath.toString());
 								logger.info("Has salido del equipo " + trainer.getTeam().getName());
 								trainer.setTeam(null);
 								dbManager.updateTrainer(trainer);
@@ -505,7 +533,7 @@ public class WindowHomeTrainer extends JFrame {
 		        panelNorthSearch.add(buttonSearchTeams);
 		        
 		        try {
-					dbManager.connect("resources/db/rebote.db");
+					dbManager.connect(dbPath.toString());
 					List<Team> teams = new ArrayList<>(dbManager.getAllTeams());
 		        
 			        panelTeamsSearch = new JPanel();
@@ -560,7 +588,7 @@ public class WindowHomeTrainer extends JFrame {
 			        panelNorthGames.add(buttonSearchGames);
 			        
 			        try {
-						dbManager.connect("resources/db/rebote.db");
+						dbManager.connect(dbPath.toString());
 						Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
 						Set<Game> games = new TreeSet<>(gameComparator);
 						games.addAll(dbManager.getAllGames());

@@ -6,10 +6,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -19,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import collections.ReboteCollections;
 import db.SQLiteDBManager;
 import domain.Game;
 import domain.League;
@@ -34,6 +38,7 @@ public class WindowTeam extends JFrame {
 	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 
+	private Path dbPath = Paths.get("resources/db/rebote.db");
 	private List<Game> gamesPlayedList = new ArrayList<>();
 	private int gameIndex;
 	
@@ -58,7 +63,7 @@ public class WindowTeam extends JFrame {
 		if (gamesPlayedList.size() > 0 && gameIndex >= 0 && gameIndex < gamesPlayedList.size()) {
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			try {
-				dbManager.connect("resources/db/rebote.db");
+				dbManager.connect(dbPath.toString());
 				Game currentGame = gamesPlayedList.get(gameIndex);
 				team1 = dbManager.getTeam(currentGame.getTeam1());
 				team1NameLabel.setText(team1.getName().toUpperCase());
@@ -98,7 +103,7 @@ public class WindowTeam extends JFrame {
 		}
 	}
 	
-	public WindowTeam(Team team, User user) {
+	public WindowTeam(Team team, User user) throws Exception {
 		setSize(480, 560);
 		setLocationRelativeTo(null);
 		setTitle(team.getName());
@@ -113,12 +118,24 @@ public class WindowTeam extends JFrame {
 		nameLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(nameLabel, BorderLayout.NORTH);
 		
-		// https://stackoverflow.com/questions/9660987/how-to-get-a-tab-character
-		// Para coger el caracter tab en html.
-		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s&#9;Estadio: %s<br/><br/>Descripción: %s</html>",
+		Map<Integer, Integer> gamesPerTeam = ReboteCollections.gamesPlayedPerTeam(dbPath);
+		int gamesPlayed = gamesPerTeam.get(team.getId());
+		Integer value = gamesPerTeam.values().iterator().next();
+		int gamesPlayedTop1 = value;
+		String isInTop1;
+		if (gamesPlayed >= gamesPlayedTop1) {
+			isInTop1 = "Sí";
+		} else {
+			isInTop1 = "No";
+		}
+		JLabel stuffLabel = new JLabel(String.format("<html>Ciudad: %s<br/>Estadio: %s<br/>Descripción: %s<br/><br/>Partidos jugados: %d<br/><br/>Partidos ganados: %d<br/><br/>Partidos perdidos: %d<br/><br/>¿Es el equipo con más partidos jugados? %s</html>",
 				team.getCity(),
 				team.getStadium(),
-				team.getDescription()));
+				team.getDescription(),
+				ReboteCollections.gamesPlayedPerTeam(dbPath).get(team.getId()),
+				ReboteCollections.gamesWin(team, dbPath).size(),
+				ReboteCollections.gamesLoseOrTie(team, dbPath).size(),
+				isInTop1));
 		stuffLabel.setVerticalAlignment(JLabel.NORTH);
 		stuffLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 0));
 		panel.add(stuffLabel, BorderLayout.CENTER);
@@ -138,7 +155,7 @@ public class WindowTeam extends JFrame {
 		backButton = new JButton("Atrás");
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			dbManager.connect("resources/db/rebote.db");
+			dbManager.connect(dbPath.toString());
 			
 			if (!dbManager.getAllGames().isEmpty()) {
 				for (Game game : dbManager.getAllGames()) {
@@ -272,11 +289,19 @@ public class WindowTeam extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (user instanceof Player) {
 					Player player = (Player) user;
-					new WindowHomePlayer(player);
+					try {
+						new WindowHomePlayer(player);
+					} catch (Exception e1) {
+						logger.warning("No se ha podido obtener el jugador.");
+					}
 					dispose();
 				} else if (user instanceof Trainer) {
 					Trainer trainer = (Trainer) user;
-					new WindowHomeTrainer(trainer);
+					try {
+						new WindowHomeTrainer(trainer);
+					} catch (Exception e1) {
+						logger.warning("No se ha podido obtener el entrenador.");
+					}
 					dispose();
 				}
 			}

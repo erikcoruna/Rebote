@@ -11,14 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import db.SQLiteDBManager;
 import domain.Game;
 import domain.IReboteCollections;
 import domain.Team;
+import gui.WindowStart;
 
 public class ReboteCollections implements IReboteCollections {
 
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static SQLiteDBManager dbManager = new SQLiteDBManager();
 	
 	public static Map<Integer, Integer> gamesPlayedPerTeam(Path dbPath) throws Exception {
@@ -139,7 +142,7 @@ public class ReboteCollections implements IReboteCollections {
 			addReturnGames(result);
 			return result;
 		} else {
-			System.out.println("El número de equipos no es par.");
+			logger.warning("El número de equipos no es par.");
 		}
 		return null;
 	}
