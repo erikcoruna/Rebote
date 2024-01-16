@@ -1,7 +1,6 @@
 package gui;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Point;
 
 import javax.swing.JLabel;
@@ -9,10 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import domain.Basket;
-import domain.Expulsion;
-import domain.Foul;
-import domain.FreeThrow;
 
 public class GameTableRenderer implements TableCellRenderer {
 	private static Color colorAction = Color.WHITE;

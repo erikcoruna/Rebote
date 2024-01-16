@@ -2,6 +2,7 @@ package io;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -10,7 +11,7 @@ import gui.WindowStart;
 public class ConfigReader {
 
 	static Logger logger = Logger.getLogger(WindowStart.class.getName());
-	
+
 	public static String projectName;
 	public static boolean projectTestData;
 	public static boolean projectCsvEdit;
@@ -30,7 +31,7 @@ public class ConfigReader {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("conf/config.properties");
+            input = new FileInputStream(Paths.get("conf/config.properties").toString());
 
             prop.load(input);
 
@@ -61,6 +62,7 @@ public class ConfigReader {
             csvWriteError = prop.getProperty("csvWriteError");
             logger.info("Mensaje de error escribiendo en fichero CSV: " + csvWriteError);
         } catch (IOException ex) {
+        	System.out.println(ex);
             logger.warning("Error leyendo fichero de configuración.");
         } finally {
             if (input != null) {

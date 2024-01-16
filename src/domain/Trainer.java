@@ -1,7 +1,6 @@
 package domain;
 
 import java.util.GregorianCalendar;
-import java.util.Vector;
 
 public class Trainer extends User {
 	public Trainer(int id, String username, String name, String firstSurname, String secondSurname, String password, GregorianCalendar birthDate,

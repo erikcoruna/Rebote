@@ -42,7 +42,6 @@ import com.toedter.calendar.JDateChooser;
 import collections.ReboteCollections;
 import db.SQLiteDBManager;
 import domain.Game;
-import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
