@@ -19,6 +19,7 @@ import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
+import io.ConfigReader;
 
 // Por el momento solo hemos creado una base de datos con SQLite, pero en un futuro pueden integrarse más bases de datos
 // como PostgresSQL, y por eso está implementada la interfaz IUserRepository.
@@ -51,9 +52,9 @@ public class SQLiteDBManager implements IUserRepository {
 			createTeamTable();
 			createGameTable();
 		} catch (ClassNotFoundException e) {
-			throw new UserRepositoryException("Error cargando el driver de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbConnectError, e);
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error conectando a la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbConnectError, e);
 		}
 	}
 	
@@ -61,7 +62,7 @@ public class SQLiteDBManager implements IUserRepository {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error cerrando la conexión con la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbDisconnectError);
 		}
 	}
 	
@@ -71,7 +72,7 @@ public class SQLiteDBManager implements IUserRepository {
 					+ " firstSurname VARCHAR, secondSurname VARCHAR, password VARCHAR, birthDate TEXT, country VARCHAR, team_id INTEGER, "
 					+ " height INT, weight DECIMAL, FOREIGN KEY(team_id) REFERENCES team(id))");
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error creando la tabla 'player' en la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
 	
@@ -80,7 +81,7 @@ public class SQLiteDBManager implements IUserRepository {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS trainer (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, name VARCHAR,"
 					+ " firstSurname VARCHAR, secondSurname VARCHAR, password VARCHAR, birthDate TEXT, country VARCHAR, team_id INTEGER, FOREIGN KEY(team_id) REFERENCES team(id))");
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error creando la tabla 'trainer' en la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
 	
@@ -89,7 +90,7 @@ public class SQLiteDBManager implements IUserRepository {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,"
 					+ " city VARCHAR, stadium VARCHAR, description VARCHAR, league VARCHAR)");
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error creando la tabla 'team' en la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
 	
@@ -99,7 +100,7 @@ public class SQLiteDBManager implements IUserRepository {
 					+ " referee VARCHAR, team1 INTEGER, team2 INTEGER, teamScore1 INTEGER, teamScore2 INTEGER,"
 					+ " teamFoults1 INTEGER, teamFoults2 INTEGER)");
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error creando la tabla 'game' en la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
 	
@@ -107,7 +108,7 @@ public class SQLiteDBManager implements IUserRepository {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("DROP TABLE IF EXISTS " + tableName);
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error borrando la tabla '" + tableName + "' de la base de datos.");
+			throw new UserRepositoryException(ConfigReader.dbDropTableError);
 		}
 	}
 	
@@ -138,10 +139,10 @@ public class SQLiteDBManager implements IUserRepository {
 				int newId = resultSet.getInt("id");
 				player.setId(newId);
 			} else {
-				throw new UserRepositoryException("Error generando el id en la base de datos.");
+				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido guardar el jugador en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
 	
@@ -170,10 +171,10 @@ public class SQLiteDBManager implements IUserRepository {
 				int newId = resultSet.getInt("id");
 				trainer.setId(newId);
 			} else {
-				throw new UserRepositoryException("Error generando el id en la base de datos.");
+				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido guardar el entrenador en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
 	
@@ -195,10 +196,10 @@ public class SQLiteDBManager implements IUserRepository {
 				int newId = resultSet.getInt("id");
 				team.setId(newId);
 			} else {
-				throw new UserRepositoryException("Error generando el id en la base de datos.");
+				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido guardar el equipo en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
 	
@@ -223,10 +224,10 @@ public class SQLiteDBManager implements IUserRepository {
 				int newId = resultSet.getInt("id");
 				game.setId(newId);
 			} else {
-				throw new UserRepositoryException("Error generando el id en la base de datos.");
+				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido guardar el partido en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
 	
@@ -257,7 +258,7 @@ public class SQLiteDBManager implements IUserRepository {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el jugador con ese id.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -286,7 +287,7 @@ public class SQLiteDBManager implements IUserRepository {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el entrenador con ese id.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -312,7 +313,7 @@ public class SQLiteDBManager implements IUserRepository {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el equipo con ese id.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -341,7 +342,7 @@ public class SQLiteDBManager implements IUserRepository {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo el partido con ese id.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -357,7 +358,7 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 			return players;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los usuarios de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -373,7 +374,7 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 			return trainers;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los entrenadores de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -388,7 +389,7 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 			return teams;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los equipos de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -404,7 +405,7 @@ public class SQLiteDBManager implements IUserRepository {
 			}
 			return games;
 		} catch (SQLException e) {
-			throw new UserRepositoryException("Error obteniendo los partidos de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
 	
@@ -414,7 +415,7 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(1, player.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el jugador " + player.getId() + " de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
 	
@@ -424,7 +425,7 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(1, trainer.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el entrenador " + trainer.getId() + " de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
 	
@@ -434,7 +435,7 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(1, team.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el equipo " + team.getId() + " de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
 	
@@ -444,7 +445,7 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(1, game.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido eliminar el partido " + game.getId() + " de la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
 	
@@ -470,7 +471,7 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el jugador en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
 
@@ -494,7 +495,7 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el entrenador en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
 	
@@ -511,7 +512,7 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el equipo en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
 	
@@ -531,7 +532,7 @@ public class SQLiteDBManager implements IUserRepository {
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new UserRepositoryException("No se ha podido actualizar el partido en la base de datos.", e);
+			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
 	
@@ -560,7 +561,7 @@ public class SQLiteDBManager implements IUserRepository {
 				result.add(player);
 			}
 		} catch (UserRepositoryException e) {
-			System.out.println("Error intentando acceder a la base de datos.");
+			System.out.println(ConfigReader.dbConnectError);
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();

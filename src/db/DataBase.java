@@ -12,11 +12,18 @@ import domain.UserRepositoryException;
 public class DataBase {
 	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
 	// Se han modificado algunas líneas respecto al código.
-	public static void main(String[] args) {
+	public static void loadTestData() {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		
 		try {
 			System.out.println("Conectando con la base de datos...");
+			dbManager.connect("resources/db/rebote.db");
+			
+			dbManager.dropTable("player");
+			dbManager.dropTable("trainer");
+			dbManager.dropTable("team");
+			dbManager.dropTable("game");
+			
 			dbManager.connect("resources/db/rebote.db");
 			
 			Team team1 = new Team("team1", "Bilbao", "Bilbao Basket", "Este es el equipo de Bilbao.", League.A);

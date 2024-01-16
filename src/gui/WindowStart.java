@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import io.ConfigReader;
+
 public class WindowStart extends JFrame {
 	
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
@@ -40,7 +42,7 @@ public class WindowStart extends JFrame {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(new JLabel(" "), gbc);
         
-        panel.add(new JLabel("<html><h1><strong>REBOTE</strong></h1></html>"), gbc);
+        panel.add(new JLabel(String.format("<html><h1><strong>%s</strong></h1></html>", ConfigReader.projectName)), gbc);
         
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;

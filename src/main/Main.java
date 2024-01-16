@@ -4,7 +4,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import db.DataBase;
 import gui.WindowStart;
+import io.ConfigReader;
 
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -31,6 +33,12 @@ public class Main extends JFrame {
 
     	frame.dispose();
     	
+    	ConfigReader.loadConfiguration();
+    	
+    	if (ConfigReader.projectTestData == true) {
+    		DataBase.loadTestData();
+    	}
+
         // Ventana inicial
     	new WindowStart();
     }

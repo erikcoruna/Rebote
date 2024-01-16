@@ -108,9 +108,9 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
 
@@ -152,9 +152,9 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
 	
@@ -188,9 +188,9 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
 	
@@ -227,9 +227,9 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error leyendo archivo CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
 
@@ -263,12 +263,12 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, playerHeaders);
 				} catch (IOException e) {
-					System.out.println("Error escribiendo fichero CSV.");
+					System.out.println(ConfigReader.csvWriteError);
 					e.printStackTrace();
 				}
 			};
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
 
@@ -300,12 +300,12 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, trainerHeaders);
 				} catch (IOException e) {
-					System.out.println("Error escribiendo fichero CSV.");
+					System.out.println(ConfigReader.csvWriteError);
 					e.printStackTrace();
 				}
 			};
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
 	
@@ -330,12 +330,12 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, teamHeaders);
 				} catch (IOException e) {
-					System.out.println("Error escribiendo fichero CSV.");
+					System.out.println(ConfigReader.csvWriteError);
 					e.printStackTrace();
 				}
 			};
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
 	
@@ -363,12 +363,12 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, gameHeaders);
 				} catch (IOException e) {
-					System.out.println("Error escribiendo fichero CSV.");
+					System.out.println(ConfigReader.csvWriteError);
 					e.printStackTrace();
 				}
 			};
 		} catch (IOException e) {
-			throw new UserRepositoryException("Error escribiendo fichero CSV.", e);
+			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
 }
