@@ -22,18 +22,18 @@ Estos dos últimos botones se utilizarán para la edición de datos más cómoda
 
 En caso de que hayas elegido en la configuración utilizar datos de prueba, esta opción habrá guardado varios usuarios y entrenadores con los que puedes iniciar sesión para probar la aplicación.
   ### Para iniciar como jugador
-  Puedes utilizar las siguientes credenciales de prueba:
-    Usuario: unai.player
+  Puedes utilizar las siguientes credenciales de prueba:<br />
+    Usuario: unai.player<br />
     Contraseña: prueba5
 
   ### Para iniciar como entrenador
-  Puedes utilizar las siguientes credenciales de prueba:
-    Usuario: unai.trainer
+  Puedes utilizar las siguientes credenciales de prueba:<br />
+    Usuario: unai.trainer<br />
     Contraseña: prueba5
 
   ### Para poder registrar partidos
-  Puedes utilizar las siguientes credenciales de prueba:
-    Usuario: admin
+  Puedes utilizar las siguientes credenciales de prueba:<br />
+    Usuario: admin<br />
     Contraseña: admin
     
 En caso contrario, si quieres entrar por primera vez a la aplicación tendrás que registrarte dandole al botón "Registrarse", y añadiendo tus datos personales en la ventana que se abrirá. Las siguientes veces que quieras acceder, te bastará con iniciar sesión con el botón "Iniciar sesión" e introducir tu nombre de usuario y contraseña que hayas elegido al registrarte.
