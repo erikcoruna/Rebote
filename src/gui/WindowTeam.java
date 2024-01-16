@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -26,11 +27,11 @@ import domain.Team;
 import domain.Trainer;
 import domain.User;
 import domain.UserRepositoryException;
+import io.ConfigReader;
 
 public class WindowTeam extends JFrame {
-	public static void main(String[] args) {
-		new WindowTeam(new Team(1, "Team1", "Bilbao", "Bilbao basket", "Este es el equipo de baloncesto de Bilbao.", League.A), new Player("erik.player", "Erik", "Coruña", "Rodríguez", "prueba1", new GregorianCalendar(2004, 4 - 1, 22), "España", null, 170, 60.4f));
-	}
+
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	private List<Game> gamesPlayedList = new ArrayList<>();
@@ -57,7 +58,6 @@ public class WindowTeam extends JFrame {
 		if (gamesPlayedList.size() > 0 && gameIndex >= 0 && gameIndex < gamesPlayedList.size()) {
 			SQLiteDBManager dbManager = new SQLiteDBManager();
 			try {
-				System.out.println("Conectando con la base de datos...");
 				dbManager.connect("resources/db/rebote.db");
 				Game currentGame = gamesPlayedList.get(gameIndex);
 				team1 = dbManager.getTeam(currentGame.getTeam1());
@@ -71,8 +71,7 @@ public class WindowTeam extends JFrame {
 				team2PointsLabel.setText("P: " + currentGame.getTeamScore2());
 				team2FoultsLabel.setText("F: " + currentGame.getTeamFoults2());
 			} catch (UserRepositoryException e) {
-				System.out.println("No se ha podido acceder a la base de datos.");
-				e.printStackTrace();
+				logger.warning(ConfigReader.dbConnectError);
 			}
 		}
 	}
@@ -139,7 +138,6 @@ public class WindowTeam extends JFrame {
 		backButton = new JButton("Atrás");
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			
 			if (!dbManager.getAllGames().isEmpty()) {
@@ -240,8 +238,7 @@ public class WindowTeam extends JFrame {
 				southPanel.add(buttonsPanel4, BorderLayout.SOUTH);
 			}
 		} catch (UserRepositoryException e) {
-			System.out.println("No se ha podido acceder a la base de datos.");
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		}
 		
 		joinButton.addActionListener(new ActionListener() {
@@ -254,8 +251,7 @@ public class WindowTeam extends JFrame {
 					try {
 						dbManager.updatePlayer(player);
 					} catch (UserRepositoryException e1) {
-						System.out.println("No se ha podido acceder a la base de datos.");
-						e1.printStackTrace();
+						logger.warning(ConfigReader.dbConnectError);
 					}
 				} else if (user instanceof Trainer) {
 					Trainer trainer = (Trainer) user;
@@ -263,11 +259,10 @@ public class WindowTeam extends JFrame {
 					try {
 						dbManager.updateTrainer(trainer);
 					} catch (UserRepositoryException e2) {
-						System.out.println("No se ha podido acceder a la base de datos.");
-						e2.printStackTrace();
+						logger.warning(ConfigReader.dbConnectError);
 					}
 				}
-				System.out.println("Unido al equipo " + team.getName());
+				logger.info("Unido al equipo " + team.getName());
 			}
 		});
 		

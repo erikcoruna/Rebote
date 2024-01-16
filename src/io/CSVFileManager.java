@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.io.CsvMapWriter;
@@ -29,8 +30,11 @@ import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
+import gui.WindowStart;
 
 public class CSVFileManager implements IFileManager {
+	
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	
 	public String[] playerHeaders = getAttributeNames(Player.class);
 	public String[] trainerHeaders = getAttributeNames(Trainer.class);
@@ -75,7 +79,6 @@ public class CSVFileManager implements IFileManager {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
@@ -84,6 +87,7 @@ public class CSVFileManager implements IFileManager {
 				try {
 					player.setId(Integer.parseInt(row.get("id")));
 				} catch (NumberFormatException e) {
+					logger.warning("El campo id no puede estar vacío.");
 					throw new UserRepositoryException("El campo id no puede estar vacío.", e);
 				}
 				player.setUsername(row.get("username"));
@@ -108,8 +112,10 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
@@ -120,7 +126,6 @@ public class CSVFileManager implements IFileManager {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
@@ -129,6 +134,7 @@ public class CSVFileManager implements IFileManager {
 				try {
 					trainer.setId(Integer.parseInt(row.get("id")));
 				} catch (NumberFormatException e) {
+					logger.warning("El campo id no puede estar vacío.");
 					throw new UserRepositoryException("El campo id no puede estar vacío.", e);
 				}
 				trainer.setUsername(row.get("username"));
@@ -152,8 +158,10 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
@@ -164,7 +172,6 @@ public class CSVFileManager implements IFileManager {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
@@ -173,6 +180,7 @@ public class CSVFileManager implements IFileManager {
 				try {
 					team.setId(Integer.parseInt(row.get("id")));
 				} catch (NumberFormatException e) {
+					logger.warning("El campo id no puede estar vacío.");
 					throw new UserRepositoryException("El campo id no puede estar vacío.", e);
 				}
 				team.setName(row.get("name"));
@@ -188,8 +196,10 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
@@ -200,7 +210,6 @@ public class CSVFileManager implements IFileManager {
 			Map<String, String> row;
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			csvReader.getHeader(false);
@@ -209,6 +218,7 @@ public class CSVFileManager implements IFileManager {
 				try {
 					game.setId(Integer.parseInt(row.get("id")));
 				} catch (NumberFormatException e) {
+					logger.warning("El campo id no puede estar vacío.");
 					throw new UserRepositoryException("El campo id no puede estar vacío.", e);
 				}
 				game.setStadium(row.get("stadium"));
@@ -227,8 +237,10 @@ public class CSVFileManager implements IFileManager {
 				}
 			}
 		} catch (FileNotFoundException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvReadError);
 			throw new UserRepositoryException(ConfigReader.csvReadError, e);
 		}
 	}
@@ -239,7 +251,6 @@ public class CSVFileManager implements IFileManager {
 			csvWriter.writeHeader(playerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			for (Player player : dbManager.getAllPlayers()) {
@@ -263,11 +274,11 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, playerHeaders);
 				} catch (IOException e) {
-					System.out.println(ConfigReader.csvWriteError);
-					e.printStackTrace();
+					logger.warning(ConfigReader.csvWriteError);
 				}
 			};
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvWriteError);
 			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
@@ -278,7 +289,6 @@ public class CSVFileManager implements IFileManager {
 			csvWriter.writeHeader(trainerHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			for (Trainer trainer : dbManager.getAllTrainers()) {
@@ -300,11 +310,11 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, trainerHeaders);
 				} catch (IOException e) {
-					System.out.println(ConfigReader.csvWriteError);
-					e.printStackTrace();
+					logger.warning(ConfigReader.csvWriteError);
 				}
 			};
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvWriteError);
 			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
@@ -315,7 +325,6 @@ public class CSVFileManager implements IFileManager {
 			csvWriter.writeHeader(teamHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			for (Team team : dbManager.getAllTeams()) {
@@ -330,11 +339,11 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, teamHeaders);
 				} catch (IOException e) {
-					System.out.println(ConfigReader.csvWriteError);
-					e.printStackTrace();
+					logger.warning(ConfigReader.csvWriteError);
 				}
 			};
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvWriteError);
 			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}
@@ -345,7 +354,6 @@ public class CSVFileManager implements IFileManager {
 			csvWriter.writeHeader(gameHeaders);
 			
 			SQLiteDBManager dbManager = new SQLiteDBManager();
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect(dbPath.toString());
 			
 			for (Game game : dbManager.getAllGames()) {
@@ -363,11 +371,11 @@ public class CSVFileManager implements IFileManager {
 				try {
 					csvWriter.write(row, gameHeaders);
 				} catch (IOException e) {
-					System.out.println(ConfigReader.csvWriteError);
-					e.printStackTrace();
+					logger.warning(ConfigReader.csvWriteError);
 				}
 			};
 		} catch (IOException e) {
+			logger.warning(ConfigReader.csvWriteError);
 			throw new UserRepositoryException(ConfigReader.csvWriteError, e);
 		}
 	}

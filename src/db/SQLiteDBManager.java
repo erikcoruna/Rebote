@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 import domain.Game;
 import domain.IUserRepository;
@@ -19,11 +20,15 @@ import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
+import gui.WindowStart;
 import io.ConfigReader;
 
 // Por el momento solo hemos creado una base de datos con SQLite, pero en un futuro pueden integrarse más bases de datos
 // como PostgresSQL, y por eso está implementada la interfaz IUserRepository.
 public class SQLiteDBManager implements IUserRepository {
+	
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
+	
 	// https://github.com/unaguil/prog3-ejemplos-codigo/tree/master/src/tema7/manager
 	// Se han modificado algunas líneas respecto al código.
 	private Connection connection = null;
@@ -51,9 +56,12 @@ public class SQLiteDBManager implements IUserRepository {
 			createTrainerTable();
 			createTeamTable();
 			createGameTable();
+			logger.info("Conectado a la base de datos.");
 		} catch (ClassNotFoundException e) {
+			logger.warning(ConfigReader.dbConnectError);
 			throw new UserRepositoryException(ConfigReader.dbConnectError, e);
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbConnectError);
 			throw new UserRepositoryException(ConfigReader.dbConnectError, e);
 		}
 	}
@@ -61,7 +69,9 @@ public class SQLiteDBManager implements IUserRepository {
 	public void disconnect() throws UserRepositoryException {
 		try {
 			connection.close();
+			logger.info("Desconectado de la base de datos.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDisconnectError);
 			throw new UserRepositoryException(ConfigReader.dbDisconnectError);
 		}
 	}
@@ -71,7 +81,9 @@ public class SQLiteDBManager implements IUserRepository {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS player (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, name VARCHAR,"
 					+ " firstSurname VARCHAR, secondSurname VARCHAR, password VARCHAR, birthDate TEXT, country VARCHAR, team_id INTEGER, "
 					+ " height INT, weight DECIMAL, FOREIGN KEY(team_id) REFERENCES team(id))");
+			logger.info("Tabla player creada.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbCreateTableError);
 			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
@@ -80,7 +92,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS trainer (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, name VARCHAR,"
 					+ " firstSurname VARCHAR, secondSurname VARCHAR, password VARCHAR, birthDate TEXT, country VARCHAR, team_id INTEGER, FOREIGN KEY(team_id) REFERENCES team(id))");
+			logger.info("Tabla trainer creada.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbCreateTableError);
 			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
@@ -89,7 +103,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,"
 					+ " city VARCHAR, stadium VARCHAR, description VARCHAR, league VARCHAR)");
+			logger.info("Tabla team creada.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbCreateTableError);
 			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
@@ -99,7 +115,9 @@ public class SQLiteDBManager implements IUserRepository {
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY AUTOINCREMENT, stadium VARCHAR,"
 					+ " referee VARCHAR, team1 INTEGER, team2 INTEGER, teamScore1 INTEGER, teamScore2 INTEGER,"
 					+ " teamFoults1 INTEGER, teamFoults2 INTEGER)");
+			logger.info("Tabla game creada.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbCreateTableError);
 			throw new UserRepositoryException(ConfigReader.dbCreateTableError);
 		}
 	}
@@ -107,7 +125,9 @@ public class SQLiteDBManager implements IUserRepository {
 	public void dropTable(String tableName) throws UserRepositoryException {
 		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate("DROP TABLE IF EXISTS " + tableName);
+			logger.info("Tabla " + tableName + " eliminada.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDropTableError);
 			throw new UserRepositoryException(ConfigReader.dbDropTableError);
 		}
 	}
@@ -127,7 +147,7 @@ public class SQLiteDBManager implements IUserRepository {
 			try {
 				preparedStatement.setInt(8, player.getTeam().getId());
 			} catch (NullPointerException e) {
-				System.out.println("Jugador sin equipo: " + player.getName());
+				logger.info("Jugador sin equipo: " + player.getName());
 			}
 			preparedStatement.setInt(9, player.getHeight());
 			preparedStatement.setFloat(10, player.getWeight());
@@ -138,10 +158,13 @@ public class SQLiteDBManager implements IUserRepository {
 			if (resultSet.next()) {
 				int newId = resultSet.getInt("id");
 				player.setId(newId);
+				logger.info("Jugador " + player.getName() + " guardado en la base de datos.");
 			} else {
+				logger.warning(ConfigReader.dbStoreError);
 				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbStoreError);
 			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
@@ -161,7 +184,7 @@ public class SQLiteDBManager implements IUserRepository {
 			try {
 				preparedStatement.setInt(8, trainer.getTeam().getId());
 			} catch (NullPointerException e) {
-				System.out.println("Entrenador sin equipo: " + trainer.getName());
+				logger.info("Entrenador sin equipo: " + trainer.getName());
 			}
 			
 			preparedStatement.executeUpdate();
@@ -170,10 +193,13 @@ public class SQLiteDBManager implements IUserRepository {
 			if (resultSet.next()) {
 				int newId = resultSet.getInt("id");
 				trainer.setId(newId);
+				logger.info("Entrenador " + trainer.getName() + " guardado.");
 			} else {
+				logger.warning(ConfigReader.dbStoreError);
 				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbStoreError);
 			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
@@ -195,10 +221,13 @@ public class SQLiteDBManager implements IUserRepository {
 			if (resultSet.next()) {
 				int newId = resultSet.getInt("id");
 				team.setId(newId);
+				logger.info("Equipo " + team.getName() + " guardado.");
 			} else {
+				logger.warning(ConfigReader.dbStoreError);
 				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbStoreError);
 			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
@@ -223,10 +252,13 @@ public class SQLiteDBManager implements IUserRepository {
 			if (resultSet.next()) {
 				int newId = resultSet.getInt("id");
 				game.setId(newId);
+				logger.info("Partido " + game.getId() + " guardado.");
 			} else {
+				logger.warning(ConfigReader.dbStoreError);
 				throw new UserRepositoryException(ConfigReader.dbStoreError);
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbStoreError);
 			throw new UserRepositoryException(ConfigReader.dbStoreError, e);
 		}
 	}
@@ -253,11 +285,13 @@ public class SQLiteDBManager implements IUserRepository {
 				player.setHeight(resultSet.getInt("height"));
 				player.setWeight(resultSet.getFloat("weight"));
 				
+				logger.info("Jugador " + player.getName() + " obtenido.");
 				return player;
 			} else {
 				return null;
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -282,11 +316,13 @@ public class SQLiteDBManager implements IUserRepository {
 				trainer.setCountry(resultSet.getString("country"));
 				trainer.setTeam(getTeam(resultSet.getInt("team_id")));
 				
+				logger.info("Entrenador " + trainer.getName() + " obtenido.");
 				return trainer;
 			} else {
 				return null;
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -308,11 +344,13 @@ public class SQLiteDBManager implements IUserRepository {
 				team.setDescription(resultSet.getString("description"));
 				team.setLeague(League.valueOf(resultSet.getString("league")));
 				
+				logger.info("Equipo " + team.getName() + " obtenido.");
 				return team;
 			} else {
 				return null;
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -337,11 +375,13 @@ public class SQLiteDBManager implements IUserRepository {
 				game.setTeamFoults1(resultSet.getInt("teamFoults1"));
 				game.setTeamFoults2(resultSet.getInt("teamFoults2"));
 				
+				logger.info("Partido " + game.getId() + " obtenido.");
 				return game;
 			} else {
 				return null;
 			}
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -356,8 +396,11 @@ public class SQLiteDBManager implements IUserRepository {
 			while (resultSet.next()) {
 				players.add(getPlayer(resultSet.getInt("id")));
 			}
+			
+			logger.info("Jugadores obtenidos.");
 			return players;
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -372,8 +415,11 @@ public class SQLiteDBManager implements IUserRepository {
 			while (resultSet.next()) {
 				trainers.add(getTrainer(resultSet.getInt("id")));
 			}
+			
+			logger.info("Entrenadores obtenidos.");
 			return trainers;
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -387,8 +433,11 @@ public class SQLiteDBManager implements IUserRepository {
 			while (resultSet.next()) {
 				teams.add(getTeam(resultSet.getInt("id")));
 			}
+			
+			logger.info("Equipos obtenidos.");
 			return teams;
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -403,8 +452,11 @@ public class SQLiteDBManager implements IUserRepository {
 			while (resultSet.next()) {
 				games.add(getGame(resultSet.getInt("id")));
 			}
+			
+			logger.info("Partidos obtenidos.");
 			return games;
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbGetError);
 			throw new UserRepositoryException(ConfigReader.dbGetError, e);
 		}
 	}
@@ -414,7 +466,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM player WHERE id = ?")) {
 			preparedStatement.setInt(1, player.getId());
 			preparedStatement.executeUpdate();
+			logger.info("Jugador " + player.getName() + " eliminado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDeleteError);
 			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
@@ -424,7 +478,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM trainer WHERE id = ?")) {
 			preparedStatement.setInt(1, trainer.getId());
 			preparedStatement.executeUpdate();
+			logger.info("Entrenador " + trainer.getName() + " eliminado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDeleteError);
 			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
@@ -434,7 +490,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM team WHERE id = ?")) {
 			preparedStatement.setInt(1, team.getId());
 			preparedStatement.executeUpdate();
+			logger.info("Equipo " + team.getName() + " eliminado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDeleteError);
 			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
@@ -444,7 +502,9 @@ public class SQLiteDBManager implements IUserRepository {
 		try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM game WHERE id = ?")) {
 			preparedStatement.setInt(1, game.getId());
 			preparedStatement.executeUpdate();
+			logger.info("Partido " + game.getId() + " eliminado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbDeleteError);
 			throw new UserRepositoryException(ConfigReader.dbDeleteError, e);
 		}
 	}
@@ -463,14 +523,16 @@ public class SQLiteDBManager implements IUserRepository {
 			try {
 				preparedStatement.setInt(8, player.getTeam().getId());
 			} catch (NullPointerException e) {
-				System.out.println("Jugador sin equipo: " + player.getName());
+				logger.info("Jugador sin equipo: " + player.getName());
 			}
 			preparedStatement.setInt(9, player.getHeight());
 			preparedStatement.setFloat(10, player.getWeight());
 			preparedStatement.setInt(11, player.getId());
 			
 			preparedStatement.executeUpdate();
+			logger.info("Jugador " + player.getName() + " actualizado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbUpdateError);
 			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
@@ -489,12 +551,14 @@ public class SQLiteDBManager implements IUserRepository {
 			try {
 				preparedStatement.setInt(8, trainer.getTeam().getId());
 			} catch (NullPointerException e) {
-				System.out.println("Entrenador sin equipo: " + trainer.getName());
+				logger.info("Entrenador sin equipo: " + trainer.getName());
 			}
 			preparedStatement.setInt(9, trainer.getId());
 			
 			preparedStatement.executeUpdate();
+			logger.info("Entrenador " + trainer.getName() + " actualizado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbUpdateError);
 			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
@@ -511,7 +575,9 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(6, team.getId());
 			
 			preparedStatement.executeUpdate();
+			logger.info("Equipo " + team.getName() + " actualizado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbUpdateError);
 			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
@@ -531,7 +597,9 @@ public class SQLiteDBManager implements IUserRepository {
 			preparedStatement.setInt(9, game.getId());
 			
 			preparedStatement.executeUpdate();
+			logger.info("Partido " + game.getId() + " actualizado.");
 		} catch (SQLException e) {
+			logger.warning(ConfigReader.dbUpdateError);
 			throw new UserRepositoryException(ConfigReader.dbUpdateError, e);
 		}
 	}
@@ -561,10 +629,9 @@ public class SQLiteDBManager implements IUserRepository {
 				result.add(player);
 			}
 		} catch (UserRepositoryException e) {
-			System.out.println(ConfigReader.dbConnectError);
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		}
 		return result;
 	}

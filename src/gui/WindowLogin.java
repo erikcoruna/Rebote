@@ -64,10 +64,6 @@ public class WindowLogin extends JFrame {
 		textFieldUsername.setPreferredSize(new Dimension(300, 20));
 		JLabel labelPassword = new JLabel("Introduzca su contraseña:");
 		passwordFieldPassword.setPreferredSize(new Dimension(300, 20));
-		JLabel labelForget = new JLabel("¿Ha olvidado su contraseña?");
-		// https://stackoverflow.com/questions/2715118/how-to-change-the-size-of-the-font-of-a-jlabel-to-take-the-maximum-size
-		// Para cambiar el tamaño de la fuente.
-		labelForget.setFont(new Font(labelForget.getFont().getName(), Font.PLAIN, 10));
 		
 		panel.add(labelUsername, gbc);
 		panel.add(new JLabel(" "), gbc);
@@ -76,8 +72,6 @@ public class WindowLogin extends JFrame {
 		panel.add(labelPassword, gbc);
 		panel.add(new JLabel(" "), gbc);
 		panel.add(passwordFieldPassword, gbc);
-		panel.add(new JLabel(" "), gbc);
-		panel.add(labelForget, gbc);
 		
 		for (int i = 0; i < 3; i++) {
 			panel.add(new JLabel(" "), gbc);
@@ -110,19 +104,20 @@ public class WindowLogin extends JFrame {
 						String inputUsername = textFieldUsername.getText();
 						String inputPassword = String.valueOf(passwordFieldPassword.getPassword());
 						try {
-							System.out.println("Conectando con la base de datos...");
 							dbManager.connect("resources/db/rebote.db");
 							
 							for (Player player : dbManager.getAllPlayers()) {
 								if (player.getUsername().equals(inputUsername) && String.valueOf(player.getPassword()).equals(inputPassword)) {
 									dispose();
 									new WindowHomePlayer(player);
+									logger.info("Login como jugador: " + player.getUsername());
 								}
 							}
 							for (Trainer trainer : dbManager.getAllTrainers()) {
 								if (trainer.getUsername().equals(inputUsername) && String.valueOf(trainer.getPassword()).equals(inputPassword)) {
 									new WindowHomeTrainer(trainer);
 									dispose();
+									logger.info("Login como entrenador: " + trainer.getUsername());
 								}
 							}
 							
@@ -132,49 +127,15 @@ public class WindowLogin extends JFrame {
 						}
 					}
 				}
-				logger.info("Pulsado el botón confirm.");
 			}
 		});
+		
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new WindowStart();
 				dispose();
 				logger.info("Pulsado el botón cancel.");
-			}
-		});
-		labelForget.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				logger.info("Pulsado el botón labelForget.");
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				labelForget.setForeground(Color.BLUE);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				labelForget.setForeground(null);
-			}
-		});
-		textFieldUsername.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		passwordFieldPassword.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
 			}
 		});
     }

@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,9 +22,11 @@ import javax.swing.JScrollPane;
 
 import collections.ReboteCollections;
 import domain.Team;
+import io.ConfigReader;
 
 public class WindowLeague extends JFrame {
 	
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	public WindowLeague(List<List<List<Team>>> league) {
@@ -73,7 +76,7 @@ public class WindowLeague extends JFrame {
 					new WindowLeague(ReboteCollections.createLeague(Paths.get("resources/db/rebote.db")));
 					dispose();
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					logger.warning(ConfigReader.dbConnectError);
 				}
 			}
 		});

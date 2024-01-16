@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -41,12 +42,14 @@ import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
+import io.ConfigReader;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class WindowHomeTrainer extends JFrame {
 
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	private JButton buttonLogout;
@@ -68,22 +71,20 @@ public class WindowHomeTrainer extends JFrame {
 	private static void updateTrainer(Trainer trainer) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			dbManager.updateTrainer(trainer);
 		} catch (UserRepositoryException e) {
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		}
 	}
 	
 	private static void updateTeam(Team team) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			dbManager.updateTeam(team);
 		} catch (UserRepositoryException e) {
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		}
 	}
 	
@@ -110,6 +111,7 @@ public class WindowHomeTrainer extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				new WindowTeam(team, trainer);
 				dispose();
+				logger.info("Abierto el equipo: " + team.getName());
 			}
 		});
 	}
@@ -122,7 +124,6 @@ public class WindowHomeTrainer extends JFrame {
     	panelCenterGames.setBackground(Color.WHITE);
     	SQLiteDBManager dbManager = new SQLiteDBManager();
     	try {
-    		System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			
 			Team team1 = dbManager.getTeam(game.getTeam1());
@@ -163,8 +164,7 @@ public class WindowHomeTrainer extends JFrame {
 			panelGamesSearch.add(panelCenterGames);
 	    	panelGamesSearch.add(Box.createRigidArea(new Dimension(0, 10)));
     	} catch (UserRepositoryException e) {
-    		System.out.println("No se ha podido acceder a la base de datos.");
-    		e.printStackTrace();
+    		logger.warning(ConfigReader.dbConnectError);
     	}
 	}
 	
@@ -249,6 +249,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setUsername(username);
 							updateTrainer(trainer);
 							labelUsername.setText("Nombre de usuario: " + username);
+							logger.info("Actualizado el nombre de usuario a: " + username);
 						}
 					}
 				});
@@ -262,6 +263,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setName(name);
 							updateTrainer(trainer);
 							labelName.setText("Nombre: " + name);
+							logger.info("Actualizado el nombre a: " + name);
 						}
 					}
 				});
@@ -275,6 +277,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setFirstSurname(firstSurname);
 							updateTrainer(trainer);
 							labelFirstSurname.setText("Primer apellido: " + firstSurname);
+							logger.info("Actualizado el primer apellido a: " + firstSurname);
 						}
 					}
 				});
@@ -288,6 +291,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setSecondSurname(secondSurname);
 							updateTrainer(trainer);
 							labelSecondSurname.setText("Segundo apellido: " + secondSurname);
+							logger.info("Actualizado el segundo apellido a: " + secondSurname);
 						}
 					}
 				});
@@ -301,6 +305,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setPassword(password);
 							updateTrainer(trainer);
 							labelPassword.setText("Contraseña: " + password);
+							logger.info("Actualizada la contraseña a: " + password);
 						}
 					}
 				});
@@ -323,6 +328,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setBirthDate(calendar);
 							updateTrainer(trainer);
 							labelBirthDate.setText("Fecha de nacimiento: " + dbManager.calendarToString(calendar));
+							logger.info("Actualizada la fecha de nacimiento a: " + dbManager.calendarToString(calendar));
 						}
 					}
 				});
@@ -344,6 +350,7 @@ public class WindowHomeTrainer extends JFrame {
 							trainer.setCountry(country);
 							updateTrainer(trainer);
 							labelCountry.setText("País: " + country);
+							logger.info("Actualizado el país a: " + country);
 						}
 					}
 				});
@@ -403,6 +410,7 @@ public class WindowHomeTrainer extends JFrame {
 								trainerTeam.setName(name);
 								updateTeam(trainerTeam);
 								labelNameTeam.setText("Nombre: " + name);
+								logger.info("Actualizado el nombre a: " + name);
 							}
 						}
 					});
@@ -416,6 +424,7 @@ public class WindowHomeTrainer extends JFrame {
 								trainerTeam.setCity(city);
 								updateTeam(trainerTeam);
 								labelCityTeam.setText("Ciudad: " + city);
+								logger.info("Actualizada la ciudad a: " + city);
 							}
 						}
 					});
@@ -429,6 +438,7 @@ public class WindowHomeTrainer extends JFrame {
 								trainerTeam.setStadium(stadium);
 								updateTeam(trainerTeam);
 								labelStadiumTeam.setText("Estadio: " + stadium);
+								logger.info("Actualizado el estadio a: " + stadium);
 							}
 						}
 					});
@@ -442,6 +452,7 @@ public class WindowHomeTrainer extends JFrame {
 								trainerTeam.setDescription(description);
 								updateTeam(trainerTeam);
 								labelDescriptionTeam.setText("Descripción: " + description);
+								logger.info("Actualizada la descripción a: " + description);
 							}
 						}
 					});
@@ -451,9 +462,8 @@ public class WindowHomeTrainer extends JFrame {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								System.out.println("Conectando con la base de datos...");
 								dbManager.connect("resources/db/rebote.db");
-								System.out.println("Has salido del equipo " + trainer.getTeam().getName());
+								logger.info("Has salido del equipo " + trainer.getTeam().getName());
 								trainer.setTeam(null);
 								dbManager.updateTrainer(trainer);
 								panelNorthTeam.remove(labelNameTeam);
@@ -471,8 +481,7 @@ public class WindowHomeTrainer extends JFrame {
 								tabbedPanel.revalidate();
 								tabbedPanel.repaint();
 							} catch (UserRepositoryException e1) {
-								System.out.println("No se ha podido acceder a la base de datos.");
-								e1.printStackTrace();
+								logger.warning(ConfigReader.dbConnectError);
 							}
 						}
 					});
@@ -496,7 +505,6 @@ public class WindowHomeTrainer extends JFrame {
 		        panelNorthSearch.add(buttonSearchTeams);
 		        
 		        try {
-		        	System.out.println("Conectando con la base de datos...");
 					dbManager.connect("resources/db/rebote.db");
 					List<Team> teams = new ArrayList<>(dbManager.getAllTeams());
 		        
@@ -534,8 +542,7 @@ public class WindowHomeTrainer extends JFrame {
 						}
 					});
 		        } catch (UserRepositoryException e) {
-		        	System.out.println("No se ha podido acceder a la base de datos.");
-		        	e.printStackTrace();
+		        	logger.warning(ConfigReader.dbConnectError);
 		        }
 		        
 		        
@@ -553,7 +560,6 @@ public class WindowHomeTrainer extends JFrame {
 			        panelNorthGames.add(buttonSearchGames);
 			        
 			        try {
-			        	System.out.println("Conectando con la base de datos...");
 						dbManager.connect("resources/db/rebote.db");
 						Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
 						Set<Game> games = new TreeSet<>(gameComparator);
@@ -586,8 +592,7 @@ public class WindowHomeTrainer extends JFrame {
 											addGamePanel(game);
 										}
 									} catch (UserRepositoryException e1) {
-										System.out.println("No se ha podido acceder a la base de datos");
-										e1.printStackTrace();
+										logger.warning(ConfigReader.dbConnectError);
 									}
 								}
 								if (panelGamesSearch.getComponentCount() == 0) {
@@ -600,8 +605,7 @@ public class WindowHomeTrainer extends JFrame {
 							}
 						});
 			        } catch (UserRepositoryException e) {
-			        	System.out.println("No se ha podido acceder a la base de datos.");
-			        	e.printStackTrace();
+			        	logger.warning(ConfigReader.dbConnectError);
 			        }
 		        }
         add(tabbedPanel, BorderLayout.CENTER);
@@ -614,6 +618,7 @@ public class WindowHomeTrainer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				new WindowStart();
+				logger.info("Cerrada la sesión.");
 			}
 		});
 	    

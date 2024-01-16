@@ -33,11 +33,9 @@ import domain.Player;
 import domain.Team;
 import domain.Trainer;
 import domain.UserRepositoryException;
+import io.ConfigReader;
 
 public class WindowRegister extends JFrame {
-	public static void main(String[] args) {
-		new WindowRegister();
-	}
 
 	// https://www.digitalocean.com/community/tutorials/logger-in-java-logging-example
 	// Cogido para tener un ejemplo de Logger y adecuado a nuestro código.
@@ -154,7 +152,6 @@ public class WindowRegister extends JFrame {
 					if (birthDateChooser.getDate().before(new Date())) {
 						SQLiteDBManager dbManager = new SQLiteDBManager();
 						try {
-							System.out.println("Conectando con la base de datos...");
 							dbManager.connect("resources/db/rebote.db");
 							
 							int exists = 0;
@@ -193,7 +190,7 @@ public class WindowRegister extends JFrame {
 									dbManager.storeTrainer(trainer);
 									dispose();
 									new WindowLogin();
-									System.out.println("Entrenador " + username + " ha sido registrado correctamente.");
+									logger.info("Entrenador " + username + " ha sido registrado correctamente.");
 								} else if (player.isSelected()) {
 									Player player = new Player(
 											username,
@@ -210,83 +207,30 @@ public class WindowRegister extends JFrame {
 									dbManager.storePlayer(player);
 									dispose();
 									new WindowLogin();
-									System.out.println("Jugador " + username + " ha sido registrado correctamente.");
+									logger.info("Jugador " + username + " ha sido registrado correctamente.");
 								}
 							} else {
-								System.out.println("Ese nombre de usuario ya está utilizado.");
+								logger.warning("Ese nombre de usuario ya está utilizado.");
 							}
 							dbManager.disconnect();
 						} catch (UserRepositoryException e1) {
-							System.out.println("Error accediendo a la base de datos.");
-							e1.printStackTrace();
+							logger.warning(ConfigReader.dbConnectError);
 						}
 					} else {
-						System.out.println("La fecha de nacimiento no puede ser superior a la actual.");
+						logger.warning("La fecha de nacimiento no puede ser superior a la actual.");
 					}
 				} else {
-					System.out.println("Debes rellenar todos los campos para registrar un usuario.");
+					logger.warning("Debes rellenar todos los campos para registrar un usuario.");
 				}
-				logger.info("Pulsado el botón confirm.");
 			}
 		});
+		
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new WindowStart();
 				dispose();
 				logger.info("Pulsado el botón cancel.");
-			}
-		});
-		textFieldName.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		textFieldFirstSurname.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		textFieldSecondSurname.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		passwordFieldPassword.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				logger.info("Salido del campo de texto.");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				logger.info("Entrado al campo de texto.");
-			}
-		});
-		coach.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				logger.info("Pulsado el botón coach.");
-			}
-		});
-		player.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				logger.info("Pulsado el botón player.");
 			}
 		});
 	}

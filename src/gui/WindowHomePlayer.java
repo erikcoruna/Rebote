@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -43,12 +44,14 @@ import domain.League;
 import domain.Player;
 import domain.Team;
 import domain.UserRepositoryException;
+import io.ConfigReader;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class WindowHomePlayer extends JFrame {
 
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	private JButton buttonLogout;
@@ -69,11 +72,10 @@ public class WindowHomePlayer extends JFrame {
 	private static void updatePlayer(Player player) {
 		SQLiteDBManager dbManager = new SQLiteDBManager();
 		try {
-			System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			dbManager.updatePlayer(player);
 		} catch (UserRepositoryException e) {
-			e.printStackTrace();
+			logger.warning(ConfigReader.dbConnectError);
 		}
 	}
 	
@@ -100,6 +102,7 @@ public class WindowHomePlayer extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				new WindowTeam(team, player);
 				dispose();
+				logger.info("Abierto el equipo: " + team.getName());
 			}
 		});
 	}
@@ -112,7 +115,6 @@ public class WindowHomePlayer extends JFrame {
     	panelCenterGames.setBackground(Color.WHITE);
     	SQLiteDBManager dbManager = new SQLiteDBManager();
     	try {
-    		System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			
 			Team team1 = dbManager.getTeam(game.getTeam1());
@@ -153,8 +155,7 @@ public class WindowHomePlayer extends JFrame {
 			panelGamesSearch.add(panelCenterGames);
 	    	panelGamesSearch.add(Box.createRigidArea(new Dimension(0, 10)));
     	} catch (UserRepositoryException e) {
-    		System.out.println("No se ha podido acceder a la base de datos.");
-    		e.printStackTrace();
+    		logger.warning(ConfigReader.dbConnectError);
     	}
 	}
 	
@@ -241,6 +242,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setUsername(username);
 					updatePlayer(player);
 					labelUsername.setText("Nombre de usuario: " + username);
+					logger.info("Actualizado el nombre de usuario a: " + username);
 				}
 			}
 		});
@@ -254,6 +256,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setName(name);
 					updatePlayer(player);
 					labelName.setText("Nombre: " + name);
+					logger.info("Actualizado el nombre a: " + name);
 				}
 			}
 		});
@@ -267,6 +270,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setFirstSurname(firstSurname);
 					updatePlayer(player);
 					labelFirstSurname.setText("Primer apellido: " + firstSurname);
+					logger.info("Actualizado el primer apellido a: " + firstSurname);
 				}
 			}
 		});
@@ -280,6 +284,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setSecondSurname(secondSurname);
 					updatePlayer(player);
 					labelSecondSurname.setText("Segundo apellido: " + secondSurname);
+					logger.info("Actualizado el segundo apellido a: " + secondSurname);
 				}
 			}
 		});
@@ -293,6 +298,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setPassword(password);
 					updatePlayer(player);
 					labelPassword.setText("Contraseña: " + password);
+					logger.info("Actualizada la contraseña a: " + password);
 				}
 			}
 		});
@@ -315,6 +321,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setBirthDate(calendar);
 					updatePlayer(player);
 					labelBirthDate.setText("Fecha de nacimiento: " + dbManager.calendarToString(calendar));
+					logger.info("Actualizada la fecha de nacimiento a: " + dbManager.calendarToString(calendar));
 				}
 			}
 		});
@@ -336,6 +343,7 @@ public class WindowHomePlayer extends JFrame {
 					player.setCountry(country);
 					updatePlayer(player);
 					labelCountry.setText("País: " + country);
+					logger.info("Actualizado el país a: " + country);
 				}
 			}
 		});
@@ -366,9 +374,8 @@ public class WindowHomePlayer extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
-						System.out.println("Conectando con la base de datos...");
 						dbManager.connect("resources/db/rebote.db");
-						System.out.println("Has salido del equipo " + player.getTeam().getName());
+						logger.info("Has salido del equipo " + player.getTeam().getName());
 						player.setTeam(null);
 						dbManager.updatePlayer(player);
 						panelTeam.remove(labelTeamStuff);
@@ -378,8 +385,7 @@ public class WindowHomePlayer extends JFrame {
 						tabbedPanel.revalidate();
 						tabbedPanel.repaint();
 					} catch (UserRepositoryException e1) {
-						System.out.println("No se ha podido acceder a la base de datos.");
-						e1.printStackTrace();
+						logger.warning(ConfigReader.dbConnectError);
 					}
 				}
 			});
@@ -403,7 +409,6 @@ public class WindowHomePlayer extends JFrame {
         panelNorthSearch.add(buttonSearchTeams);
         
         try {
-        	System.out.println("Conectando con la base de datos...");
 			dbManager.connect("resources/db/rebote.db");
 			List<Team> teams = new ArrayList<>(dbManager.getAllTeams());
         
@@ -441,8 +446,7 @@ public class WindowHomePlayer extends JFrame {
 				}
 			});
         } catch (UserRepositoryException e) {
-        	System.out.println("No se ha podido acceder a la base de datos.");
-        	e.printStackTrace();
+        	logger.warning(ConfigReader.dbConnectError);
         }
         
         
@@ -460,7 +464,6 @@ public class WindowHomePlayer extends JFrame {
 	        panelNorthGames.add(buttonSearchGames);
 	        
 	        try {
-	        	System.out.println("Conectando con la base de datos...");
 				dbManager.connect("resources/db/rebote.db");
 				Comparator<Game> gameComparator = (game1, game2) -> {return Integer.compare(game1.getId(), game2.getId()) * -1;};
 				Set<Game> games = new TreeSet<>(gameComparator);
@@ -495,8 +498,7 @@ public class WindowHomePlayer extends JFrame {
 									addGamePanel(game);
 								}
 							} catch (UserRepositoryException e1) {
-								System.out.println("No se ha podido acceder a la base de datos");
-								e1.printStackTrace();
+								logger.warning(ConfigReader.dbConnectError);
 							}
 						}
 						if (panelGamesSearch.getComponentCount() == 0) {
@@ -509,8 +511,7 @@ public class WindowHomePlayer extends JFrame {
 					}
 				});
 	        } catch (UserRepositoryException e) {
-	        	System.out.println("No se ha podido acceder a la base de datos.");
-	        	e.printStackTrace();
+	        	logger.warning(ConfigReader.dbConnectError);
 	        }
         }
 	    add(tabbedPanel, BorderLayout.CENTER);
@@ -523,6 +524,7 @@ public class WindowHomePlayer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				new WindowStart();
+				logger.info("Cerrada la sesión.");
 			}
 		});
 	    

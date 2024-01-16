@@ -1,4 +1,6 @@
 package main;
+import java.util.logging.Logger;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -9,6 +11,8 @@ import gui.WindowStart;
 import io.ConfigReader;
 
 public class Main extends JFrame {
+	
+	static Logger logger = Logger.getLogger(WindowStart.class.getName());
 	private static final long serialVersionUID = 1L;
 	
 	// https://www.geeksforgeeks.org/java-swing-jprogressbar/
@@ -22,6 +26,15 @@ public class Main extends JFrame {
     	frame.setLocationRelativeTo(null);
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	
+    	ConfigReader.loadConfiguration();
+    	
+    	if (ConfigReader.projectTestData == true) {
+    		DataBase.loadTestData();
+    		logger.info("Iniciando aplicación con datos de prueba.");
+    	} else {
+    		logger.info("Iniciando aplicación sin datos de prueba.");
+    	}
+    	
     	progressBar.setValue(0);
     	progressBar.setStringPainted(true);
     	panel.add(progressBar);
@@ -32,12 +45,6 @@ public class Main extends JFrame {
 //    	fill();
 
     	frame.dispose();
-    	
-    	ConfigReader.loadConfiguration();
-    	
-    	if (ConfigReader.projectTestData == true) {
-    		DataBase.loadTestData();
-    	}
 
         // Ventana inicial
     	new WindowStart();
