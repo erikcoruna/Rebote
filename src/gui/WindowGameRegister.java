@@ -5,6 +5,9 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -124,6 +127,16 @@ public class WindowGameRegister extends JFrame {
 		tableActions.getTableHeader().setDefaultRenderer(new GameTableHeaderRenderer());
 		JScrollPane scrollPane = new JScrollPane(tableActions);
 		tableActions.setRowHeight(30);
+		tableActions.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
+					 incidents.remove(0);
+					 gameTableModel.fireTableDataChanged();
+				 }
+			}
+		});
 		panelTable.add(scrollPane);
 		
 		// Botonera con opciones en la parte de abajo a la derecha
