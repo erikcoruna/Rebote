@@ -1,4 +1,7 @@
 package main;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -42,7 +45,7 @@ public class Main extends JFrame {
     	
     	frame.setVisible(true);
     	
-//    	fill();
+    	fill();
 
     	frame.dispose();
 
@@ -50,16 +53,16 @@ public class Main extends JFrame {
     	new WindowStart();
     }
     
-//    public static void fill() {
-//    	int i = 0;
-//    	while (i <= 100) {
-//    		progressBar.setValue(i + 1);
-//    		try {
-//				Thread.sleep(30);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//    		i += 1;
-//    	}
-//    }
+    public static void fill() {
+    	int i = 0;
+    	while (i <= 100) {
+    		progressBar.setValue(i + 1);
+    		try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    		i += 1;
+    	}
+    }
 }
